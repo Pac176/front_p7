@@ -1,21 +1,27 @@
 <template>
-<nav id='nav'>
-
-  <router-link class="navLink" to="/"><img id="logoHeader" src="images\icon-left-font-monochrome-white.svg" alt="Icone groupomania-left"> </router-link> 
-  <router-link class="navLink" to="/Connect">Connexion</router-link>
-  <router-link class="navLink" to="/Subscription">Inscription</router-link>
-  <router-link class="navLink" to="/MyAccount">Mon Compte</router-link>
-  <router-link class="navLink" to="/Connect">Deconnexion</router-link>
- </nav>
-
+<div>
+  <b-navbar toggleable="lg" type="dark" variant="dark">
+    <b-navbar-brand to="/"><img id="logoHeader" src="images\icon-left-font-monochrome-white.svg" alt="Icone groupomania-left"></b-navbar-brand>
+    <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
+    <b-collapse id="nav-text-collapse" is-nav>
+      <b-navbar-nav>
+        <b-nav-item class="routerLink" to="/Connect">Connexion</b-nav-item>
+        <b-nav-item class="routerLink" to="/">Deconnexion</b-nav-item>
+        <b-nav-item class="routerLink" to="/Subscription">Inscription</b-nav-item>
+        <b-nav-item class="routerLink" to="/FilActu">Fil d'actualité</b-nav-item>
+        <b-nav-item class="routerLink" to="/MyAccount">Mon Compte</b-nav-item>
+        <b-nav-item class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item>
+      </b-navbar-nav>
+    </b-collapse>
+  </b-navbar>
+</div>
 </template>
 
 <script>
 export default {
   name: 'Nav',
-  props: {
-    msg: String
-  }
+ 
+ 
 }
 </script>
 
@@ -49,7 +55,7 @@ height: 8rem;
 
 background-color: #454545;
 }
-.navLink{
+.routerLink{
   color:rgb(253, 251, 251);
   font-size: 1.5rem;
   margin-left: 1rem;

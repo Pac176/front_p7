@@ -1,7 +1,6 @@
 <template>
-  <div class="myAccount">
+  <div class="filActu">
      <Nav></Nav>
-      <h1>Mon Compte</h1>
   </div>
 </template>
 
@@ -10,7 +9,7 @@
 import Nav from '@/components/Nav.vue'
 
 export default {
-  name: 'MyAccount',
+  name: 'filActu',
   components: {
     Nav
   }

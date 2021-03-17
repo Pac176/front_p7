@@ -1,6 +1,7 @@
 <template>
   <div class="home">
      <Nav></Nav>
+     <h1>Bienvenue sur le reseau social GROUPOMANIA</h1>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="connection">
+  <div class="subscription">
      <Nav></Nav>
      <h1>Inscription</h1>
   </div>
@@ -10,7 +10,7 @@
 import Nav from '@/components/Nav.vue'
 
 export default {
-  name: 'Home',
+  name: 'Subscription',
   components: {
     Nav
   }

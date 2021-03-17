@@ -1,6 +1,7 @@
 <template>
-  <div class="home">
+  <div class="myAccount">
      <Nav></Nav>
+      <h1>Mon Compte</h1>
   </div>
 </template>
 

@@ -1,6 +1,7 @@
 <template>
-  <div class="home">
+  <div class="connection">
      <Nav></Nav>
+     <h1>Inscription</h1>
   </div>
 </template>
 

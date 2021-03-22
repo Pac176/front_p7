@@ -31,10 +31,7 @@ export default {
       password:"",
       email:""
     },
-    urlApi:'http://localhost:3000/api/groupomania/users',
-    
-
-    
+    urlApi:'http://localhost:3000/api/groupomania',
     }
   },
   components: {
@@ -42,6 +39,7 @@ export default {
   },
   methods:{
     async onConnect (event) {
+     
       event.preventDefault()
       const requestOptions = {
         method: "POST",
@@ -50,13 +48,16 @@ export default {
             "Authorization": "Bearer my-token"},
         body: JSON.stringify(this.form)
   }
-  const response = await fetch(this.urlApi + "/login", requestOptions);
+  const response = await fetch(this.urlApi + "/users/login", requestOptions);
   const data = await response.json();
+  console.log(data)
   this.$store.state.token = data.token
   this.$store.state.isConnect = true
   this.$router.push('filActu')
-}
   
+    }
+
+    
   }
 }
 

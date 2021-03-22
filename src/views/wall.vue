@@ -1,5 +1,5 @@
 <template>
-  <div class="filActu">
+  <div class="wall">
      <Nav></Nav>
   </div>
 </template>
@@ -9,7 +9,7 @@
 import Nav from '@/components/Nav.vue'
 
 export default {
-  name: 'filActu',
+  name: 'wall',
   components: {
     Nav
   }

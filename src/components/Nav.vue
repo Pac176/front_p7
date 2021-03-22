@@ -6,8 +6,11 @@
     <b-collapse id="nav-text-collapse" is-nav>
     <b-navbar-nav v-if="this.$store.state.isConnect">
         <b-nav-item class="routerLink" to="/FilActu">Fil d'actualité</b-nav-item>
+
         <b-nav-item class="routerLink" to="/MyAccount">Mon Compte</b-nav-item>
+
         <b-nav-item> <b-button variant="danger"  @click.stop='isConnect()'  to="/">Deconnexion</b-button></b-nav-item>
+        
         <b-nav-item v-if="this.$store.state.isAdmin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
        </b-navbar-nav>
       <b-navbar-nav v-else>  

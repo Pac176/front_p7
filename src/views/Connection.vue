@@ -3,7 +3,7 @@
    <Nav></Nav>
 	
     <div class="vue-template">
-		
+		<b-alert variant="danger" v-if="this.failedConnect" show>{{this.data.error}}</b-alert> 
         <b-form class="form" @submit="onConnect">
 			<b-alert variant="success" v-if="this.$store.state.successSubscribe" show>Inscription reussie!</b-alert> 
             <b-form-group style="font-weight:bold" id="input-group-5"  label="Adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
@@ -29,7 +29,8 @@ export default {
 	name: 'Subscription',
 	data(){
 		return{
-      
+			failedConnect: false,
+			data:"",
 			form:{
 				password:"",
 				email:""
@@ -42,22 +43,34 @@ export default {
 	},
 	methods:{
 		async onConnect (event) {
-			event.preventDefault();
-			const requestOptions = {
-				method: "POST",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": "Bearer my-token"},
-				body: JSON.stringify(this.form)
-			};
-			const response = await fetch(this.urlApi + "/users/login", requestOptions);
-			const data = await response.json();
-			console.log(data);
-			this.$store.state.token = data.token;
-			this.$store.state.isConnect = true;
-			this.$store.state.successSubscribe = false;
-			this.$router.push('wall');
+			try {
+				event.preventDefault();
+				const requestOptions = {
+					method: "POST",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": "Bearer my-token"},
+					body: JSON.stringify(this.form)
+				};
+				const response = await fetch(this.urlApi + "/users/login", requestOptions);
+				this.data = await response.json();
+				if(response.ok === true ){
+					console.log(this.$store.state.token);
+					this.$store.state.token = this.data.token;
+					this.$store.state.isConnect = true;
+					this.$store.state.successSubscribe = false;
+					this.$router.push('wall');
+					
+				}else{
+
+					this.failedConnect = true;
+					console.log("niette");}
   
+			} catch (e) {
+				console.log(e);
+			}
+
+			
 		}
 
     

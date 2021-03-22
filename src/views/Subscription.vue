@@ -2,6 +2,7 @@
   <div class="subscription">
    <Nav></Nav>
      <div class="vue-template">
+		<b-alert variant="danger" v-if="failure" show>Inscription incomplète, verifier les champs!</b-alert> 
         <b-form class="form" @submit="onSubscription" >
             <b-form-group style="font-weight:bold" id="input-group-1"  label="Votre Nom:" label-for="input-1" >
               <b-form-input style="font-style:italic" id="input-1" v-model="form.first_name" placeholder="Entrez votre nom (uniquement des lettres)" required ></b-form-input>
@@ -29,46 +30,54 @@
 
 <script>
 // @ is an alias to /src
-import Nav from '@/components/Nav.vue'
+import Nav from '@/components/Nav.vue';
 
 export default {
-  name: 'Subscription',
-  data(){
-    return{
-   
-    form:{
-      first_name:"",
-      last_name:"",
-      pseudo:"",
-      password:"",
-      email:""
-    },
-    urlApi:'http://localhost:3000/api/groupomania',
-    }
-  },
-  components: {
-    Nav
-  },
-  methods:{
-    
-    async onSubscription () {
-   
-      //event.preventDefault()
-  const requestOptions = {
-        method: "POST",
-        headers: { 
-            "Content-Type": "application/json",
-            "Authorization": "Bearer my-token"},
-        body: JSON.stringify(this.form)
-  }
-  const response = await fetch(this.urlApi + "/users/signup", requestOptions);
-  const data = await response.json();
-  alert(data.message)
-  //event.target.reset();
-}
-  
-  }
-}
+	name: 'Subscription',
+	data(){
+		return{
+			failure:false,
+			form:{
+				first_name:"",
+				last_name:"",
+				pseudo:"",
+				password:"",
+				email:""
+			},
+			urlApi:'http://localhost:3000/api/groupomania',
+		};
+	},
+	components: {
+		Nav
+	},
+	methods:{
+		async onSubscription (event) {
+			event.preventDefault();
+			try {
+				const requestOptions = {
+					method: "POST",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": "Bearer my-token"},
+					body: JSON.stringify(this.form)
+				};
+				const response = await fetch(this.urlApi + "/users/signup", requestOptions);
+				if(response.ok === true ){
+					console.log(response);
+					this.$router.push('connect');
+					this.$store.state.successSubscribe = true;
+					console.log(this.$store.state.successSubscribe);
+					//event.target.reset();
+				} else {
+					this.failure= true;
+					console.log("erreure");
+				}
+			} catch (error) {
+				console.log(error.message);
+			}
+		}
+	}
+};
 
 
 

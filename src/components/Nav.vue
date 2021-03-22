@@ -5,7 +5,7 @@
     <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
     <b-collapse id="nav-text-collapse" is-nav>
     <b-navbar-nav v-if="this.$store.state.isConnect">
-        <b-nav-item class="routerLink" to="/FilActu">Fil d'actualité</b-nav-item>
+        <b-nav-item class="routerLink" to="/wall">Fil d'actualité</b-nav-item>
 
         <b-nav-item class="routerLink" to="/MyAccount">Mon Compte</b-nav-item>
 
@@ -15,7 +15,7 @@
        </b-navbar-nav>
       <b-navbar-nav v-else>  
         <b-nav-item class="routerLink" to="/Subscription" >Inscription</b-nav-item>
-        <b-nav-item  class="routerLink"  to="/Connect" >Connexion</b-nav-item> 
+        <b-nav-item  class="routerLink"  to="/Connect">Connexion</b-nav-item> 
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
@@ -24,20 +24,20 @@
 
 <script>
 export default {
-  name: 'Nav',
-  data(){
-    return{
+	name: 'Nav',
+	data(){
+		return{
    
-    }
-  },
-  methods:{
-    isConnect(){
-     this.$store.state.isConnect = this.$store.state.isConnect? false: true
+		};
+	},
+	methods:{
+		isConnect(){
+			this.$store.state.isConnect = this.$store.state.isConnect? false: true;
      
-    }
-  }
+		}
+	}
  
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

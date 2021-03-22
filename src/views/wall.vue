@@ -6,12 +6,12 @@
 
 <script>
 // @ is an alias to /src
-import Nav from '@/components/Nav.vue'
+import Nav from '@/components/Nav.vue';
 
 export default {
-  name: 'wall',
-  components: {
-    Nav
-  }
-}
+	name: 'wall',
+	components: {
+		Nav
+	}
+};
 </script>

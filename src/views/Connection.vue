@@ -1,8 +1,11 @@
 <template>
   <div class="connect">
    <Nav></Nav>
-     <div class="vue-template" v-if="!this.$store.state.isConnect">
+	
+    <div class="vue-template">
+		
         <b-form class="form" @submit="onConnect">
+			<b-alert variant="success" v-if="this.$store.state.successSubscribe" show>Inscription reussie!</b-alert> 
             <b-form-group style="font-weight:bold" id="input-group-5"  label="Adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
             <b-form-input style="font-style:italic" id="input-5" v-model="form.email" type="email" placeholder="Entrez votre email" required></b-form-input>
             </b-form-group>
@@ -20,46 +23,46 @@
 
 <script>
 // @ is an alias to /src
-import Nav from '@/components/Nav.vue'
+import Nav from '@/components/Nav.vue';
 
 export default {
-  name: 'Subscription',
-  data(){
-    return{
+	name: 'Subscription',
+	data(){
+		return{
       
-    form:{
-      password:"",
-      email:""
-    },
-    urlApi:'http://localhost:3000/api/groupomania',
-    }
-  },
-  components: {
-    Nav
-  },
-  methods:{
-    async onConnect (event) {
-     
-      event.preventDefault()
-      const requestOptions = {
-        method: "POST",
-        headers: { 
-            "Content-Type": "application/json",
-            "Authorization": "Bearer my-token"},
-        body: JSON.stringify(this.form)
-  }
-  const response = await fetch(this.urlApi + "/users/login", requestOptions);
-  const data = await response.json();
-  console.log(data)
-  this.$store.state.token = data.token
-  this.$store.state.isConnect = true
-  this.$router.push('filActu')
+			form:{
+				password:"",
+				email:""
+			},
+			urlApi:'http://localhost:3000/api/groupomania',
+		};
+	},
+	components: {
+		Nav
+	},
+	methods:{
+		async onConnect (event) {
+			event.preventDefault();
+			const requestOptions = {
+				method: "POST",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": "Bearer my-token"},
+				body: JSON.stringify(this.form)
+			};
+			const response = await fetch(this.urlApi + "/users/login", requestOptions);
+			const data = await response.json();
+			console.log(data);
+			this.$store.state.token = data.token;
+			this.$store.state.isConnect = true;
+			this.$store.state.successSubscribe = false;
+			this.$router.push('wall');
   
-    }
+		}
 
     
-  }
-}
+	}
+};
 
 
 </script>

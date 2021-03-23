@@ -5,7 +5,7 @@
     <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
     <b-collapse id="nav-text-collapse" is-nav>
     <b-navbar-nav v-if="this.$store.state.isConnect">
-        <b-nav-item class="routerLink" to="/wall">Fil d'actualité</b-nav-item>
+        <b-nav-item class="routerLink" to="/wall" @click='resetSuccessSuscribe()'>Fil d'actualité</b-nav-item>
 
         <b-nav-item class="routerLink" to="/MyAccount">Mon Compte</b-nav-item>
 
@@ -32,8 +32,11 @@ export default {
 	},
 	methods:{
 		isConnect(){
-			this.$store.state.isConnect = this.$store.state.isConnect? false: true;
-     
+			return this.$store.state.isConnect = this.$store.state.isConnect? false: true;
+		},
+		resetSuccessSuscribe() {
+			this.$store.state.resetSuccessSuscribe = false;
+			console.log(this.$store.state.resetSuccessSuscribe );
 		}
 	}
  

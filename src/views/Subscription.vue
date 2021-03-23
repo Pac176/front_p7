@@ -32,14 +32,7 @@ export default {
 
 
 <style lang="scss" >
-.form{
-  text-align: left;
-}
-.vue-template{
-  width: 75%;
-  margin:auto;
-  padding-top:4rem;
-  }
+
 
 </style>
 

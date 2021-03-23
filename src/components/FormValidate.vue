@@ -1,7 +1,8 @@
 <template>
       <div class="vue-template">
-		<b-alert variant="danger" v-if="this.badValidation" show>{{this.data.message}}</b-alert> 
+		
 		<b-form class="form" @submit="onSubscription" >
+			<b-alert variant="danger" v-if="this.badValidation" show>{{this.data.message}}</b-alert> 
            <b-form-group style="font-weight:bold" id="input-group-1"  label="Votre Nom:" label-for="input-1" >
               <b-form-input style="font-style:italic" id="input-1" v-model="first_name" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' placeholder="Entrez votre nom (uniquement des lettres)" required ></b-form-input>
             </b-form-group>
@@ -34,20 +35,13 @@ export default {
 	name: 'Subscription',
 	data(){
 		return{
-			data:"",
+			data:{},
 			badValidation:false,
 			first_name:"",
 			last_name:"",
 			pseudo:"",
 			password:"",
 			email:"",
-			form:{
-				first_name:"",
-				last_name:"",
-				pseudo:"",
-				password:"",
-				email:""
-			},
 			urlApi:'http://localhost:3000/api/groupomania',
 		};
 	},
@@ -102,7 +96,7 @@ export default {
 				
 				if(response.ok === true ){
 					console.log(response);
-					this.$router.push('/');
+					this.$router.push('/Wall');
 					this.$store.state.successSubscribe = true;
 					const ConnectRequestOptions = {
 						method: "POST",
@@ -119,6 +113,7 @@ export default {
 					console.log(this.$store.state.token);
 					this.$store.state.token = this.data.token;
 					this.$store.state.isConnect = true;
+					console.log(this.$store.state.successSubscribe);
 					
 				} else {
 					this.badValidation = true;
@@ -138,13 +133,33 @@ export default {
 </script>
 
 <style lang="scss" >
-.form{
-  text-align: left;
+
+@media screen and (max-width:500px) {
+	.form{
+	display:flex;
+	flex-direction: column;
+	width:95%
+
 }
+}
+@media screen and (min-width:500px) {
+	.form{
+	width:50%
+
+}
+
+}
+
 .vue-template{
-  width: 75%;
-  margin:auto;
-  padding-top:4rem;
+	display: flex;
+	
+	margin:0;
+	text-align: left;
+	justify-content: center;
+	padding-top: 4rem;
   }
+
+
+
 
 </style>

@@ -1,12 +1,10 @@
 <template>
   <div class="connect">
    <Nav></Nav>
-	
-    <div class="vue-template">
+	<div class="vue-template">
 		<b-alert variant="danger" v-if="this.failedConnect" show>{{this.data.error}}</b-alert> 
         <b-form class="form" @submit="onConnect">
-			<b-alert variant="success" v-if="this.$store.state.successSubscribe" show>Inscription reussie!</b-alert> 
-            <b-form-group style="font-weight:bold" id="input-group-5"  label="Adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
+			<b-form-group style="font-weight:bold" id="input-group-5"  label="Adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
             <b-form-input style="font-style:italic" id="input-5" v-model="form.email" type="email" placeholder="Entrez votre email" required></b-form-input>
             </b-form-group>
             <b-form-group style="font-weight:bold" id="input-group-4"   label="Mot de passe:" label-for="input-4" description="Au moins 8 caractères, 1 majuscule, 1chiffre et un caratere special" >
@@ -26,7 +24,7 @@
 import Nav from '@/components/Nav.vue';
 
 export default {
-	name: 'Subscription',
+	name: 'Connect',
 	data(){
 		return{
 			failedConnect: false,
@@ -58,7 +56,6 @@ export default {
 					console.log(this.$store.state.token);
 					this.$store.state.token = this.data.token;
 					this.$store.state.isConnect = true;
-					this.$store.state.successSubscribe = false;
 					this.$router.push('wall');
 					
 				}else{
@@ -81,11 +78,27 @@ export default {
 </script>
 
 <style lang="scss" >
-.vue-template{
-  width: 75%;
-  margin:auto;
-  padding-top:4rem;
- 
+@media screen and (max-width:500px) {
+	.form{
+	display:flex;
+	flex-direction: column;
+	width:95%
+
+}
+}
+@media screen and (min-width:500px) {
+	.form{
+	width:50%
+
 }
 
+}
+
+.vue-template{
+	display: flex;
+	margin:0;
+	text-align: left;
+	justify-content: center;
+	padding-top: 4rem;
+  }
 </style>

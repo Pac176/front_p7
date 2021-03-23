@@ -1,6 +1,7 @@
 <template>
   <div class="wall">
-     <Nav></Nav>
+    <Nav></Nav>
+	<b-alert variant="success" v-if='this.$store.state.successSubscribe' show >Inscription reussie!</b-alert>
   </div>
 </template>
 

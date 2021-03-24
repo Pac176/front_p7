@@ -78,9 +78,12 @@ export default {
 	
 	},
 	computed:{
-		...mapState
+		...mapState(['successSubscribe','token','isConnect'])
 	},
 	methods:{
+		isConnectInStore(){
+			this.$store.commit('isConnectMutation');
+		},
 		countDownChanged(dismissCountDown) {
 			this.dismissCountDown = dismissCountDown;
 		},
@@ -89,6 +92,9 @@ export default {
 		},
 		successSubscrirtionShow(){
 			this.$store.commit('successSubscribeMutation');
+		}, 
+		tokenInStore(data){
+			this.$store.commit('tokenSet', data);
 		},
 		async onSubscription (event) {
 			event.preventDefault();
@@ -123,11 +129,8 @@ export default {
 
 					const response = await fetch(this.urlApi + "/users/login", ConnectRequestOptions);
 					this.data = await response.json();
-					console.log(this.$store.state.token);
-					this.$store.state.token = this.data.token;
-					this.$store.state.isConnect = true;
-					console.log(this.$store.state.successSubscribe);
-					
+					this.isConnectInStore();
+					this.tokenInStore(this.data.token);
 				} else {
 					this.showAlert();
 				} 

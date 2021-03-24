@@ -10,7 +10,12 @@ export default new Vuex.Store({
 		successSubscribe: false,
 		token:""
 	},
-	mutations: {},
-	actions: {},
+	mutations: {
+		successSubscribeMutation(state) {
+			return state.successSubscribe = !state.successSubscribe ? true : false;
+		}},
+	actions: {
+		
+	},
 	modules: {},
 });

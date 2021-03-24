@@ -2,7 +2,8 @@
       <div class="vue-template">
 		
 		<b-form class="form" @submit="onSubscription" >
-			<b-alert variant="danger" v-if="this.badValidation" show>{{this.data.message}}</b-alert> 
+			<b-alert :show="dismissCountDown" dismissible variant="danger"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
+     {{this.data.message}}</b-alert>
            <b-form-group style="font-weight:bold" id="input-group-1"  label="Votre Nom:" label-for="input-1" >
               <b-form-input style="font-style:italic" id="input-1" v-model="first_name" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' placeholder="Entrez votre nom (uniquement des lettres)" required ></b-form-input>
             </b-form-group>
@@ -35,6 +36,8 @@ export default {
 	name: 'Subscription',
 	data(){
 		return{
+			dismissSecs: 5,
+			dismissCountDown: 0,
 			data:{},
 			badValidation:false,
 			first_name:"",
@@ -75,6 +78,15 @@ export default {
 	
 	},
 	methods:{
+		countDownChanged(dismissCountDown) {
+			this.dismissCountDown = dismissCountDown;
+		},
+		showAlert() {
+			this.dismissCountDown = this.dismissSecs;
+		},
+		successSubscrirtionShow(){
+			this.$store.commit('successSubscribeMutation');
+		},
 		async onSubscription (event) {
 			event.preventDefault();
 			try {
@@ -93,11 +105,9 @@ export default {
 				};
 				const response = await fetch(this.urlApi + "/users/signup", requestOptions);
 				this.data = await response.json();
-				
 				if(response.ok === true ){
-					console.log(response);
 					this.$router.push('/Wall');
-					this.$store.state.successSubscribe = true;
+					this.successSubscrirtionShow();
 					const ConnectRequestOptions = {
 						method: "POST",
 						headers: { 
@@ -116,7 +126,7 @@ export default {
 					console.log(this.$store.state.successSubscribe);
 					
 				} else {
-					this.badValidation = true;
+					this.showAlert();
 				} 
 			} catch (error) {
 				console.log(error.message);

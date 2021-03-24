@@ -35,8 +35,7 @@ export default {
 			return this.$store.state.isConnect = this.$store.state.isConnect? false: true;
 		},
 		resetSuccessSuscribe() {
-			this.$store.state.resetSuccessSuscribe = false;
-			console.log(this.$store.state.resetSuccessSuscribe );
+			this.$store.commit('successSubscribeMutation');
 		}
 	}
  

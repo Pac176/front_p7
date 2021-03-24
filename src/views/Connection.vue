@@ -3,8 +3,10 @@
    <Nav></Nav>
 	<div class="vue-template">
         <b-form class="form" @submit="onConnect">
-		<b-alert variant="danger" v-if="this.failedConnect" show>{{this.dataResponse.error}}</b-alert> 
-			<b-form-group style="font-weight:bold" id="input-group-5"  label="Adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
+			<b-alert :show="dismissCountDown" dismissible variant="danger"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
+     {{this.dataResponse.error}}
+    </b-alert>
+		<b-form-group style="font-weight:bold" id="input-group-5"  label="Adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
             <b-form-input style="font-style:italic" id="input-5" v-model="form.email" type="email" placeholder="Entrez votre email" required></b-form-input>
             </b-form-group>
             <b-form-group style="font-weight:bold" id="input-group-4"   label="Mot de passe:" label-for="input-4" description="Au moins 8 caractères, 1 majuscule, 1chiffre et un caratere special" >
@@ -27,7 +29,8 @@ export default {
 	name: 'Connect',
 	data(){
 		return{
-			failedConnect: false,
+			dismissSecs: 5,
+			dismissCountDown: 0,
 			dataResponse:"",
 			form:{
 				password:"",
@@ -40,8 +43,15 @@ export default {
 		Nav
 	},
 	methods:{
+		countDownChanged(dismissCountDown) {
+			this.dismissCountDown = dismissCountDown;
+		},
+		showAlert() {
+			this.dismissCountDown = this.dismissSecs;
+		},
 		async onConnect (event) {
 			try {
+				
 				event.preventDefault();
 				const requestOptions = {
 					method: "POST",
@@ -59,8 +69,7 @@ export default {
 					this.$router.push('wall');
 					
 				}else{
-
-					this.failedConnect = true;
+					this.showAlert();
 					console.log("niette");}
   
 			} catch (e) {

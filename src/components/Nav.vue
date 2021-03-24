@@ -4,16 +4,17 @@
     <b-navbar-brand to="/"><img id="logoHeader" src="images\icon-left-font-monochrome-white.svg" alt="Icone groupomania-left"></b-navbar-brand>
     <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
     <b-collapse id="nav-text-collapse" is-nav>
-    <b-navbar-nav v-if="this.$store.state.isConnect">
-
+<b-navbar-nav v-if="this.$store.state.isConnect" id="connectMenu">
+    <b-navbar-nav id="menuGauche">
         <b-nav-item class="routerLink" to="/wall" >Fil d'actualité</b-nav-item>
         <b-nav-item class="routerLink" to="/myAccount">Mon Compte</b-nav-item>
-
         <b-nav-item v-if="this.$store.state.isAdmin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
-
         <b-nav-item  v-if="$route.path=='/myAccount'" class="routerLink" to="/updateAccount">Modifier mes infos</b-nav-item> 
-        <b-nav-item> <b-button variant="danger"  @click.stop='isConnect()'  to="/">Deconnexion</b-button></b-nav-item>
-       </b-navbar-nav>
+    </b-navbar-nav>
+     <b-navbar-nav id="menuDroit">   
+        <b-nav-item > <b-button variant="danger"  @click.stop='isConnect()'  to="/" >Deconnexion</b-button></b-nav-item>
+    </b-navbar-nav>
+</b-navbar-nav>
 
       <b-navbar-nav v-else>  
         <b-nav-item class="routerLink" to="/Subscription" >Inscription</b-nav-item>
@@ -79,5 +80,21 @@ background-color: #454545;
   text-decoration-line: none;
   
 }
+@media screen and (min-width:992px) {
+  #connectMenu{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width:100%;
+}
+#menuGauche{
+display:flex
+}
+#menuDroit{
+display:flex
+}
+}
+
+
 </style>
  

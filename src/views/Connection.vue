@@ -2,8 +2,8 @@
   <div class="connect">
    <Nav></Nav>
 	<div class="vue-template">
-		<b-alert variant="danger" v-if="this.failedConnect" show>{{this.data.error}}</b-alert> 
         <b-form class="form" @submit="onConnect">
+		<b-alert variant="danger" v-if="this.failedConnect" show>{{this.data.error}}</b-alert> 
 			<b-form-group style="font-weight:bold" id="input-group-5"  label="Adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
             <b-form-input style="font-style:italic" id="input-5" v-model="form.email" type="email" placeholder="Entrez votre email" required></b-form-input>
             </b-form-group>

@@ -1,6 +1,5 @@
 <template>
       <div class="vue-template">
-		
 		<b-form class="form" @submit="onSubscription" >
 			<b-alert :show="dismissCountDown" dismissible variant="danger"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
      {{this.data.message}}</b-alert>
@@ -32,6 +31,7 @@
 import { required,  helpers, minLength, maxLength, alphaNum } from 'vuelidate/lib/validators';
 const emailRegex = helpers.regex('emailRegex', /^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,6}$/);
 const pwdRegex = helpers.regex('pwdRegex', /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/);
+import {mapState} from 'vuex';
 export default {
 	name: 'Subscription',
 	data(){
@@ -76,6 +76,9 @@ export default {
 			pwdRegex
 		}
 	
+	},
+	computed:{
+		...mapState
 	},
 	methods:{
 		countDownChanged(dismissCountDown) {

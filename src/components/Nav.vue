@@ -5,14 +5,16 @@
     <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
     <b-collapse id="nav-text-collapse" is-nav>
     <b-navbar-nav v-if="this.$store.state.isConnect">
-        <b-nav-item class="routerLink" to="/wall" @click='resetSuccessSuscribe()'>Fil d'actualité</b-nav-item>
 
-        <b-nav-item class="routerLink" to="/MyAccount">Mon Compte</b-nav-item>
+        <b-nav-item class="routerLink" to="/wall" >Fil d'actualité</b-nav-item>
+        <b-nav-item class="routerLink" to="/myAccount">Mon Compte</b-nav-item>
 
-        <b-nav-item> <b-button variant="danger"  @click.stop='isConnect()'  to="/">Deconnexion</b-button></b-nav-item>
-        
         <b-nav-item v-if="this.$store.state.isAdmin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
+
+        <b-nav-item  v-if="$route.path=='/myAccount'" class="routerLink" to="/updateAccount">Modifier mes infos</b-nav-item> 
+        <b-nav-item> <b-button variant="danger"  @click.stop='isConnect()'  to="/">Deconnexion</b-button></b-nav-item>
        </b-navbar-nav>
+
       <b-navbar-nav v-else>  
         <b-nav-item class="routerLink" to="/Subscription" >Inscription</b-nav-item>
         <b-nav-item  class="routerLink"  to="/Connect">Connexion</b-nav-item> 
@@ -34,9 +36,7 @@ export default {
 		isConnect(){
 			return this.$store.state.isConnect = this.$store.state.isConnect? false: true;
 		},
-		resetSuccessSuscribe() {
-			this.$store.commit('successSubscribeMutation');
-		}
+		
 	}
  
 };

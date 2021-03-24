@@ -35,6 +35,7 @@ export default {
 	mounted(){
 		if (this.$store.state.successSubscribe){
 			this.showAlert();
+			this.successSubscrirtionShow();
 		}
 	}
 };

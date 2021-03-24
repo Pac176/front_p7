@@ -2,25 +2,26 @@
       <div class="vue-template">
 		<b-form class="form" @submit="onSubscription" >
 			<b-alert :show="dismissCountDown" dismissible variant="danger"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
-     {{this.data.message}}</b-alert>
+     {{this.dataResponse.message}}</b-alert>
            <b-form-group style="font-weight:bold" id="input-group-1"  label="Votre Nom:" label-for="input-1" >
-              <b-form-input style="font-style:italic" id="input-1" v-model="first_name" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' placeholder="Entrez votre nom (uniquement des lettres)" required ></b-form-input>
+              <b-form-input style="font-style:italic" id="input-1" v-model="first_name" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' placeholder="Entrez votre nom (uniquement des lettres)"  ></b-form-input>
             </b-form-group>
             <b-form-group style="font-weight:bold" id="input-group-2"  label="Votre prénom:" label-for="input-2" >
-              <b-form-input style="font-style:italic" id="input-2" v-model.trim="$v.last_name.$model" :class='{"is-invalid":$v.last_name.$error,"is-valid":!$v.last_name.$invalid}' placeholder="Entrez votre prénom (uniquement des lettres)" required ></b-form-input>
+              <b-form-input style="font-style:italic" id="input-2" v-model.trim="$v.last_name.$model" :class='{"is-invalid":$v.last_name.$error,"is-valid":!$v.last_name.$invalid}' placeholder="Entrez votre prénom (uniquement des lettres)"  ></b-form-input>
             </b-form-group>
             <b-form-group style="font-weight:bold" id="input-group-3"  label="Votre pseudo:" label-for="input-3" >
               <b-form-input style="font-style:italic" id="input-3" v-model.trim="$v.pseudo.$model" :class='{"is-invalid":$v.pseudo.$error,"is-valid":!$v.pseudo.$invalid}' placeholder="Entrez votre pseudo (uniquement des lettres)" ></b-form-input>
             </b-form-group>
             <b-form-group style="font-weight:bold" id="input-group-4"   label="Mot de passe:" label-for="input-4" description="Au moins 8 caractères, 1 majuscule, 1 chiffre et un caratere special" >
-              <b-form-input style="font-style:italic" id="input-4" v-model.trim="$v.password.$model" :class='{"is-invalid":$v.password.$error,"is-valid":!$v.password.$invalid}' type="password" placeholder="Entrez votre mot de passe"   required ></b-form-input>
+              <b-form-input style="font-style:italic" id="input-4" v-model.trim="$v.password.$model" :class='{"is-invalid":$v.password.$error,"is-valid":!$v.password.$invalid}' type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
             </b-form-group>
             <b-form-group style="font-weight:bold" id="input-group-5"  label="Adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
-              <b-form-input style="font-style:italic" id="input-5" v-model.trim="$v.email.$model" :class='{"is-invalid":$v.email.$error,"is-valid":!$v.email.$invalid}' type="email" placeholder="Entrez votre email" required></b-form-input>
+              <b-form-input style="font-style:italic" id="input-5" v-model.trim="$v.email.$model" :class='{"is-invalid":$v.email.$error,"is-valid":!$v.email.$invalid}' type="email" placeholder="Entrez votre email" ></b-form-input>
             </b-form-group>
-            <button type="submit"   class="btn btn-success btn-lg btn-block">Inscription</button>
+            <button v-if="$route.path=='/Subscription'" type="submit"   class="btn btn-success btn-lg btn-block">Inscription</button>
+            <button v-if="$route.path=='/updateAccount'" type="submit"   class="btn btn-success btn-lg btn-block">Modifier mes donnees</button>
             <p class="forgot-password text-right mt-2 mb-4">
-            <router-link to="/motDePasseOublie">Mot de passe oublié ?</router-link>
+           
             </p>
        </b-form>
     </div>
@@ -38,7 +39,7 @@ export default {
 		return{
 			dismissSecs: 5,
 			dismissCountDown: 0,
-			data:{},
+			dataResponse:{},
 			badValidation:false,
 			first_name:"",
 			last_name:"",
@@ -93,8 +94,8 @@ export default {
 		successSubscrirtionShow(){
 			this.$store.commit('successSubscribeMutation');
 		}, 
-		tokenInStore(data){
-			this.$store.commit('tokenSet', data);
+		tokenInStore(responseToken){
+			this.$store.commit('tokenSet', responseToken);
 		},
 		async onSubscription (event) {
 			event.preventDefault();
@@ -113,7 +114,7 @@ export default {
 					})
 				};
 				const response = await fetch(this.urlApi + "/users/signup", requestOptions);
-				this.data = await response.json();
+				this.dataResponse = await response.json();
 				if(response.ok === true ){
 					this.$router.push('/Wall');
 					this.successSubscrirtionShow();
@@ -128,9 +129,9 @@ export default {
 					};	
 
 					const response = await fetch(this.urlApi + "/users/login", ConnectRequestOptions);
-					this.data = await response.json();
+					this.dataResponse = await response.json();
 					this.isConnectInStore();
-					this.tokenInStore(this.data.token);
+					this.tokenInStore(this.dataResponse.token);
 				} else {
 					this.showAlert();
 				} 

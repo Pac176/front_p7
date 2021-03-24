@@ -3,7 +3,7 @@
    <Nav></Nav>
 	<div class="vue-template">
         <b-form class="form" @submit="onConnect">
-		<b-alert variant="danger" v-if="this.failedConnect" show>{{this.data.error}}</b-alert> 
+		<b-alert variant="danger" v-if="this.failedConnect" show>{{this.dataResponse.error}}</b-alert> 
 			<b-form-group style="font-weight:bold" id="input-group-5"  label="Adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
             <b-form-input style="font-style:italic" id="input-5" v-model="form.email" type="email" placeholder="Entrez votre email" required></b-form-input>
             </b-form-group>
@@ -28,7 +28,7 @@ export default {
 	data(){
 		return{
 			failedConnect: false,
-			data:"",
+			dataResponse:"",
 			form:{
 				password:"",
 				email:""
@@ -51,10 +51,10 @@ export default {
 					body: JSON.stringify(this.form)
 				};
 				const response = await fetch(this.urlApi + "/users/login", requestOptions);
-				this.data = await response.json();
+				this.dataResponse = await response.json();
 				if(response.ok === true ){
 					console.log(this.$store.state.token);
-					this.$store.state.token = this.data.token;
+					this.$store.state.token = this.dataResponse.token;
 					this.$store.state.isConnect = true;
 					this.$router.push('wall');
 					

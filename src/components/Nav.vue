@@ -1,7 +1,7 @@
 <template>
 <div>
   <b-navbar toggleable="lg" type="dark" variant="dark">
-    <b-navbar-brand to="/"><img id="logoHeader" src="images/icon-left-font-monochrome-white.svg" alt="Icone groupomania-left"></b-navbar-brand>
+    <b-navbar-brand to="/"><img id="logoHeader" src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616663944/icon-left-font-monochrome-white_pgqzj3.svg" alt="Icone groupomania-left"></b-navbar-brand>
     <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
     <b-collapse id="nav-text-collapse" is-nav>
 <b-navbar-nav v-if="this.isConnect" id="connectMenu">
@@ -66,7 +66,7 @@ li {
 }
 
 #logoHeader {
-  width:15rem
+  width:10rem
  
 }
 #nav{

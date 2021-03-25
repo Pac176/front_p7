@@ -1,8 +1,8 @@
 <template>
   <div class="home">
      <Nav></Nav><br><br><br><br>
-     <h1>Bienvenue sur le reseau social de l'entreprise GROUPOMANIA</h1>
-      <img id="homeLogo" src="images/icon-left-font.svg" alt="logo">
+     <h1>Bienvenue sur le reseau social de l'entreprise</h1>
+      <img id="homeLogo" src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616663942/icon-above-font_hzocsv.svg" alt="logo">
      </div>
 </template>
 

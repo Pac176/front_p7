@@ -79,7 +79,7 @@ export default {
 	
 	},
 	computed:{
-		...mapState(['successSubscribe','token','isConnect'])
+		...mapState(['successSubscribe','token','isConnect','userId'])
 	},
 	methods:{
 		isConnectInStore(){
@@ -96,6 +96,9 @@ export default {
 		}, 
 		tokenInStore(responseToken){
 			this.$store.commit('tokenSet', responseToken);
+		},
+		userIdInStore(responseUserId){
+			this.$store.commit('userIdSet', responseUserId);
 		},
 		async onSubscription (event) {
 			event.preventDefault();
@@ -132,6 +135,8 @@ export default {
 					this.dataResponse = await response.json();
 					this.isConnectInStore();
 					this.tokenInStore(this.dataResponse.token);
+					this.userIdInStore(this.dataResponse.userId);
+					
 				} else {
 					this.showAlert();
 				} 

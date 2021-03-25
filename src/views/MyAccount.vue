@@ -13,6 +13,9 @@ export default {
 	name: 'MyAccount',
 	components: {
 		Nav
+	},
+	methods:{
+
 	}
 };
 </script>

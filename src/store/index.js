@@ -8,7 +8,8 @@ export default new Vuex.Store({
 		isConnect: false,
 		isAdmin: false,
 		successSubscribe: false,
-		token:false
+		token: false,
+		userId:null
 	},
 	mutations: {
 		isConnectMutation(state) {
@@ -17,8 +18,11 @@ export default new Vuex.Store({
 		successSubscribeMutation(state) {
 			return state.successSubscribe = !state.successSubscribe ? true : false;
 		},
-		tokenSet(state, data) {
-			return state.token = data;
+		tokenSet(state, tokenRequest) {
+			return state.token = tokenRequest;
+		},
+		userIdSet(state, userIdRequest) {
+			return state.userId = userIdRequest;
 		}
 	},
 	actions: {

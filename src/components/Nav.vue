@@ -1,18 +1,18 @@
 <template>
 <div>
   <b-navbar toggleable="lg" type="dark" variant="dark">
-    <b-navbar-brand to="/"><img id="logoHeader" src="images\icon-left-font-monochrome-white.svg" alt="Icone groupomania-left"></b-navbar-brand>
+    <b-navbar-brand to="/"><img id="logoHeader" src="images/icon-left-font-monochrome-white.svg" alt="Icone groupomania-left"></b-navbar-brand>
     <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
     <b-collapse id="nav-text-collapse" is-nav>
-<b-navbar-nav v-if="this.$store.state.isConnect" id="connectMenu">
+<b-navbar-nav v-if="this.isConnect" id="connectMenu">
     <b-navbar-nav id="menuGauche">
         <b-nav-item class="routerLink" to="/wall" >Fil d'actualité</b-nav-item>
-        <b-nav-item class="routerLink" to="/myAccount">Mon Compte</b-nav-item>
-        <b-nav-item v-if="this.$store.state.isAdmin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
-        <b-nav-item  v-if="$route.path=='/myAccount'" class="routerLink" to="/updateAccount">Modifier mes infos</b-nav-item> 
+        <b-nav-item class="routerLink" :to='{name:"MyAccount"}'>Mon Compte</b-nav-item>
+        <b-nav-item v-if="this.isAdmin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
+        <b-nav-item v-if="$route.name =='MyAccount'"  class="routerLink" :to='{name:"UpdateAccount"}'>Modifier mes infos</b-nav-item> 
     </b-navbar-nav>
      <b-navbar-nav id="menuDroit">   
-        <b-nav-item > <b-button variant="danger"  @click.stop='isConnect()'  to="/" >Deconnexion</b-button></b-nav-item>
+        <b-nav-item > <b-button variant="danger"  @click.stop='isConnectInStore()'  to="/" >Deconnexion</b-button></b-nav-item>
     </b-navbar-nav>
 </b-navbar-nav>
 
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex';
 export default {
 	name: 'Nav',
 	data(){
@@ -33,9 +34,12 @@ export default {
    
 		};
 	},
+	computed:{
+		...mapState(['successSubscribe','token','isConnect','userId','isAdmin'])
+	},
 	methods:{
-		isConnect(){
-			return this.$store.state.isConnect = this.$store.state.isConnect? false: true;
+		isConnectInStore(){
+			this.$store.commit('isConnectMutation');
 		},
 		
 	}

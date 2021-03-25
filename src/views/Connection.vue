@@ -24,14 +24,14 @@
 <script>
 // @ is an alias to /src
 import Nav from '@/components/Nav.vue';
-
+import {mapState} from 'vuex';
 export default {
 	name: 'Connect',
 	data(){
 		return{
 			dismissSecs: 5,
 			dismissCountDown: 0,
-			dataResponse:"",
+			dataResponse:{},
 			form:{
 				password:"",
 				email:""
@@ -42,7 +42,19 @@ export default {
 	components: {
 		Nav
 	},
+	computed:{
+		...mapState(['successSubscribe','token','isConnect','userId'])
+	},
 	methods:{
+		isConnectInStore(){
+			this.$store.commit('isConnectMutation');
+		},
+		tokenInStore(responseToken){
+			this.$store.commit('tokenSet', responseToken);
+		},
+		userIdInStore(responseUserId){
+			this.$store.commit('userIdSet', responseUserId);
+		},
 		countDownChanged(dismissCountDown) {
 			this.dismissCountDown = dismissCountDown;
 		},
@@ -63,9 +75,9 @@ export default {
 				const response = await fetch(this.urlApi + "/users/login", requestOptions);
 				this.dataResponse = await response.json();
 				if(response.ok === true ){
-					console.log(this.$store.state.token);
-					this.$store.state.token = this.dataResponse.token;
-					this.$store.state.isConnect = true;
+					this.isConnectInStore();
+					this.tokenInStore(this.dataResponse.token);
+					this.userIdInStore(this.dataResponse.userId);
 					this.$router.push('wall');
 					
 				}else{

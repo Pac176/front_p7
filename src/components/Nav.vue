@@ -44,8 +44,8 @@ export default {
 		isConnectInStore(){
 			this.$store.commit('isConnectMutation');
 		},
-		userInStore(){
-			this.$store.commit('userStoreSet');
+		userInStore(userData){
+			this.$store.commit('userStoreSet',userData);
 		},
 		async findOneUser () {
 			const requestOptions = {
@@ -57,9 +57,8 @@ export default {
 			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
 			console.log(response);
 			this.userData = await response.json();
-			console.log(this.userData.data);
-			this.$store.state.userStore = this.userData.data;
-			console.log(this.$store.state.userStore );
+			this.userInStore(this.userData.data) ;
+		
 		},
 		async findAllPosts() {
 			const requestOptions = {

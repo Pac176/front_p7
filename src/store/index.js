@@ -9,24 +9,26 @@ export default new Vuex.Store({
 		isAdmin: false,
 		successSubscribe: false,
 		token: false,
-		userId:null
+		userId: null,
+		userStore: [],
 	},
 	mutations: {
 		isConnectMutation(state) {
 			return (state.isConnect = !state.isConnect ? true : false);
 		},
 		successSubscribeMutation(state) {
-			return state.successSubscribe = !state.successSubscribe ? true : false;
+			return (state.successSubscribe = !state.successSubscribe ? true : false);
 		},
 		tokenSet(state, tokenRequest) {
 			return state.token = tokenRequest;
 		},
 		userIdSet(state, userIdRequest) {
 			return state.userId = userIdRequest;
-		}
+		},
+		userStoreSet(state, userDataRequest) {
+			return state.userStore = userDataRequest;
+		},
 	},
-	actions: {
-		
-	},
+	actions: {},
 	modules: {},
 });

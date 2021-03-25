@@ -6,7 +6,7 @@
     <b-collapse id="nav-text-collapse" is-nav>
 <b-navbar-nav v-if="this.isConnect" id="connectMenu">
     <b-navbar-nav id="menuGauche">
-        <b-nav-item class="routerLink" to="/wall" >Fil d'actualité</b-nav-item>
+        <b-nav-item class="routerLink" to="/wall" @click.stop='findAllPosts()'>Fil d'actualité</b-nav-item>
         <b-nav-item class="routerLink" :to='{name:"MyAccount",params:{userId:`${this.userId}`}}' @click.stop='findOneUser()' >Mon Compte</b-nav-item>
         <b-nav-item v-if="this.isAdmin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
         <b-nav-item v-if="$route.name =='MyAccount'"  class="routerLink" :to='{name:"UpdateAccount"}'>Modifier mes infos</b-nav-item> 
@@ -27,20 +27,25 @@
 
 <script>
 import {mapState} from 'vuex';
+
 export default {
 	name: 'Nav',
 	data(){
 		return{
-			dataResponse:{},
+			userData:{},
+			allPosts:{},
 			urlApi:'http://localhost:3000/api/groupomania',
 		};
 	},
 	computed:{
-		...mapState(['successSubscribe','token','isConnect','userId','isAdmin'])
+		...mapState(['successSubscribe','token','isConnect','userId','isAdmin','userStore','allPostsStore'])
 	},
 	methods:{
 		isConnectInStore(){
 			this.$store.commit('isConnectMutation');
+		},
+		userInStore(){
+			this.$store.commit('userStoreSet');
 		},
 		async findOneUser () {
 			const requestOptions = {
@@ -50,8 +55,24 @@ export default {
 					"Authorization": `Bearer ${this.token}`},
 			};
 			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
-			this.dataResponse = await response.json();
-			console.log(this.dataResponse.data);
+			console.log(response);
+			this.userData = await response.json();
+			console.log(this.userData.data);
+			this.$store.state.userStore = this.userData.data;
+			console.log(this.$store.state.userStore );
+		},
+		async findAllPosts() {
+			const requestOptions = {
+				method: "Get",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+			};
+			const response = await fetch(this.urlApi + `/posts`, requestOptions);
+			console.log(response);
+			this.allPostsData = await response.json();
+			this.allpostsStore = this.allPostsData.data;
+			console.log(this.allpostsStore.rows );
 		}
 	}
  

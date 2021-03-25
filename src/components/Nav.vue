@@ -7,7 +7,7 @@
 <b-navbar-nav v-if="this.isConnect" id="connectMenu">
     <b-navbar-nav id="menuGauche">
         <b-nav-item class="routerLink" to="/wall" >Fil d'actualité</b-nav-item>
-        <b-nav-item class="routerLink" :to='{name:"MyAccount"}'>Mon Compte</b-nav-item>
+        <b-nav-item class="routerLink" :to='{name:"MyAccount",params:{userId:`${this.userId}`}}' @click.stop='findOneUser()' >Mon Compte</b-nav-item>
         <b-nav-item v-if="this.isAdmin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
         <b-nav-item v-if="$route.name =='MyAccount'"  class="routerLink" :to='{name:"UpdateAccount"}'>Modifier mes infos</b-nav-item> 
     </b-navbar-nav>
@@ -31,7 +31,8 @@ export default {
 	name: 'Nav',
 	data(){
 		return{
-   
+			dataResponse:{},
+			urlApi:'http://localhost:3000/api/groupomania',
 		};
 	},
 	computed:{
@@ -41,7 +42,17 @@ export default {
 		isConnectInStore(){
 			this.$store.commit('isConnectMutation');
 		},
-		
+		async findOneUser () {
+			const requestOptions = {
+				method: "Get",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+			};
+			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
+			this.dataResponse = await response.json();
+			console.log(this.dataResponse.data);
+		}
 	}
  
 };

@@ -43,6 +43,7 @@ export default {
 		return{
 			dismissSecs: 5,
 			dismissCountDown: 0,
+			urlApi:'http://localhost:3000/api/groupomania',
 		};
 	},
 	components: {
@@ -71,8 +72,25 @@ export default {
 		successSubscrirtionShow(){
 			this.$store.commit('successSubscribeMutation');
 		},
+		allpostsInStore(allPostsData){
+			this.$store.commit('allPostsStoreSet',allPostsData);
+		},
+		async findAllPosts() {
+			const requestOptions = {
+				method: "Get",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+			};
+			const response = await fetch(this.urlApi + `/posts`, requestOptions);
+			console.log(response);
+			this.allPostsData = await response.json();
+			this.allpostsInStore(this.allPostsData.data.rows);
+		
+		}
 	},
 	mounted(){
+		this.findAllPosts();
 		if (this.$store.state.successSubscribe){
 			this.showAlert();
 			this.successSubscrirtionShow();

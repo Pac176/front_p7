@@ -1,6 +1,6 @@
 <template>
 <div>
-  <b-navbar toggleable="lg" type="dark" variant="dark">
+  <b-navbar toggleable="lg" type="dark" variant="dark" class="fixed-top">
     <b-navbar-brand to="/"><img id="logoHeader" src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616663944/icon-left-font-monochrome-white_pgqzj3.svg" alt="Icone groupomania-left"></b-navbar-brand>
     <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
     <b-collapse id="nav-text-collapse" is-nav>
@@ -22,6 +22,7 @@
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
+  
 </div>
 </template>
 
@@ -47,6 +48,9 @@ export default {
 		userInStore(userData){
 			this.$store.commit('userStoreSet',userData);
 		},
+		allpostsInStore(allPostsData){
+			this.$store.commit('allPostsStoreSet',allPostsData);
+		},
 		async findOneUser () {
 			const requestOptions = {
 				method: "Get",
@@ -70,8 +74,8 @@ export default {
 			const response = await fetch(this.urlApi + `/posts`, requestOptions);
 			console.log(response);
 			this.allPostsData = await response.json();
-			this.allpostsStore = this.allPostsData.data;
-			console.log(this.allpostsStore.rows );
+			this.allpostsInStore(this.allPostsData.data.rows);
+		
 		}
 	}
  

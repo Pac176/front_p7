@@ -12,7 +12,7 @@
             <b-form-group style="font-weight:bold" id="input-group-4"   label="Mot de passe:" label-for="input-4" description="Au moins 8 caractères, 1 majuscule, 1chiffre et un caratere special" >
               <b-form-input style="font-style:italic" id="input-4" v-model="form.password" type="password" placeholder="Entrez votre mot de passe"   required ></b-form-input>
             </b-form-group>
-            <button type="submit"   class="btn btn-success btn-lg btn-block">Connexion</button>
+            <button type="submit"   class="btn btn-success btn-lg btn-block" to="/wall">Connexion</button>
             <p class="forgot-password text-right mt-2 mb-4">
             <router-link to="/motDePasseOublie">Mot de passe oublié ?</router-link>
             </p>

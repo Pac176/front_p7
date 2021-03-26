@@ -11,6 +11,7 @@ export default new Vuex.Store({
 		token: false,
 		userId: null,
 		userStore: [],
+		allPostsStore:[]
 	},
 	mutations: {
 		isConnectMutation(state) {
@@ -27,6 +28,9 @@ export default new Vuex.Store({
 		},
 		userStoreSet(state, userDataRequest) {
 			return state.userStore = userDataRequest;
+		},
+		allPostsStoreSet(state, allPostsDataRequest) {
+			return state.allPostsStore = allPostsDataRequest;
 		},
 	},
 	actions: {},

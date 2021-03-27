@@ -1,10 +1,14 @@
 <template>
-  <div class="wall">
-    <Nav></Nav>
+
+
+
+	
+  <b-col class="wall">
+   <Nav></Nav>
 	<b-alert  :show="dismissCountDown" dismissible variant="success"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
      Inscription reussie!</b-alert>
-	<!-- <b-card v-for="item in allPosts" :key="item.id">{{item.post_content}}</b-card> -->
-	<div>
+	<!-- <b-card v-for="item in allPostsStore" :key="item.id"></b-card>  -->
+	<div class="wallPosts">
   <b-card title="" sub-title="" v-for="item in allPosts" :key="item.id" class="post">
     <b-card-text>
      {{item.post_content}}
@@ -12,25 +16,32 @@
 <b-nav class="likeComment">
 	<div > 
 	<b-link><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="25">
-	<b-card-text class="jaime" >J'aime</b-card-text>
+	<b-card-text class="like" >J'aime</b-card-text>
 	</b-link>
 	</div>
 <div >
 	<b-link><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="25">
-	<b-card-text class="commenter"  >Commenter</b-card-text>
+	<b-card-text class="comment"  >Commenter</b-card-text>
 	</b-link>
 </div>
 <div>
 	<b-link v-if="item.user_id === $store.state.userId || $store.state.isAdmin" ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616755730/delete_sg8ndk.svg" alt="" height="25">
-	<b-card-text class="commenter"  >supprimer</b-card-text>
+	<b-card-text class="delete"  >supprimer</b-card-text>
 	</b-link>
 	</div>
 	
   </b-nav>
   </b-card>
-</div>
+</div> 
 	
-  </div>
+  </b-col>
+  
+ 
+  
+
+ 
+
+ 
 </template>
 
 <script>
@@ -85,7 +96,10 @@ export default {
 			const response = await fetch(this.urlApi + `/posts`, requestOptions);
 			console.log(response);
 			this.allPostsData = await response.json();
-			this.allpostsInStore(this.allPostsData.data.rows);
+			if(this.allPostsData.count !== 0){
+				return this.allpostsInStore(this.allPostsData.data.rows);
+			}
+		
 		
 		}
 	},
@@ -102,16 +116,25 @@ export default {
 
 
 <style lang="scss" scoped>
-
+.wall{
+	margin-top: 4rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
 .post {
-	margin-top:5rem
+	margin-top:1rem;
+	
+	
+	
+	
 }
 .likeComment {
 	display: flex;
 	justify-content: space-around;
 
 }
-.commenter, .jaime {
+.comment, .like, .delete {
 	text-decoration: none;
 	color: rgb(115, 20, 20);
 }

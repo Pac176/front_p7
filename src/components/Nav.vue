@@ -6,7 +6,7 @@
     <b-collapse id="nav-text-collapse" is-nav>
 <b-navbar-nav v-if="this.isConnect" id="connectMenu">
     <b-navbar-nav id="menuGauche">
-        <b-nav-item class="routerLink" to="/wall" @click.stop='findAllPosts()'>Fil d'actualité</b-nav-item>
+        <b-nav-item class="routerLink" to="/wall" >Fil d'actualité</b-nav-item>
         <b-nav-item class="routerLink" :to='{name:"MyAccount",params:{userId:`${this.userId}`}}' @click.stop='findOneUser()' >Mon Compte</b-nav-item>
         <b-nav-item v-if="this.isAdmin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
         <b-nav-item v-if="$route.name =='MyAccount'"  class="routerLink" :to='{name:"UpdateAccount"}'>Modifier mes infos</b-nav-item> 
@@ -34,12 +34,11 @@ export default {
 	data(){
 		return{
 			userData:{},
-			allPosts:{},
 			urlApi:'http://localhost:3000/api/groupomania',
 		};
 	},
 	computed:{
-		...mapState(['successSubscribe','token','isConnect','userId','isAdmin','userStore','allPostsStore'])
+		...mapState(['successSubscribe','token','isConnect','userId','isAdmin','userStore'])
 	},
 	methods:{
 		isConnectInStore(){
@@ -47,9 +46,6 @@ export default {
 		},
 		userInStore(userData){
 			this.$store.commit('userStoreSet',userData);
-		},
-		allpostsInStore(allPostsData){
-			this.$store.commit('allPostsStoreSet',allPostsData);
 		},
 		async findOneUser () {
 			const requestOptions = {
@@ -64,19 +60,7 @@ export default {
 			this.userInStore(this.userData.data) ;
 		
 		},
-		async findAllPosts() {
-			const requestOptions = {
-				method: "Get",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-			};
-			const response = await fetch(this.urlApi + `/posts`, requestOptions);
-			console.log(response);
-			this.allPostsData = await response.json();
-			this.allpostsInStore(this.allPostsData.data.rows);
 		
-		}
 	}
  
 };

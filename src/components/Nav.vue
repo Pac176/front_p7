@@ -38,14 +38,14 @@ export default {
 		};
 	},
 	computed:{
-		...mapState(['successSubscribe','token','isConnect','userId','isAdmin','userStore'])
+		...mapState(['successSubscribe','token','isConnect','userId','isAdmin','user'])
 	},
 	methods:{
 		isConnectInStore(){
 			this.$store.commit('ISCONNECT');
 		},
 		userInStore(userData){
-			this.$store.commit('userStoreSet',userData);
+			this.$store.commit('USER',userData);
 		},
 		async findOneUser () {
 			const requestOptions = {

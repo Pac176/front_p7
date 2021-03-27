@@ -92,13 +92,13 @@ export default {
 			this.dismissCountDown = this.dismissSecs;
 		},
 		successSubscrirtionShow(){
-			this.$store.commit('successSubscribeMutation');
+			this.$store.commit('SUCCESSSUBSCIBE');
 		}, 
 		tokenInStore(responseToken){
-			this.$store.commit('tokenSet', responseToken);
+			this.$store.commit('TOKEN', responseToken);
 		},
 		userIdInStore(responseUserId){
-			this.$store.commit('userIdSet', responseUserId);
+			this.$store.commit('USERID', responseUserId);
 		},
 		async onSubscription (event) {
 			event.preventDefault();

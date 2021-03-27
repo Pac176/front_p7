@@ -14,7 +14,7 @@ export default new Vuex.Store({
 		allPostsStore:[]
 	},
 	mutations: {
-		isConnectMutation(state) {
+		ISCONNECT(state) {
 			return (state.isConnect = !state.isConnect ? true : false);
 		},
 		successSubscribeMutation(state) {

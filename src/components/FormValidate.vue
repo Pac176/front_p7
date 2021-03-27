@@ -83,7 +83,7 @@ export default {
 	},
 	methods:{
 		isConnectInStore(){
-			this.$store.commit('isConnectMutation');
+			this.$store.commit('ISCONNECT');
 		},
 		countDownChanged(dismissCountDown) {
 			this.dismissCountDown = dismissCountDown;

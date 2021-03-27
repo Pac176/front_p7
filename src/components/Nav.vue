@@ -42,7 +42,7 @@ export default {
 	},
 	methods:{
 		isConnectInStore(){
-			this.$store.commit('isConnectMutation');
+			this.$store.commit('ISCONNECT');
 		},
 		userInStore(userData){
 			this.$store.commit('userStoreSet',userData);

@@ -47,7 +47,7 @@ export default {
 	},
 	methods:{
 		isConnectInStore(){
-			this.$store.commit('isConnectMutation');
+			this.$store.commit('ISCONNECT');
 		},
 		tokenInStore(responseToken){
 			this.$store.commit('tokenSet', responseToken);

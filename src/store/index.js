@@ -1,17 +1,19 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+	plugins: [createPersistedState()],
 	state: {
 		isConnect: false,
 		isAdmin: false,
 		successSubscribe: false,
 		token: false,
 		userId: null,
-		user: [],
-		allPosts:[]
+		user: null,
+		allPosts: [],
 	},
 	mutations: {
 		ISCONNECT(state) {
@@ -21,16 +23,16 @@ export default new Vuex.Store({
 			return (state.successSubscribe = !state.successSubscribe ? true : false);
 		},
 		TOKEN(state, tokenRequest) {
-			return state.token = tokenRequest;
+			return (state.token = tokenRequest);
 		},
 		USERID(state, userIdRequest) {
-			return state.userId = userIdRequest;
+			return (state.userId = userIdRequest);
 		},
 		USER(state, userDataRequest) {
-			return state.user = userDataRequest;
+			return (state.user = userDataRequest);
 		},
 		ALLPOSTS(state, allPostsDataRequest) {
-			return state.allPosts = allPostsDataRequest;
+			return (state.allPosts = allPostsDataRequest);
 		},
 	},
 	actions: {},

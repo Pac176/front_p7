@@ -1,13 +1,14 @@
 <template>
   <div class="myAccount">
      <Nav></Nav>
-      <h1>Mes informations</h1>
-      <div>{{this.$store.state.user.firstName}}</div>
-      <div>{{this.$store.state.user.lastName}}</div>
-      <div>{{this.$store.state.user.email}}</div>
-      <div>{{this.$store.state.user.nbPosts}}</div>
-      <div>{{this.$store.state.user.nbComments}}</div>
-      <div>{{this.$store.state.user.createdAt}}</div>
+    <h1>Mes informations</h1>
+
+    <div class="user">{{user.first_name}}</div>
+    <div class="user">{{user.last_name}}</div>
+    <div class="user">{{user.email}}</div>
+    <div class="user">{{user.nb_posts}}</div>
+    <div class="user">{{user.createdAt}}</div>
+    
   </div>
 </template>
 
@@ -36,3 +37,9 @@ export default {
 	}
 };
 </script>
+
+<style scoped lang='scss'>
+.user {
+	margin-top: 4rem
+}
+</style>

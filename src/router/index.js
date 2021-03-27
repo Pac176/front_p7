@@ -6,50 +6,48 @@ Vue.use(VueRouter);
 
 const routes = [
 	{
-		path: '/',
-		name: 'Home',
-		component: Home
+		path: "/",
+		name: "Home",
+		component: Home,
 	},
 	{
-		path: '/connect',
-		name: 'Connect',
+		path: "/connect",
+		name: "Connect",
 		// route level code-splitting
 		// this generates a separate chunk (about.[hash].js) for this route
 		// which is lazy-loaded when the route is visited.
-		component: () => import(/* webpackChunkName: "about" */ '../views/Connection.vue')
+		component: () =>
+			import(/* webpackChunkName: "about" */ "../views/Connection.vue"),
 	},
 	{
-		path: '/myAccount/user/:userId',
-		name: 'MyAccount',
+		path: "/myAccount/user/:userId",
+		name: "MyAccount",
 		// route level code-splitting
 		// this generates a separate chunk (about.[hash].js) for this route
 		// which is lazy-loaded when the route is visited.
-		component: () => import(/* webpackChunkName: "about" */ '../views/MyAccount.vue')
+		component: () =>
+			import(/* webpackChunkName: "about" */ "../views/MyAccount.vue"),
 	},
 	{
-		path: '/subscription',
-		name: 'Subscription',
+		path: "/subscription",
+		name: "Subscription",
 		// route level code-splitting
 		// this generates a separate chunk (about.[hash].js) for this route
 		// which is lazy-loaded when the route is visited.
-		component: () => import(/* webpackChunkName: "about" */ '../views/Subscription.vue')
+		component: () =>
+			import(/* webpackChunkName: "about" */ "../views/Subscription.vue"),
 	},
 	{
-		path: '/wall',
-		name: 'Wall',
+		path: "/wall",
+		name: "Wall",
+		
 		// route level code-splitting
 		// this generates a separate chunk (about.[hash].js) for this route
 		// which is lazy-loaded when the route is visited.
-		component: () => import(/* webpackChunkName: "about" */ '../views/wall.vue')
+		component: () =>
+			import(/* webpackChunkName: "about" */ "../views/wall.vue"),
 	},
-	{
-		path: '/updateAccount/user/:userId',
-		name: 'UpdateAccount',
-		// route level code-splitting
-		// this generates a separate chunk (about.[hash].js) for this route
-		// which is lazy-loaded when the route is visited.
-		component: () => import(/* webpackChunkName: "about" */ '../views/updateAccount.vue')
-	},
+	
 ];
 
 const router = new VueRouter({

@@ -45,6 +45,7 @@
 </template>
 
 <script>
+
 // @ is an alias to /src
 import Nav from '@/components/Nav.vue';
 import {mapState} from 'vuex';
@@ -96,10 +97,10 @@ export default {
 			const response = await fetch(this.urlApi + `/posts`, requestOptions);
 			console.log(response);
 			this.allPostsData = await response.json();
-			if(this.allPostsData.count !== 0){
+			if(this.allPostsData.count !== 0 && this.isConnect){
+				
 				return this.allpostsInStore(this.allPostsData.data.rows);
-			}
-		
+			} 
 		
 		}
 	},

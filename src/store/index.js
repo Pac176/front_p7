@@ -1,36 +1,38 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+	
 	state: {
 		isConnect: false,
 		isAdmin: false,
 		successSubscribe: false,
-		token: false,
+		token: null,
 		userId: null,
-		userStore: [],
-		allPostsStore:[]
+		user: null,
+		allPosts: [],
 	},
 	mutations: {
 		ISCONNECT(state) {
 			return (state.isConnect = !state.isConnect ? true : false);
 		},
-		successSubscribeMutation(state) {
+		SUCCESSSUBSCIBE(state) {
 			return (state.successSubscribe = !state.successSubscribe ? true : false);
 		},
-		tokenSet(state, tokenRequest) {
-			return state.token = tokenRequest;
+		TOKEN(state, tokenRequest) {
+			return (state.token = tokenRequest);
 		},
-		userIdSet(state, userIdRequest) {
-			return state.userId = userIdRequest;
+		USERID(state, userIdRequest) {
+			return (state.userId = userIdRequest);
 		},
-		userStoreSet(state, userDataRequest) {
-			return state.userStore = userDataRequest;
+		USER(state, userDataRequest) {
+			return (state.user = userDataRequest);
 		},
-		allPostsStoreSet(state, allPostsDataRequest) {
-			return state.allPostsStore = allPostsDataRequest;
+		ALLPOSTS(state, allPostsDataRequest) {
+			return (state.allPosts = allPostsDataRequest);
 		},
 	},
 	actions: {},

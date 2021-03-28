@@ -50,10 +50,10 @@ export default {
 			this.$store.commit('ISCONNECT');
 		},
 		tokenInStore(responseToken){
-			this.$store.commit('tokenSet', responseToken);
+			this.$store.commit('TOKEN', responseToken);
 		},
 		userIdInStore(responseUserId){
-			this.$store.commit('userIdSet', responseUserId);
+			this.$store.commit('USERID', responseUserId);
 		},
 		countDownChanged(dismissCountDown) {
 			this.dismissCountDown = dismissCountDown;

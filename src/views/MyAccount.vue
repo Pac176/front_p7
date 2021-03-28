@@ -1,13 +1,14 @@
 <template>
   <div class="myAccount">
      <Nav></Nav>
-      <h1>Mes informations</h1>
-      <div>{{this.$store.state.userStore.firstName}}</div>
-      <div>{{this.$store.state.userStore.lastName}}</div>
-      <div>{{this.$store.state.userStore.email}}</div>
-      <div>{{this.$store.state.userStore.nbPosts}}</div>
-      <div>{{this.$store.state.userStore.nbComments}}</div>
-      <div>{{this.$store.state.userStore.createdAt}}</div>
+    <h1>Mes informations</h1>
+
+    <div class="user">{{user.first_name}}</div>
+    <div class="user">{{user.last_name}}</div>
+    <div class="user">{{user.email}}</div>
+    <div class="user">{{user.nb_posts}}</div>
+    <div class="user">{{user.createdAt}}</div>
+    
   </div>
 </template>
 
@@ -29,10 +30,16 @@ export default {
 		Nav
 	},
 	computed:{
-		...mapState(['successSubscribe','token','isConnect','userId','isAdmin','userStore'])
+		...mapState(['successSubscribe','token','isConnect','userId','isAdmin','user'])
 	},
 	methods:{
 	
 	}
 };
 </script>
+
+<style scoped lang='scss'>
+.user {
+	margin-top: 4rem
+}
+</style>

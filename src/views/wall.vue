@@ -7,7 +7,7 @@
    <Nav></Nav>
 	<b-alert  :show="dismissCountDown" dismissible variant="success"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
      Inscription reussie!</b-alert>
-	<!-- <b-card v-for="item in allPostsStore" :key="item.id"></b-card>  -->
+	<!-- <b-card v-for="item in allPosts" :key="item.id"></b-card>  -->
 	<div class="wallPosts">
   <b-card title="" sub-title="" v-for="item in allPosts" :key="item.id" class="post">
     <b-card-text>
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+
 // @ is an alias to /src
 import Nav from '@/components/Nav.vue';
 import {mapState} from 'vuex';
@@ -62,7 +63,7 @@ export default {
 	},
 	computed:{
 		allPosts() {
-			return this.$store.state.allPostsStore;
+			return this.$store.state.allPosts;
 		},
 		...mapState([
 			'successSubscribe',
@@ -70,8 +71,8 @@ export default {
 			'isConnect',
 			'userId',
 			'isAdmin',
-			'userStore',
-			'allPostsStore']),
+			'user',
+			'allPosts']),
 	},
 	methods:{
 		countDownChanged(dismissCountDown) {
@@ -81,10 +82,10 @@ export default {
 			this.dismissCountDown = this.dismissSecs;
 		},
 		successSubscrirtionShow(){
-			this.$store.commit('successSubscribeMutation');
+			this.$store.commit('SUCCESSSUBSCIBE');
 		},
 		allpostsInStore(allPostsData){
-			this.$store.commit('allPostsStoreSet',allPostsData);
+			this.$store.commit('ALLPOSTS',allPostsData);
 		},
 		async findAllPosts() {
 			const requestOptions = {
@@ -96,10 +97,10 @@ export default {
 			const response = await fetch(this.urlApi + `/posts`, requestOptions);
 			console.log(response);
 			this.allPostsData = await response.json();
-			if(this.allPostsData.count !== 0){
+			if(this.allPostsData.count !== 0 && this.isConnect){
+				
 				return this.allpostsInStore(this.allPostsData.data.rows);
-			}
-		
+			} 
 		
 		}
 	},

@@ -1,16 +1,16 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import createPersistedState from "vuex-persistedstate";
+
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-	plugins: [createPersistedState()],
+	
 	state: {
 		isConnect: false,
 		isAdmin: false,
 		successSubscribe: false,
-		token: false,
+		token: null,
 		userId: null,
 		user: null,
 		allPosts: [],

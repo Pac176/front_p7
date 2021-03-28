@@ -17,13 +17,15 @@ export default new Vuex.Store({
 	},
 	mutations: {
 		ISCONNECT(state) {
-			return (state.isConnect = !state.isConnect ? true : false);
+			state.isConnect = !state.isConnect ? true : false;
+			return localStorage.setItem("isConnect", state.isConnect);
 		},
 		SUCCESSSUBSCIBE(state) {
 			return (state.successSubscribe = !state.successSubscribe ? true : false);
 		},
 		TOKEN(state, tokenRequest) {
-			return (state.token = tokenRequest);
+			state.token = tokenRequest;
+			return localStorage.setItem('token', state.token);
 		},
 		USERID(state, userIdRequest) {
 			return (state.userId = userIdRequest);
@@ -32,7 +34,8 @@ export default new Vuex.Store({
 			return (state.user = userDataRequest);
 		},
 		ALLPOSTS(state, allPostsDataRequest) {
-			return (state.allPosts = allPostsDataRequest);
+			state.allPosts = allPostsDataRequest;
+			return localStorage.setItem("allPosts", state.allPosts);
 		},
 	},
 	actions: {},

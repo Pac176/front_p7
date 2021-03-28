@@ -52,7 +52,7 @@ export default {
 				method: "Get",
 				headers: { 
 					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
+					"Authorization": `Bearer ${localStorage.token}`},
 			};
 			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
 			console.log(response);

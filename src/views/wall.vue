@@ -92,7 +92,7 @@ export default {
 				method: "Get",
 				headers: { 
 					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
+					"Authorization": `Bearer ${localStorage.token}`},
 			};
 			const response = await fetch(this.urlApi + `/posts`, requestOptions);
 			console.log(response);

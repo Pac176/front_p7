@@ -4,15 +4,15 @@
     <b-navbar-brand to="/"><img id="logoHeader" src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616663944/icon-left-font-monochrome-white_pgqzj3.svg" alt="Icone groupomania-left"></b-navbar-brand>
     <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
     <b-collapse id="nav-text-collapse" is-nav>
-<b-navbar-nav v-if="this.isConnect" id="connectMenu">
+<b-navbar-nav v-if="isConnect" id="connectMenu">
     <b-navbar-nav id="menuGauche">
         <b-nav-item class="routerLink" to="/wall" >Fil d'actualité</b-nav-item>
-        <b-nav-item class="routerLink" :to='{name:"MyAccount",params:{userId:`${this.userId}`}}' @click.stop='findOneUser()' >Mon Compte</b-nav-item>
-        <b-nav-item v-if="this.isAdmin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
+        <b-nav-item class="routerLink" :to='{name:"MyAccount",params:{userId:`${this.userId}`}}' @click.stop='findOneUser' >Mon Compte</b-nav-item>
+        <b-nav-item v-if="isAdmin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
         
     </b-navbar-nav>
      <b-navbar-nav id="menuDroit">   
-        <b-nav-item > <b-button variant="danger"  @click.stop='isConnectInStore()'  to="/" >Deconnexion</b-button></b-nav-item>
+        <b-nav-item > <b-button variant="danger"  @click.stop='isConnectInStore'  to="/" >Deconnexion</b-button></b-nav-item>
     </b-navbar-nav>
 </b-navbar-nav>
 

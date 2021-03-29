@@ -2,7 +2,7 @@
       <div >
 		<b-form v-if="!isConnect" class="vue-template">
 			<b-form class="form"  @submit="onSubscription">
-			<b-alert :show="dismissCountDown" dismissible variant="danger"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
+			<b-alert :show="dismissCountDown" dismissible variant=""   @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
      {{this.dataResponse.message}}</b-alert>
 			<b-form-group style="font-weight:bold" id="input-group-1"  label1="Votre Nom:" label-for="input-1" >
               <b-form-input style="font-style:italic" id="input-1" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' placeholder="Entrez votre nom (uniquement des lettres)"  ></b-form-input>
@@ -27,7 +27,7 @@
 		</b-form>
 		<b-form v-else class="vue-template">
 				<b-form class="form"  @submit="onUpdateUser">
-			<b-alert :show="dismissCountDown" dismissible variant="danger"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
+			<b-alert :show="dismissCountDown" dismissible  :variant='updateUser ? "success":"danger"'  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged" id='alert'>
      {{this.dataResponse.message}}</b-alert>
            <b-form-group style="font-weight:bold" id="input-group-1"  label="Moifier votre Nom:"  Nom: label-for="input-1" >
               <b-form-input  style="font-style:italic" id="input-1" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}'  :placeHolder="$store.state.user.first_name"  ></b-form-input>
@@ -63,7 +63,8 @@ export default {
 	name: 'Subscription',
 	data(){
 		return{
-			dismissSecs: 5,
+			updateUser:true,
+			dismissSecs: 30,
 			dismissCountDown: 0,
 			dataResponse:{},
 			badValidation:false,
@@ -105,7 +106,7 @@ export default {
 	
 	},
 	computed:{
-		...mapState(['successSubscribe','token','isConnect','userId','user'])
+		...mapState(['successSubscribe','sucessUpdateUser','token','isConnect','userId','user'])
 	},
 	methods:{
 
@@ -117,10 +118,11 @@ export default {
 		},
 		showAlert() {
 			this.dismissCountDown = this.dismissSecs;
+		
 		},
-		successSubscrirtionShow(){
+		successSubscriptionShow(){
 			this.$store.commit('SUCCESSSUBSCIBE');
-		}, 
+		},
 		tokenInStore(responseToken){
 			this.$store.commit('TOKEN', responseToken);
 		},
@@ -163,7 +165,7 @@ export default {
 				this.dataResponse = await response.json();
 				if(response.ok === true ){
 					this.$router.push('/Wall');
-					this.successSubscrirtionShow();
+					this.successSubscriptionShow();
 					const ConnectRequestOptions = {
 						method: "POST",
 						headers: { 
@@ -208,8 +210,10 @@ export default {
 				this.dataResponse = await response.json();
 				if(response.ok === true ){
 					this.findOneUser();
-					//this.successSubscrirtionShow();
+					this.updateUser = true;
+					this.showAlert();
 				} else {
+					this.updateUser = false;
 					this.showAlert();
 				} 
 			} catch (error) {

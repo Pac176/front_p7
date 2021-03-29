@@ -1,13 +1,9 @@
 <template>
   <div class="myAccount">
-     <Nav></Nav>
-    <h1>Mes informations</h1>
-
-    <div class="user">{{user.first_name}}</div>
-    <div class="user">{{user.last_name}}</div>
-    <div class="user">{{user.email}}</div>
-    <div class="user">{{user.nb_posts}}</div>
-    <div class="user">{{user.createdAt}}</div>
+    <Nav></Nav><br><br><br>
+	<h1>Mettre a Jour mes informations</h1>
+	<FormValidate></FormValidate>
+	
     
   </div>
 </template>
@@ -16,6 +12,7 @@
 // @ is an alias to /src
 
 import Nav from '@/components/Nav.vue';
+import FormValidate from '@/components/FormValidate.vue';
 import {mapState} from 'vuex';
 
 export default {
@@ -28,7 +25,8 @@ export default {
 		};
 	},
 	components: {
-		Nav
+		Nav,
+		FormValidate
 	},
 	computed:{
 		...mapState(['successSubscribe','token','isConnect','userId','isAdmin','user'])
@@ -42,7 +40,7 @@ export default {
 				method: "Get",
 				headers: { 
 					"Content-Type": "application/json",
-					"Authorization": `Bearer ${localStorage.token}`},
+					"Authorization": `Bearer ${this.token}`},
 			};
 			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
 			console.log(response);

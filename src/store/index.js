@@ -1,11 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-	
 	state: {
 		isConnect: false,
 		isAdmin: false,
@@ -17,15 +16,13 @@ export default new Vuex.Store({
 	},
 	mutations: {
 		ISCONNECT(state) {
-			state.isConnect = !state.isConnect ? true : false;
-			return localStorage.setItem("isConnect", state.isConnect);
+			return state.isConnect = !state.isConnect ? true : false;
 		},
 		SUCCESSSUBSCIBE(state) {
 			return (state.successSubscribe = !state.successSubscribe ? true : false);
 		},
 		TOKEN(state, tokenRequest) {
 			state.token = tokenRequest;
-			return localStorage.setItem('token', state.token);
 		},
 		USERID(state, userIdRequest) {
 			return (state.userId = userIdRequest);
@@ -34,10 +31,10 @@ export default new Vuex.Store({
 			return (state.user = userDataRequest);
 		},
 		ALLPOSTS(state, allPostsDataRequest) {
-			state.allPosts = allPostsDataRequest;
-			return localStorage.setItem("allPosts", state.allPosts);
+			return state.allPosts = allPostsDataRequest;
 		},
 	},
 	actions: {},
 	modules: {},
+	plugins: [createPersistedState()],
 });

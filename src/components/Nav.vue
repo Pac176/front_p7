@@ -43,6 +43,7 @@ export default {
 	methods:{
 		isConnectInStore(){
 			this.$store.commit('ISCONNECT');
+			
 		},
 	}
  

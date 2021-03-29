@@ -92,13 +92,13 @@ export default {
 				method: "Get",
 				headers: { 
 					"Content-Type": "application/json",
-					"Authorization": `Bearer ${localStorage.token}`},
+					"Authorization": `Bearer ${this.token}`},
 			};
 			const response = await fetch(this.urlApi + `/posts`, requestOptions);
 			console.log(response);
 			this.allPostsData = await response.json();
+			console.log(this.$store.state.user);
 			if(this.allPostsData.count !== 0 && this.isConnect){
-				
 				return this.allpostsInStore(this.allPostsData.data.rows);
 			} 
 		

@@ -64,7 +64,7 @@ export default {
 	data(){
 		return{
 			updateUser:true,
-			dismissSecs: 30,
+			dismissSecs: 5,
 			dismissCountDown: 0,
 			dataResponse:{},
 			badValidation:false,
@@ -212,6 +212,7 @@ export default {
 					this.findOneUser();
 					this.updateUser = true;
 					this.showAlert();
+					
 				} else {
 					this.updateUser = false;
 					this.showAlert();

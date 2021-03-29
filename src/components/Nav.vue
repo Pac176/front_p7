@@ -7,7 +7,7 @@
 <b-navbar-nav v-if="isConnect" id="connectMenu">
     <b-navbar-nav id="menuGauche">
         <b-nav-item class="routerLink" to="/wall" >Fil d'actualité</b-nav-item>
-        <b-nav-item class="routerLink" :to='{name:"MyAccount",params:{userId:`${this.userId}`}}' @click.stop='findOneUser' >Mon Compte</b-nav-item>
+        <b-nav-item class="routerLink" :to='{name:"MyAccount",params:{userId:`${this.userId}`}}' >Mon Compte</b-nav-item>
         <b-nav-item v-if="isAdmin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
         
     </b-navbar-nav>
@@ -44,24 +44,6 @@ export default {
 		isConnectInStore(){
 			this.$store.commit('ISCONNECT');
 		},
-		userInStore(userData){
-			this.$store.commit('USER',userData);
-		},
-		async findOneUser () {
-			const requestOptions = {
-				method: "Get",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${localStorage.token}`},
-			};
-			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
-			console.log(response);
-			this.userData = await response.json();
-			this.userInStore(this.userData.data) ;
-			console.log(this.user);
-		
-		},
-		
 	}
  
 };

@@ -23,7 +23,8 @@ export default {
 	name: 'MyAccount',
 	data(){
 		return{
-  
+			userData:{},
+			urlApi:'http://localhost:3000/api/groupomania',
 		};
 	},
 	components: {
@@ -33,7 +34,28 @@ export default {
 		...mapState(['successSubscribe','token','isConnect','userId','isAdmin','user'])
 	},
 	methods:{
+		userInStore(userData){
+			this.$store.commit('USER',userData);
+		},
+		async findOneUser () {
+			const requestOptions = {
+				method: "Get",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${localStorage.token}`},
+			};
+			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
+			console.log(response);
+			this.userData = await response.json();
+			this.userInStore(this.userData.data) ;
+			console.log(this.user);
+		
+		},
+	},
+	mounted(){
+		this.findOneUser();
 	
+		
 	}
 };
 </script>

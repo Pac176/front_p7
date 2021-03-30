@@ -1,24 +1,22 @@
 <template>
-<b-form v-if="!isConnect" class="vue-template">
+<b-form  class="vue-template">
 	<b-form class="form"  @submit="onSubscription">
 			<b-alert :show="dismissCountDown" dismissible :variant='successSubscribe ? "success":"danger"'   @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
     {{this.apiResponse.message}}</b-alert>
-			<b-form-group style="font-weight:bold" id="input-group-1"   label="Votre nom:" label-for="input-2" >
-              <b-form-input style="font-style:italic" id="input-1" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' placeholder="Entrez votre nom (uniquement des lettres)"  ></b-form-input>
+			
+            
+           
+            <b-form-group style="font-weight:bold" id="input-group-1"   label="Actuel mot de passe:" label-for="input-1" description="Au moins 8 caractères, 1 majuscule, 1 chiffre et un caratere special" >
+              <b-form-input style="font-style:italic" id="input-1" v-model.trim="$v.oldPassword.$model" :class='{"is-invalid":$v.oldPassword.$error,"is-valid":!$v.oldPassword.$invalid}' type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
             </b-form-group>
-            <b-form-group style="font-weight:bold" id="input-group-2"  label="Votre prénom:" label-for="input-2" >
-              <b-form-input style="font-style:italic" id="input-2" v-model.trim="$v.last_name.$model" :class='{"is-invalid":$v.last_name.$error,"is-valid":!$v.last_name.$invalid}' placeholder="Entrez votre prénom (uniquement des lettres)"  ></b-form-input>
+           <b-form-group style="font-weight:bold" id="input-group-2"   label="Actuel mot de passe:" label-for="input-2" description="Au moins 8 caractères, 1 majuscule, 1 chiffre et un caratere special" >
+              <b-form-input style="font-style:italic" id="input-2" v-model.trim="$v.newPassword1.$model" :class='{"is-invalid":$v.newPassword1.$error,"is-valid":!$v.newPassword1.$invalid}' type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
             </b-form-group>
-            <b-form-group style="font-weight:bold" id="input-group-3"  label="Votre pseudo:" label-for="input-3" >
-              <b-form-input style="font-style:italic" id="input-3" v-model.trim="$v.pseudo.$model" :class='{"is-invalid":$v.pseudo.$error,"is-valid":!$v.pseudo.$invalid}' placeholder="Entrez votre pseudo (uniquement des lettres)" ></b-form-input>
-            </b-form-group>
-            <b-form-group style="font-weight:bold" id="input-group-4"   label="Mot de passe:" label-for="input-4" description="Au moins 8 caractères, 1 majuscule, 1 chiffre et un caratere special" >
-              <b-form-input style="font-style:italic" id="input-4" v-model.trim="$v.password.$model" :class='{"is-invalid":$v.password.$error,"is-valid":!$v.password.$invalid}' type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
-            </b-form-group>
-            <b-form-group style="font-weight:bold" id="input-group-5"  label="Adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
-              <b-form-input style="font-style:italic" id="input-5" v-model.trim="$v.email.$model" :class='{"is-invalid":$v.email.$error,"is-valid":!$v.email.$invalid}' type="email" placeholder="Entrez votre email" ></b-form-input>
-            </b-form-group>
-            <button  type="submit"   class="btn btn-success btn-lg btn-block">Inscription</button>
+            <b-form-group style="font-weight:bold" id="input-group-1"   label="Actuel mot de passe:" label-for="input-3" description="Au moins 8 caractères, 1 majuscule, 1 chiffre et un caratere special" >
+              <b-form-input style="font-style:italic" id="input-3" v-model.trim="$v.newPassword2.$model" :class='{"is-invalid":$v.newPassword2.$error,"is-valid":!$v.newPassword2.$invalid}' type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
+            </b-form-group> 
+          
+            <button  type="submit"   class="btn btn-success btn-lg btn-block">Changer de mot de passe</button>
             
             <p class="forgot-password text-right mt-2 mb-4">
             </p>
@@ -29,8 +27,8 @@
 </template>
 <script>
 // @ is an alias to /src
-import { required,  helpers, minLength, maxLength, alphaNum } from 'vuelidate/lib/validators';
-const emailRegex = helpers.regex('emailRegex', /^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,6}$/);
+import { required,  helpers } from 'vuelidate/lib/validators';
+//const emailRegex = helpers.regex('emailRegex', /^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,6}$/);
 const pwdRegex = helpers.regex('pwdRegex', /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/);
 import {mapState} from 'vuex';
 export default {
@@ -43,41 +41,26 @@ export default {
 			apiResponse:{},
 			updateResponse:{},
 			badValidation:false,
-			first_name: this.$store.state.user.first_name, 
-			last_name:this.$store.state.user.last_name, 
-			pseudo: this.$store.state.user.pseudo,
-			password:null,
+			oldPassword:null,
+			newPassword1:null,
+			newPassword:null,
 			email: this.$store.state.user.email, 
 			urlApi:'http://localhost:3000/api/groupomania',
 		};
 	},
 	validations:{
-		first_name:{
-			required,
-			minLength: minLength(2),
-			maxLength: maxLength(50),
-			alphaNum
-
-		},
-		last_name:{
-			required,
-			minLength: minLength(2),
-			maxLength: maxLength(50),
-			alphaNum
-		},
-		pseudo:{
-			minLength: minLength(2),
-			maxLength: maxLength(50),
-			alphaNum
-		}, 
-		email:{
-			required,
-			emailRegex
-		},
-		password:{
+		oldPassword:{
 			required,
 			pwdRegex
-		}
+		},
+		newPassword1:{
+			required,
+			pwdRegex
+		},
+		newPassword2:{
+			required,
+			pwdRegex
+		},
 	
 	},
 	computed:{

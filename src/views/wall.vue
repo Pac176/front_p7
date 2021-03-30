@@ -11,6 +11,20 @@
 		<b-alert  :show="dismissCountDown" dismissible variant="success"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
      Inscription reussie!</b-alert>
 	<h1>Fil d'actualité</h1>
+
+
+   
+    
+  
+   
+      <b-form-textarea
+        id="textarea-auto-height"
+        :placeholder="user.first_name"
+        rows="3"
+        max-rows="8"
+      ></b-form-textarea>
+   
+ 
   <b-card title="" sub-title="" v-for="item in allPosts" :key="item.id" class="post">
     <b-card-text>
      {{item.post_content}}
@@ -55,6 +69,11 @@ export default {
 	name: 'wall',
 	data(){
 		return{
+			first_name:this.$store.state.user.first_name,
+			last_name:this.$store.state.user.last_name,
+			pseudo: this.$store.state.user.pseudo,
+			password:null,
+			email:this.$store.state.user.email,
 			dismissSecs: 5,
 			dismissCountDown: 0,
 			urlApi:'http://localhost:3000/api/groupomania',

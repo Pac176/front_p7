@@ -2,25 +2,33 @@
   <div class="subscription">
 	<Nav></Nav><br><br><br>
 	<h1>Entrez vos informations:</h1>
-	<FormValidate></FormValidate>
+	<FormValidateUser></FormValidateUser>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import Nav from '@/components/Nav.vue';
-import FormValidate from '@/components/FormValidate.vue';
+import FormValidateUser from '@/components/FormValidate.vue';
+import {mapState} from 'vuex';
 
 export default {
 	name: 'Subscription',
 	data(){
 		return{
-			
+			first_name:null,
+			last_name:null,
+			pseudo:null,
+			password:null,
+			email:null,	
 		};
+	},
+	computed:{
+		...mapState(['successSubscribe','token','isConnect','userId','isAdmin','user'])
 	},
 	components: {
 		Nav,
-		FormValidate
+		FormValidateUser
 	},
 	methods:{
 		

@@ -29,6 +29,7 @@ export default {
 	name: 'Connect',
 	data(){
 		return{
+			apiResponse:{},
 			dismissSecs: 5,
 			dismissCountDown: 0,
 			dataResponse:{},
@@ -54,12 +55,15 @@ export default {
 		},
 		userIdInStore(responseUserId){
 			this.$store.commit('USERID', responseUserId);
-		},
+		}, 
 		countDownChanged(dismissCountDown) {
 			this.dismissCountDown = dismissCountDown;
 		},
 		showAlert() {
 			this.dismissCountDown = this.dismissSecs;
+		},
+		userInStore(userData){
+			this.$store.commit('USER',userData);
 		},
 		async onConnect (event) {
 			try {
@@ -78,6 +82,7 @@ export default {
 					this.isConnectInStore();
 					this.tokenInStore(this.dataResponse.token);
 					this.userIdInStore(this.dataResponse.userId);
+					this.userInStore(this.dataResponse);
 					this.$router.push('wall');
 					
 				}else{

@@ -114,7 +114,9 @@ export default {
 }
 
 }
-
+.connect{
+	margin-top:5rem
+}
 .vue-template{
 	display: flex;
 	margin:0;
@@ -122,4 +124,5 @@ export default {
 	justify-content: center;
 	padding-top: 4rem;
   }
+
 </style>

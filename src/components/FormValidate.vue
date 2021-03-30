@@ -2,9 +2,9 @@
       <div >
 		<b-form v-if="!isConnect" class="vue-template">
 			<b-form class="form"  @submit="onSubscription">
-			<b-alert :show="dismissCountDown" dismissible variant=""   @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
+			<b-alert :show="dismissCountDown" dismissible :variant='successSubscribe ? "success":"danger"'   @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
      {{this.dataResponse.message}}</b-alert>
-			<b-form-group style="font-weight:bold" id="input-group-1"  label1="Votre Nom:" label-for="input-1" >
+			<b-form-group style="font-weight:bold" id="input-group-1"   label="Votre nom:" label-for="input-2" >
               <b-form-input style="font-style:italic" id="input-1" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' placeholder="Entrez votre nom (uniquement des lettres)"  ></b-form-input>
             </b-form-group>
             <b-form-group style="font-weight:bold" id="input-group-2"  label="Votre prénom:" label-for="input-2" >
@@ -231,7 +231,7 @@ export default {
 
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 
 @media screen and (max-width:500px) {
 	.form{
@@ -251,11 +251,10 @@ export default {
 
 .vue-template{
 	display: flex;
-	
 	margin:0;
 	text-align: left;
 	justify-content: center;
-	padding-top: 4rem;
+	padding-top: 2rem;
   }
 
 

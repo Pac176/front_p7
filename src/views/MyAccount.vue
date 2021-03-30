@@ -2,7 +2,7 @@
   <div class="myAccount">
     <Nav></Nav><br><br><br>
 	<h1>Mettre a Jour mes informations</h1>
-	<FormValidate></FormValidate>
+	<FormValidate ></FormValidate>
 	
     
   </div>
@@ -58,8 +58,9 @@ export default {
 };
 </script>
 
-<style scoped lang='scss'>
-.user {
-	margin-top: 4rem
+<style lang='scss'>
+.myAccount{
+	margin-top:2rem;
 }
+
 </style>

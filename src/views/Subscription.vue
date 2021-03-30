@@ -1,6 +1,7 @@
 <template>
   <div class="subscription">
-	<Nav></Nav>
+	<Nav></Nav><br><br><br>
+	<h1>Entrez vos informations:</h1>
 	<FormValidate></FormValidate>
   </div>
 </template>
@@ -31,8 +32,10 @@ export default {
 </script>
 
 
-<style lang="scss" >
-
+<style lang="scss" scoped >
+.subscription{
+	margin-top:2rem
+}
 
 </style>
 

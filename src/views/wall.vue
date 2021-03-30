@@ -5,10 +5,12 @@
 	
   <b-col class="wall">
    <Nav></Nav>
-	<b-alert  :show="dismissCountDown" dismissible variant="success"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
-     Inscription reussie!</b-alert>
+	
 	<!-- <b-card v-for="item in allPosts" :key="item.id"></b-card>  -->
 	<div class="wallPosts">
+		<b-alert  :show="dismissCountDown" dismissible variant="success"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
+     Inscription reussie!</b-alert>
+	<h1>Fil d'actualité</h1>
   <b-card title="" sub-title="" v-for="item in allPosts" :key="item.id" class="post">
     <b-card-text>
      {{item.post_content}}
@@ -117,8 +119,9 @@ export default {
 
 
 <style lang="scss" scoped>
+
 .wall{
-	margin-top: 4rem;
+	margin-top: 5rem;
 	display: flex;
 	flex-direction: row;
 	justify-content: center;

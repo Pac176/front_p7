@@ -1,10 +1,11 @@
 <template>
   <div class="myAccount">
-    <Nav></Nav><br><br><br>
+	<Nav></Nav><br><br><br>
 	<h1>Mettre a Jour mes informations</h1>
-	<FormUpdateUser></FormUpdateUser>
-	<PwdUpdate></PwdUpdate>
-
+	<b-row>
+		<b-col  class="formUpdateUser" md="6"><FormUpdateUser></FormUpdateUser></b-col> 
+		<b-col  class="formPwdUpdateUser" md="6"><PwdUpdate></PwdUpdate></b-col> 
+	</b-row>
 	
     
   </div>
@@ -52,5 +53,8 @@ export default {
 .myAccount{
 	margin-top:2rem
 }
-
+.formUpdateUser, .formPwdUpdateUser {
+	display: flex;
+    justify-content: center;
+}
 </style>

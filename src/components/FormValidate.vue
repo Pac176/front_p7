@@ -1,5 +1,5 @@
 <template>
-<b-form v-if="!isConnect" class="vue-template">
+<!-- <b-form v-if="!isConnect" class="vue-template"> -->
 	<b-form class="form"  @submit="onSubscription">
 			<b-alert :show="dismissCountDown" dismissible :variant='successSubscribe ? "success":"danger"'   @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
     {{this.apiResponse.message}}</b-alert>
@@ -23,7 +23,7 @@
             <p class="forgot-password text-right mt-2 mb-4">
             </p>
        </b-form>
-	</b-form>	   
+<!-- 	</b-form>	 -->   
    
 
 </template>

@@ -1,9 +1,10 @@
 <template>
-    <b-form  class="vue-template">
-				<b-form class="form"  @submit="onUpdateUser">
-			<b-alert :show="dismissCountDown" dismissible  :variant='updateUser ? "success":"danger"'  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged" id='alert'>
-     {{this.updateResponse.message}}</b-alert>
-           <b-form-group style="font-weight:bold" id="input-group-1"  label="Moifier votre Nom:"  Nom: label-for="input-1" >
+  <!--   <b-form  class="vue-template"> -->
+				<b-form class="formUpdate"  @submit="onUpdateUser">
+					
+			<b-link  v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour maintenir le message'" :show="dismissCountDown" dismissible  :variant='updateUser ? "success":"danger"'  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged" id='alert'>
+    {{this.updateResponse.message}}</b-alert></b-link>
+           <b-form-group style="font-weight:bold" id="input-group-1"  label="Modifier votre Nom:"  Nom: label-for="input-1" >
               <b-form-input  style="font-style:italic" id="input-1" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}'  :placeHolder="$store.state.user.first_name"  ></b-form-input>
             </b-form-group>
            <b-form-group style="font-weight:bold" id="input-group-2"  label="Modifier votre prénom:" label-for="input-2" >
@@ -18,11 +19,11 @@
             <b-form-group style="font-weight:bold" id="input-group-5"  label="Modifier votre adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
               <b-form-input style="font-style:italic" id="input-5"  type="email" v-model.trim="$v.email.$model" :class='{"is-invalid":$v.email.$error,"is-valid":!$v.email.$invalid}' :placeHolder="user.email"  ></b-form-input>
             </b-form-group> 
-            <button  type="submit"   class="btn btn-success btn-lg btn-block">Modifier mes donnees</button>
+            <button   type="submit"   class="btn btn-success btn-lg btn-block">Modifier mes donnees</button>
             <p class="forgot-password text-right mt-2 mb-4">
             </p>
        </b-form>
-		</b-form> 
+		<!-- </b-form>  -->
 </template>
 
 <script>
@@ -89,6 +90,12 @@ export default {
 		...mapState(['successSubscribe','token','isConnect','userId','isAdmin','user'])
 	},
 	methods:{
+		alertHover(){
+			this.dismissCountDown = true;
+		},
+		alertHoverOut(){
+			this.dismissCountDown = 1;
+		},
 		userInStore(userData){
 			this.$store.commit('USER',userData);
 		},
@@ -96,7 +103,6 @@ export default {
 			this.dismissCountDown = dismissCountDown;
 		},
 		showAlert(apiResponse) {
-			console.log(apiResponse);
 			this.apiResponse = apiResponse;
 			this.dismissCountDown = this.dismissSecs;
 		
@@ -108,7 +114,6 @@ export default {
 					"Content-Type": "application/json",
 					"Authorization": `Bearer ${this.token}`},
 			};
-			console.log(this.userId);
 			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
 			this.userData = await response.json();
 			this.userInStore(this.userData.data);
@@ -156,25 +161,39 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 @media screen and (max-width:500px) {
-	.form{
+	.formUpdate{
 	display:flex;
 	flex-direction: column;
-	width:95%
-    }
-}
-@media screen and (min-width:500px) {
-	.form{
-	width:50%
-    }
-}
-.vue-template{
+	width:95%;
 	display: flex;
 	margin:0;
 	text-align: left;
 	justify-content: center;
 	padding-top: 2rem;
-  }
+	color: red;
+    }
+}
+@media screen and (min-width:500px) {
+	.formUpdate{
+	width:95%;
+	text-align: left;
+	justify-content: center;
+	padding-top: 2rem;
+	color: rgb(50, 59, 100);
+    }
+}
+.btn-outline{
+	width:100%;
+	height: 100%;
+}
+/* .vue-template{
+	display: flex;
+	margin:0;
+	text-align: left;
+	justify-content: center;
+	padding-top: 2rem;
+  } */
 </style>

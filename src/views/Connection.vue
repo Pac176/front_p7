@@ -2,7 +2,7 @@
   <div class="connect">
    <Nav></Nav>
 	<div class="vue-template">
-        <b-form class="form" @submit="onConnect">
+        <b-form class="formConnect" @submit="onConnect">
 			<b-alert :show="dismissCountDown" dismissible variant="danger"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
      {{this.dataResponse.error}}
     </b-alert>
@@ -104,16 +104,16 @@ export default {
 </script>
 
 <style lang="scss" >
-@media screen and (max-width:500px) {
-	.form{
+@media screen and (max-width:700px) {
+	.formConnect{
 	display:flex;
 	flex-direction: column;
 	width:95%
 
 }
 }
-@media screen and (min-width:500px) {
-	.form{
+@media screen and (min-width:700px) {
+	.formConnect{
 	width:50%
 
 }

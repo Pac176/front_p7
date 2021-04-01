@@ -1,6 +1,5 @@
 <template>
-<!-- <b-form v-if="!isConnect" class="vue-template"> -->
-	<b-form class="form"  @submit="onSubscription">
+	<b-form class="formSubscribe"  @submit="onSubscription">
 			<b-alert :show="dismissCountDown" dismissible :variant='successSubscribe ? "success":"danger"'   @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
     {{this.apiResponse.message}}</b-alert>
 			<b-form-group style="font-weight:bold" id="input-group-1"   label="Votre nom:" label-for="input-2" >
@@ -19,13 +18,9 @@
               <b-form-input style="font-style:italic" id="input-5" v-model.trim="$v.email.$model" :class='{"is-invalid":$v.email.$error,"is-valid":!$v.email.$invalid}' type="email" placeholder="Entrez votre email" ></b-form-input>
             </b-form-group>
             <button  type="submit"   class="btn btn-success btn-lg btn-block">Inscription</button>
-            
             <p class="forgot-password text-right mt-2 mb-4">
             </p>
        </b-form>
-<!-- 	</b-form>	 -->   
-   
-
 </template>
 <script>
 // @ is an alias to /src
@@ -43,11 +38,11 @@ export default {
 			apiResponse:{},
 			updateResponse:{},
 			badValidation:false,
-			first_name: this.$store.state.user.first_name, 
-			last_name:this.$store.state.user.last_name, 
-			pseudo: this.$store.state.user.pseudo,
+			first_name: null, 
+			last_name:null, 
+			pseudo: null,
 			password:null,
-			email: this.$store.state.user.email, 
+			email: null, 
 			urlApi:'http://localhost:3000/api/groupomania',
 		};
 	},
@@ -215,24 +210,28 @@ export default {
 
 <style lang="scss">
 
-@media screen and (max-width:500px) {
-	.form{
+@media screen and (max-width:700px) {
+	.formSubscribe{
 	display:flex;
 	flex-direction: column;
-	width:95%
-	}
-}
-@media screen and (min-width:500px) {
-	.form{
-	width:50%
-	}
-}
-
-.vue-template{
+	width:95%;
 	display: flex;
 	margin:0;
 	text-align: left;
 	justify-content: center;
 	padding-top: 2rem;
-  }
+	color: red;
+    }
+}
+@media screen and (min-width:700px) {
+	.formSubscribe{
+	width:50%;
+	text-align: left;
+	justify-content: center;
+	padding-top: 2rem;
+	color: rgb(50, 59, 100);
+    }
+}
+
+
 </style>

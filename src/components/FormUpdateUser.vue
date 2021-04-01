@@ -1,8 +1,6 @@
 <template>
-  <!--   <b-form  class="vue-template"> -->
-				<b-form class="formUpdate"  @submit="onUpdateUser">
-					
-			<b-link  v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour maintenir le message'" :show="dismissCountDown" dismissible  :variant='updateUser ? "success":"danger"'  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged" id='alert'>
+	<b-form class="formUpdate"  @submit="onUpdateUser">
+		<b-link  v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour maintenir le message'" :show="dismissCountDown" dismissible  :variant='updateUser ? "success":"danger"'  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged" id='alert'>
     {{this.updateResponse.message}}</b-alert></b-link>
            <b-form-group style="font-weight:bold" id="input-group-1"  label="Modifier votre Nom:"  Nom: label-for="input-1" >
               <b-form-input  style="font-style:italic" id="input-1" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}'  :placeHolder="$store.state.user.first_name"  ></b-form-input>
@@ -23,7 +21,7 @@
             <p class="forgot-password text-right mt-2 mb-4">
             </p>
        </b-form>
-		<!-- </b-form>  -->
+	
 </template>
 
 <script>

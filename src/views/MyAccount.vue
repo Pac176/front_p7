@@ -6,9 +6,7 @@
 		<b-col  class="formUpdateUser" md="6"><FormUpdateUser></FormUpdateUser></b-col> 
 		<b-col  class="formPwdUpdateUser" md="6"><PwdUpdate></PwdUpdate></b-col> 
 	</b-row>
-	
-    
-  </div>
+ </div>
 </template>
 
 <script>
@@ -57,4 +55,4 @@ export default {
 	display: flex;
     justify-content: center;
 }
-</style>
+</style>²

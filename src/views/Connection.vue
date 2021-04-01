@@ -44,7 +44,7 @@ export default {
 		Nav
 	},
 	computed:{
-		...mapState(['successSubscribe','token','isConnect','userId'])
+		...mapState(['successSubscribe','token','isConnect','userId','user'])
 	},
 	methods:{
 		isConnectInStore(){
@@ -65,6 +65,17 @@ export default {
 		userInStore(userData){
 			this.$store.commit('USER',userData);
 		},
+		async findOneUser () {
+			const requestOptions = {
+				method: "Get",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+			};
+			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
+			this.userData = await response.json();
+			this.userInStore(this.userData.data);
+		},
 		async onConnect (event) {
 			try {
 				
@@ -81,8 +92,8 @@ export default {
 				if(response.ok === true ){
 					this.isConnectInStore();
 					this.tokenInStore(this.dataResponse.token);
-					this.userIdInStore(this.dataResponse.userId);
-					this.userInStore(this.dataResponse);
+					await this.findOneUser();
+					console.log(this.user);
 					this.$router.push('wall');
 					
 				}else{

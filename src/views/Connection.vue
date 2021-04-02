@@ -92,6 +92,7 @@ export default {
 				if(response.ok === true ){
 					this.isConnectInStore();
 					this.tokenInStore(this.dataResponse.token);
+					this.userIdInStore(this.dataResponse.userId);
 					await this.findOneUser();
 					console.log(this.user);
 					this.$router.push('wall');

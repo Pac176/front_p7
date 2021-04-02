@@ -1,7 +1,7 @@
 <template>
 	<b-form class="formSubscribe"  @submit="onSubscription">
 			<b-alert :show="dismissCountDown" dismissible :variant='successSubscribe ? "success":"danger"'   @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
-    {{this.apiResponse.message}}</b-alert>
+    {{apiResponse.message}}</b-alert>
 			<b-form-group style="font-weight:bold" id="input-group-1"   label="Votre nom:" label-for="input-2" >
               <b-form-input style="font-style:italic" id="input-1" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' placeholder="Entrez votre nom (uniquement des lettres)"  ></b-form-input>
             </b-form-group>

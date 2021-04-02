@@ -117,7 +117,7 @@ export default {
 			this.userInStore(this.userData.data);
 		},
 		async onUpdateUser (event) {
-			console.log(this.user);
+			//console.log(this.user);
 			event.preventDefault();
 			try {
 				const requestOptions = {
@@ -141,12 +141,10 @@ export default {
 					this.showAlert();
 					
 				} else {
-					console.log("ko");
 					this.updateUser = false;
 					this.showAlert();
 				} 
 			} catch (error) {
-				
 				console.log(error.message);
 			}
 		}

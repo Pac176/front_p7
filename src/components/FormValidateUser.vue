@@ -105,7 +105,6 @@ export default {
 			this.$store.commit('USER',userData);
 		},
 		async onSubscription (event) {
-			console.log(this.$store.state.userId);
 			event.preventDefault();
 			try {
 				const requestOptions = {
@@ -144,11 +143,9 @@ export default {
 						this.isConnectInStore();
 					} 
 				} else {
-					console.log('coucou Kévin');
 					this.showAlert(signupResponse);
 				} 
 			} catch (error) {
-				console.log('coucou pascal');
 				this.showAlert({message: error});
 			}
 		},
@@ -189,7 +186,6 @@ export default {
 					this.showAlert();
 					
 				} else {
-					console.log("ko");
 					this.updateUser = false;
 					this.showAlert();
 				} 

@@ -100,7 +100,7 @@ export default {
 			this.dataResponse = await response.json();
 			if(response.ok === true ){
 				this.updatePwdSuccess = true;
-				console.log(this.updatePwdSuccess);
+				
 			}
 			
 		},
@@ -111,13 +111,12 @@ export default {
 					"Content-Type": "application/json",
 					"Authorization": `Bearer ${this.token}`},
 			};
-			console.log(this.userId);
+			
 			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
 			this.userData = await response.json();
 			this.userInStore(this.userData.data);
 		},
 		async onUpdateUser (event) {
-			console.log(this.user);
 			event.preventDefault();
 			try {
 				const requestOptions = {
@@ -137,18 +136,15 @@ export default {
 				const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
 				this.updateResponse = await response.json();
 				if(response.ok === true ){
-					console.log('ok');
-					//await this.findOneUser();
+					await this.findOneUser();
 					this.updatePwd = true;
 					this.showAlert();
 					
 				} else {
-					console.log("ko");
 					this.updatePwd = false;
 					this.showAlert();
 				} 
 			} catch (error) {
-				
 				console.log(error.message);
 			}
 		}

@@ -3,8 +3,8 @@
    <Nav></Nav>
 	<div class="vue-template">
         <b-form class="formConnect" @submit="onConnect">
-			<b-alert :show="dismissCountDown" dismissible variant="danger"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
-     {{this.dataResponse.error}}
+			<b-alert :show="dismissCountDown" dismissible  :variant="variantResult"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
+     {{this.dataResponse.message}}
     </b-alert>
 		<b-form-group style="font-weight:bold" id="input-group-5"  label="Adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
             <b-form-input style="font-style:italic" id="input-5" v-model="form.email" type="email" placeholder="Entrez votre email" required></b-form-input>
@@ -29,7 +29,7 @@ export default {
 	name: 'Connect',
 	data(){
 		return{
-			apiResponse:{},
+			variantResult:"",
 			dismissSecs: 5,
 			dismissCountDown: 0,
 			dataResponse:{},
@@ -59,8 +59,10 @@ export default {
 		countDownChanged(dismissCountDown) {
 			this.dismissCountDown = dismissCountDown;
 		},
-		showAlert() {
+		showAlert(variant) {
+			this.variantResult = variant;
 			this.dismissCountDown = this.dismissSecs;
+		
 		},
 		userInStore(userData){
 			this.$store.commit('USER',userData);
@@ -88,7 +90,8 @@ export default {
 					body: JSON.stringify(this.form)
 				};
 				const response = await fetch(this.urlApi + "/users/login", requestOptions);
-				this.dataResponse = await response.json();
+				const dataResponse = await response.json();
+				this.dataResponse = dataResponse;
 				if(response.ok === true ){
 					this.isConnectInStore();
 					this.tokenInStore(this.dataResponse.token);
@@ -98,8 +101,8 @@ export default {
 					this.$router.push('wall');
 					
 				}else{
-					this.showAlert();
-					console.log("niette");}
+					this.showAlert('danger');
+				}
   
 			} catch (e) {
 				console.log(e);

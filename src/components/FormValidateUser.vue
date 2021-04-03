@@ -1,6 +1,6 @@
 <template>
 	<b-form class="formSubscribe"  @submit="onSubscription">
-			<b-alert :show="dismissCountDown" dismissible :variant='successSubscribe ? "success":"danger"'   @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
+			<b-alert :show="dismissCountDown" dismissible :variant='variantResult'   @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
     {{apiResponse.message}}</b-alert>
 			<b-form-group style="font-weight:bold" id="input-group-1"   label="Votre nom:" label-for="input-2" >
               <b-form-input style="font-style:italic" id="input-1" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' placeholder="Entrez votre nom (uniquement des lettres)"  ></b-form-input>
@@ -36,6 +36,7 @@ export default {
 			dismissSecs: 5,
 			dismissCountDown: 0,
 			apiResponse:{},
+			variantResult:"",
 			updateResponse:{},
 			badValidation:false,
 			first_name: null, 
@@ -61,9 +62,10 @@ export default {
 			alphaNum
 		},
 		pseudo:{
+			required,
 			minLength: minLength(2),
 			maxLength: maxLength(50),
-			alphaNum
+			
 		}, 
 		email:{
 			required,
@@ -86,7 +88,8 @@ export default {
 		countDownChanged(dismissCountDown) {
 			this.dismissCountDown = dismissCountDown;
 		},
-		showAlert(apiResponse) {
+		showAlert(apiResponse, variant) {
+			this.variantResult = variant;
 			console.log(apiResponse);
 			this.apiResponse = apiResponse;
 			this.dismissCountDown = this.dismissSecs;
@@ -143,10 +146,10 @@ export default {
 						this.isConnectInStore();
 					} 
 				} else {
-					this.showAlert(signupResponse);
+					this.showAlert(signupResponse, 'danger');
 				} 
 			} catch (error) {
-				this.showAlert({message: error});
+				this.showAlert({message: error},'danger');
 			}
 		},
 		async findOneUser () {
@@ -179,15 +182,15 @@ export default {
 					})
 				};
 				const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
-				this.updateResponse = await response.json();
+				const updateResponse = await response.json();
 				if(response.ok === true ){
 					await this.findOneUser();
 					this.updateUser = true;
-					this.showAlert();
+					this.showAlert(updateResponse, 'success');
 					
 				} else {
 					this.updateUser = false;
-					this.showAlert();
+					this.showAlert(updateResponse, 'danger');
 				} 
 			} catch (error) {
 				

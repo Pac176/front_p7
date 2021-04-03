@@ -1,8 +1,8 @@
 <template>
 <!-- <b-form  class="vue-template"> -->
 	<b-form class="formPwdUpdate"  @submit="onUpdateUser" >
-			<b-link  class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible :variant='updateUser ? "success":"danger"'  @dismiss-count-down="countDownChanged" >
-      {{updateResponse.message}}
+			<b-link  class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible :variant='variantResult'  @dismiss-count-down="countDownChanged" >
+      {{apiResponse.message}}
     </b-alert></b-link>
 			<b-form-group v-if="!updatePwdSuccess" style="font-weight:bold" id="input-group-1"   label="Actuel mot de passe:" label-for="input-1" description="Au moins 8 caractères, 1 majuscule, 1 chiffre et un caratere special" >
               <b-form-input  style="font-style:italic" id="input-1" v-model.trim="$v.oldPassword.$model" :class='{"is-invalid":$v.oldPassword.$error,"is-valid":!$v.oldPassword.$invalid}' type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
@@ -13,7 +13,7 @@
             <b-form-group v-if="updatePwdSuccess" style="font-weight:bold" id="input-group-1"   label="Confirmez nouveau mot de passe:" label-for="input-3" description="Au moins 8 caractères, 1 majuscule, 1 chiffre et un caratere special" >
               <b-form-input style="font-style:italic" id="input-3" v-model.trim="$v.repeatNewPassword.$model" :class='{"is-invalid":$v.repeatNewPassword.$error,"is-valid":!$v.repeatNewPassword.$invalid}' type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
             </b-form-group> 
-            <button   v-if="!updatePwdSuccess" type="submit"  @click="validPwd" class="btn btn-success btn-lg btn-block">Changer de mot de passe</button>
+            <button   v-if="!updatePwdSuccess" type="submit"  @click="validPwd" class="btn btn-success btn-lg btn-block" >Changer de mot de passe</button>
             <button   v-if="newPassword === repeatNewPassword && newPassword !== null && repeatNewPassword !== null" type="submit"  class="btn btn-success btn-lg btn-block">Sauvegarder mot de passe</button>
             <p class="forgot-password text-right mt-2 mb-4">
             </p>
@@ -34,7 +34,10 @@ export default {
 		return{
 			updateUser:true,
 			updatePwdSuccess:false,
+			savePwd:false,
+			dataResponse:{},
 			updateResponse:{},
+			variantResult:"",
 			dismissSecs: 5,
 			dismissCountDown: 0,
 			apiResponse:{},
@@ -56,10 +59,12 @@ export default {
 		},
 		newPassword:{
 			required,
-			pwdRegex
+			pwdRegex 
 		},
 		repeatNewPassword:{
 			sameAsNewPassword: sameAs('newPassword'),
+			required,
+			pwdRegex 
 		},
 	
 	},
@@ -67,6 +72,7 @@ export default {
 		...mapState(['successSubscribe','sucessUpdateUser','token','isConnect','userId','user'])
 	},
 	methods:{
+		
 		alertHover(){
 			this.dismissCountDown = true;
 		},
@@ -80,8 +86,10 @@ export default {
 			this.dismissCountDown = dismissCountDown;
 		},
 
-		showAlert(/* apiResponse */) {
-			//this.apiResponse = apiResponse;
+		showAlert(apiResponse, variant) {
+			this.variantResult = variant;
+			console.log(apiResponse);
+			this.apiResponse = apiResponse;
 			this.dismissCountDown = this.dismissSecs;
 		
 		},
@@ -97,10 +105,13 @@ export default {
 					password:this.oldPassword})
 			};
 			const response = await fetch(this.urlApi + "/users/login", requestOptions);
-			this.dataResponse = await response.json();
+			const dataResponse = await response.json();
+			console.log(this.dataResponse.message);
 			if(response.ok === true ){
 				this.updatePwdSuccess = true;
-				
+				this.showAlert(dataResponse, "success");
+			} else {
+				this.showAlert(dataResponse, "danger");
 			}
 			
 		},
@@ -134,15 +145,16 @@ export default {
 					})
 				};
 				const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
-				this.updateResponse = await response.json();
+				const updateResponse = await response.json();
 				if(response.ok === true ){
 					await this.findOneUser();
-					this.updatePwd = true;
-					this.showAlert();
+					
+					this.savePwd  = true;
+					this.showAlert(updateResponse,"success");
 					
 				} else {
-					this.updatePwd = false;
-					this.showAlert();
+					
+					this.showAlert(updateResponse, "danger");
 				} 
 			} catch (error) {
 				console.log(error.message);

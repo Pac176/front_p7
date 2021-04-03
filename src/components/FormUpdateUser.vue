@@ -1,7 +1,7 @@
 <template>
 	<b-form class="formUpdate"  @submit="onUpdateUser">
-		<b-link  class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible  :variant='updateUser ? "success":"danger"'  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged" id='alert'>
-    {{updateResponse.message}}</b-alert></b-link>
+		<b-link  class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible  :variant='variantResult'  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged" id='alert'>
+    {{apiResponse.message}}</b-alert></b-link>
            <b-form-group style="font-weight:bold" id="input-group-1"  label="Modifier votre Nom:"  Nom: label-for="input-1" >
               <b-form-input  style="font-style:italic" id="input-1" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}'    ></b-form-input>
             </b-form-group>
@@ -38,6 +38,7 @@ export default {
 	name: 'FormUpdateUser',
 	data(){
 		return{
+			apiResponse:{},
 			updateResponse:{},
 			updateUser:true,
 			dismissSecs: 5,
@@ -70,9 +71,10 @@ export default {
 			alphaNum
 		},
 		pseudo:{
+			required,
 			minLength: minLength(2),
 			maxLength: maxLength(50),
-			alphaNum
+			
 		}, 
 		email:{
 			required,
@@ -100,8 +102,10 @@ export default {
 		countDownChanged(dismissCountDown) {
 			this.dismissCountDown = dismissCountDown;
 		},
-		showAlert(/* apiResponse */) {
-			//this.apiResponse = apiResponse;
+		showAlert(apiResponse, variant) {
+			this.variantResult = variant;
+			console.log(apiResponse);
+			this.apiResponse = apiResponse;
 			this.dismissCountDown = this.dismissSecs;
 		
 		},
@@ -134,15 +138,18 @@ export default {
 					})
 				};
 				const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
-				this.updateResponse = await response.json();
+				const updateResponse = await response.json();
 				if(response.ok === true ){
 					await this.findOneUser();
 					this.updateUser = true;
-					this.showAlert();
+					if(this.first_name === "" && this.last_name === ""  &&	this.pseudo === "" && this.email === "" &&	this.password === "" ){
+						this.showAlert(updateResponse,'warning');
+					}
+					this.showAlert(updateResponse,'success');
 					
 				} else {
 					this.updateUser = false;
-					this.showAlert();
+					this.showAlert(updateResponse,'danger');
 				} 
 			} catch (error) {
 				console.log(error.message);

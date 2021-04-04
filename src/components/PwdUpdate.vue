@@ -13,7 +13,14 @@
             <b-form-group v-if="updatePwdSuccess" style="font-weight:bold" id="input-group-1"   label="Confirmez nouveau mot de passe:" label-for="input-3" description="Au moins 8 caractères, 1 majuscule, 1 chiffre et un caratere special" >
               <b-form-input style="font-style:italic" id="input-3" v-model.trim="$v.repeatNewPassword.$model" :class='{"is-invalid":$v.repeatNewPassword.$error,"is-valid":!$v.repeatNewPassword.$invalid}' type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
             </b-form-group> 
-            <button   v-if="!updatePwdSuccess" type="submit"  @click="validPwd" class="btn btn-success btn-lg btn-block" >Changer de mot de passe</button>
+			<b-row>
+				<b-col>
+					<button   v-if="!updatePwdSuccess" type="submit"  @click="validPwd" class="btn btn-success btn-lg btn-block" >Changer de mot de passe</button>
+				</b-col>
+				<b-col>
+					<button   type="submit"  @click="validPwd" class="btn btn-danger btn-lg btn-block" >Supprimer mon compte</button>
+				</b-col>
+			</b-row>
             <button   v-if="newPassword === repeatNewPassword && newPassword !== null && repeatNewPassword !== null" type="submit"  class="btn btn-success btn-lg btn-block">Sauvegarder mot de passe</button>
             <p class="forgot-password text-right mt-2 mb-4">
             </p>

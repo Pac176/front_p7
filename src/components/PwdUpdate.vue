@@ -18,10 +18,10 @@
 					<button   v-if="!updatePwdSuccess" type="submit"  @click="validPwd" class="btn btn-success btn-lg btn-block" >Changer de mot de passe</button>
 				</b-col>
 				<b-col>
-					<button  type="submit"  @click="deleteAccount" class="btn btn-danger btn-lg btn-block" >Supprimer mon compte</button>
+					<button  v-if="!updatePwdSuccess" type="submit"  @click="deleteAccount" class="btn btn-danger btn-lg btn-block" >Supprimer mon compte</button>
 				</b-col>
 			</b-row>
-            <button   v-if="newPassword === repeatNewPassword && newPassword !== null && repeatNewPassword !== null"  @click="onUpdateUser"  class="btn btn-success btn-lg btn-block">Sauvegarder mot de passe</button>
+            <button   v-if="newPassword === repeatNewPassword && newPassword !== null && repeatNewPassword !== null"  @click="onUpdatePwd"  class="btn btn-success btn-lg btn-block">Sauvegarder mot de passe</button>
             <p class="forgot-password text-right mt-2 mb-4">
             </p>
        </b-form> 
@@ -142,7 +142,7 @@ export default {
 			this.userData = await response.json();
 			this.userInStore(this.userData.data);
 		},
-		/* async onUpdateUser (event) {
+		async onUpdatePwd (event) {
 			event.preventDefault();
 			try {
 				const requestOptions = {
@@ -174,7 +174,7 @@ export default {
 			} catch (error) {
 				console.log(error.message);
 			}
-		}, */
+		}, 
 		async deleteAccount(event){
 			event.preventDefault();
 			const requestOptions = {

@@ -124,7 +124,8 @@ export default {
 		async onUpdateUser (event) {
 			console.log(this.user);
 			event.preventDefault();
-			try {
+			
+			try { 
 				const requestOptions = {
 					method: "Put",
 					headers: { 
@@ -135,7 +136,7 @@ export default {
 						last_name:this.last_name === ""? this.user.last_name : this.last_name,
 						pseudo:this.pseudo === ""? this.user.pseudo : this.pseudo,
 						email:this.email === ""? this.user.email : this.email,
-						password: this.user.password
+						password: this.user.password 
 					})
 				};
 				const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
@@ -145,17 +146,13 @@ export default {
 					this.updateUser = true;
 					if(this.first_name === "" && this.last_name === ""  &&	this.pseudo === "" && this.email === "" &&	this.password === "" ){
 						this.showAlert(updateResponse,'warning');
+					} else {
+						this.updateUser = false;
+						this.showAlert(updateResponse,'success');
 					}
-					this.showAlert(updateResponse,'success');
-					
-					
-				} else {
-					this.updateUser = false;
-					this.showAlert(updateResponse,'danger');
-					
 				} 
 			} catch (error) {
-				console.log(error.message);
+				this.showAlert({message: error},'danger');
 			}
 		}
 	},

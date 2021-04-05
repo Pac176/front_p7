@@ -13,10 +13,12 @@ export default new Vuex.Store({
 		userId: null,
 		user: null,
 		allPosts: [],
+		deleteAccountRequest:{},
+		deleteAccountSuccess: false,
 	},
 	mutations: {
 		ISCONNECT(state) {
-			return state.isConnect = !state.isConnect ? true : false;
+			return (state.isConnect = !state.isConnect ? true : false);
 		},
 		SUCCESSSUBSCIBE(state) {
 			return (state.successSubscribe = !state.successSubscribe ? true : false);
@@ -31,7 +33,13 @@ export default new Vuex.Store({
 			return (state.user = userDataRequest);
 		},
 		ALLPOSTS(state, allPostsDataRequest) {
-			return state.allPosts = allPostsDataRequest;
+			return (state.allPosts = allPostsDataRequest);
+		},
+		DELETEACCOUNT(state, deleteRequest) {
+			return state.deleteAccountRequest = deleteRequest;
+		},
+		DELETESUCCESS(state) {
+			return (state.deleteAccountSuccess = !state.deleteAccountSuccess ? true : false);
 		},
 	},
 	actions: {},

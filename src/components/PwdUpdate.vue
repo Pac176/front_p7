@@ -1,6 +1,6 @@
 <template>
 <!-- <b-form  class="vue-template"> -->
-	<b-form class="formPwdUpdate"  @submit="onUpdateUser" >
+	<b-form class="formPwdUpdate"  >
 			<b-link  class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible :variant='variantResult'  @dismiss-count-down="countDownChanged" >
       {{apiResponse.message}}
     </b-alert></b-link>
@@ -18,10 +18,10 @@
 					<button   v-if="!updatePwdSuccess" type="submit"  @click="validPwd" class="btn btn-success btn-lg btn-block" >Changer de mot de passe</button>
 				</b-col>
 				<b-col>
-					<button   type="submit"  @click="validPwd" class="btn btn-danger btn-lg btn-block" >Supprimer mon compte</button>
+					<button  type="submit"  @click="deleteAccount" class="btn btn-danger btn-lg btn-block" >Supprimer mon compte</button>
 				</b-col>
 			</b-row>
-            <button   v-if="newPassword === repeatNewPassword && newPassword !== null && repeatNewPassword !== null" type="submit"  class="btn btn-success btn-lg btn-block">Sauvegarder mot de passe</button>
+            <button   v-if="newPassword === repeatNewPassword && newPassword !== null && repeatNewPassword !== null"  @click="onUpdateUser"  class="btn btn-success btn-lg btn-block">Sauvegarder mot de passe</button>
             <p class="forgot-password text-right mt-2 mb-4">
             </p>
        </b-form> 
@@ -76,10 +76,9 @@ export default {
 	
 	},
 	computed:{
-		...mapState(['successSubscribe','sucessUpdateUser','token','isConnect','userId','user'])
+		...mapState(['successSubscribe','sucessUpdateUser', 'deleteAccountSuccess','deleteAccountRequest','token','isConnect','userId','user'])
 	},
 	methods:{
-		
 		alertHover(){
 			this.dismissCountDown = true;
 		},
@@ -99,6 +98,15 @@ export default {
 			this.apiResponse = apiResponse;
 			this.dismissCountDown = this.dismissSecs;
 		
+		},
+		isConnectInStore(){
+			this.$store.commit('ISCONNECT');
+		},
+		deleteAccountResponse(data){
+			this.$store.commit('DELETEACCOUNT', data);
+		},
+		deleteSuccess(){
+			this.$store.commit('DELETESUCCESS');
 		},
 		async validPwd (event) {
 			event.preventDefault();
@@ -166,8 +174,46 @@ export default {
 			} catch (error) {
 				console.log(error.message);
 			}
-		}
-		
+		},
+		async deleteAccount(event){
+			event.preventDefault();
+			const requestOptions = {
+				method: "POST",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+				body: JSON.stringify({
+					email:this.user.email,
+					password:this.oldPassword})
+			};
+			const loginRequest = await fetch(this.urlApi + "/users/login", requestOptions);
+			const loginResponse = await loginRequest.json();	
+			if(loginRequest.ok === true ){
+				const deleteRequestOptions = {
+					method: "Delete",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+				};
+				const deleteRequest = await fetch(this.urlApi + `/users/${this.userId}`, deleteRequestOptions);
+				const deleteAccountRequestResponse = await deleteRequest.json();
+				if(deleteRequest.ok === true ){
+					confirm("Etes vous sur de vouloir supprimer définitivement votre compte?");
+					console.log(deleteAccountRequestResponse.message);
+					this.deleteAccountResponse(deleteAccountRequestResponse);
+					this.deleteSuccess();
+					console.log(this.deleteAccountSuccess);
+					console.log(this.deleteAccountRequest);
+					this.isConnectInStore();
+					this.$router.push('/');
+									
+				} else {
+					this.showAlert(deleteAccountRequestResponse, "danger");
+				}  
+			} else {
+				this.showAlert(loginResponse, "danger");
+			}
+		},
 	}};		
 				
 				

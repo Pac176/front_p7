@@ -14,7 +14,7 @@
             </b-form-group>
             <button type="submit"   class="btn btn-success btn-lg btn-block" to="/wall">Connexion</button>
             <p class="forgot-password text-right mt-2 mb-4">
-            <router-link to="/motDePasseOublie">Mot de passe oublié ?</router-link>
+            <!-- <router-link to="/motDePasseOublie">Mot de passe oublié ?</router-link> -->
             </p>
        </b-form>
     </div>
@@ -98,7 +98,7 @@ export default {
 					this.userIdInStore(this.dataResponse.userId);
 					await this.findOneUser();
 					console.log(this.user);
-					this.$router.push('wall');
+					this.$router.push('/wall');
 					
 				}else{
 					this.showAlert('danger');

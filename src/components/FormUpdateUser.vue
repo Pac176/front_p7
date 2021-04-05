@@ -39,6 +39,7 @@ export default {
 	data(){
 		return{
 			apiResponse:{},
+			variantResult:"",
 			updateResponse:{},
 			updateUser:true,
 			dismissSecs: 5,
@@ -104,7 +105,6 @@ export default {
 		},
 		showAlert(apiResponse, variant) {
 			this.variantResult = variant;
-			console.log(apiResponse);
 			this.apiResponse = apiResponse;
 			this.dismissCountDown = this.dismissSecs;
 		

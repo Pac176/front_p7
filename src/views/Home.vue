@@ -54,9 +54,7 @@ export default {
 		if(this.deleteAccountSuccess){
 			this.showAlert(this.deleteAccountRequest, 'success');
 			this.successDeleteAccountAlert(); 
-			
 		}
-		
 	},
 };
 </script>

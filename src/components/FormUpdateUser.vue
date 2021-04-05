@@ -2,20 +2,21 @@
 	<b-form class="formUpdate"  @submit="onUpdateUser">
 		<b-link  class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible  :variant='variantResult'  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged" id='alert'>
     {{apiResponse.message}}</b-alert></b-link>
-           <b-form-group style="font-weight:bold" id="input-group-1"  label="Modifier votre Nom:"  Nom: label-for="input-1" >
-              <b-form-input  style="font-style:italic" id="input-1" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}'    ></b-form-input>
+		
+           <b-form-group style="font-weight:bold" id="input-group-1"  label="Modifier votre Nom:"  label-for="input-1" > 
+              <b-form-input  style="font-style:italic" id="input-1" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' :placeholder="user.first_name"   ></b-form-input>
             </b-form-group>
            <b-form-group style="font-weight:bold" id="input-group-2"  label="Modifier votre prénom:" label-for="input-2" >
-              <b-form-input style="font-style:italic" id="input-2"   v-model.trim="$v.last_name.$model" :class='{"is-invalid":$v.last_name.$error,"is-valid":!$v.last_name.$invalid}'    ></b-form-input>
+              <b-form-input style="font-style:italic" id="input-2"   v-model.trim="$v.last_name.$model" :class='{"is-invalid":$v.last_name.$error,"is-valid":!$v.last_name.$invalid}' :placeholder="user.last_name"   ></b-form-input>
             </b-form-group>
             <b-form-group style="font-weight:bold" id="input-group-3"  label="Modifier votre pseudo:" label-for="input-3" >
-              <b-form-input style="font-style:italic" id="input-3"  v-model.trim="$v.pseudo.$model" :class='{"is-invalid":$v.pseudo.$error,"is-valid":!$v.pseudo.$invalid}'  ></b-form-input>
+              <b-form-input style="font-style:italic" id="input-3"  v-model.trim="$v.pseudo.$model" :class='{"is-invalid":$v.pseudo.$error,"is-valid":!$v.pseudo.$invalid}'  :placeholder="user.pseudo" ></b-form-input>
             </b-form-group> 
            <!-- <b-form-group style="font-weight:bold" id="input-group-4"   label="Mot de passe:" label-for="input-4" description="Au moins 8 caractères, 1 majuscule, 1 chiffre et un caratere special" >
               <b-form-input style="font-style:italic" id="input-4"  type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
             </b-form-group>  -->
             <b-form-group style="font-weight:bold" id="input-group-5"  label="Modifier votre adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
-              <b-form-input style="font-style:italic" id="input-5"  type="email" v-model.trim="$v.email.$model" :class='{"is-invalid":$v.email.$error,"is-valid":!$v.email.$invalid}'   ></b-form-input>
+              <b-form-input style="font-style:italic" id="input-5"  type="email" v-model.trim="$v.email.$model" :class='{"is-invalid":$v.email.$error,"is-valid":!$v.email.$invalid}' :placeholder="user.email"  ></b-form-input>
             </b-form-group> 
             <button   type="submit"   class="btn btn-success btn-lg btn-block">Modifier mes donnees</button>
             <p class="forgot-password text-right mt-2 mb-4">
@@ -121,7 +122,7 @@ export default {
 			this.userInStore(this.userData.data);
 		},
 		async onUpdateUser (event) {
-			//console.log(this.user);
+			console.log(this.user);
 			event.preventDefault();
 			try {
 				const requestOptions = {
@@ -134,7 +135,7 @@ export default {
 						last_name:this.last_name === ""? this.user.last_name : this.last_name,
 						pseudo:this.pseudo === ""? this.user.pseudo : this.pseudo,
 						email:this.email === ""? this.user.email : this.email,
-						password:this.password === ""? this.user.password : this.password,
+						password: this.user.password
 					})
 				};
 				const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
@@ -147,9 +148,11 @@ export default {
 					}
 					this.showAlert(updateResponse,'success');
 					
+					
 				} else {
 					this.updateUser = false;
 					this.showAlert(updateResponse,'danger');
+					
 				} 
 			} catch (error) {
 				console.log(error.message);

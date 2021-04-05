@@ -7,7 +7,7 @@
 <b-navbar-nav v-if="isConnect" id="connectMenu">
     <b-navbar-nav id="menuGauche">
         <b-nav-item class="routerLink" to="/wall" >Fil d'actualité</b-nav-item>
-        <b-nav-item class="routerLink" :to='{name:"MyAccount",params:{userId:`${this.userId}`}}' >Mon Compte</b-nav-item>
+        <b-nav-item class="routerLink" to='/myAccount/user' >Mon Compte</b-nav-item>
         <b-nav-item v-if="isAdmin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
         
     </b-navbar-nav>
@@ -15,8 +15,7 @@
         <b-nav-item > <b-button variant="danger"  @click.stop='isConnectInStore'  to="/" >Deconnexion</b-button></b-nav-item>
     </b-navbar-nav>
 </b-navbar-nav>
-
-      <b-navbar-nav v-else>  
+       <b-navbar-nav v-else>  
         <b-nav-item class="routerLink" to="/Subscription" >Inscription</b-nav-item>
         <b-nav-item  class="routerLink"  to="/Connect">Connexion</b-nav-item> 
       </b-navbar-nav>

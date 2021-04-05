@@ -142,7 +142,7 @@ export default {
 			this.userData = await response.json();
 			this.userInStore(this.userData.data);
 		},
-		async onUpdateUser (event) {
+		/* async onUpdateUser (event) {
 			event.preventDefault();
 			try {
 				const requestOptions = {
@@ -174,7 +174,7 @@ export default {
 			} catch (error) {
 				console.log(error.message);
 			}
-		},
+		}, */
 		async deleteAccount(event){
 			event.preventDefault();
 			const requestOptions = {
@@ -189,27 +189,26 @@ export default {
 			const loginRequest = await fetch(this.urlApi + "/users/login", requestOptions);
 			const loginResponse = await loginRequest.json();	
 			if(loginRequest.ok === true ){
-				const deleteRequestOptions = {
-					method: "Delete",
-					headers: { 
-						"Content-Type": "application/json",
-						"Authorization": `Bearer ${this.token}`},
-				};
-				const deleteRequest = await fetch(this.urlApi + `/users/${this.userId}`, deleteRequestOptions);
-				const deleteAccountRequestResponse = await deleteRequest.json();
-				if(deleteRequest.ok === true ){
-					confirm("Etes vous sur de vouloir supprimer définitivement votre compte?");
-					console.log(deleteAccountRequestResponse.message);
-					this.deleteAccountResponse(deleteAccountRequestResponse);
-					this.deleteSuccess();
-					console.log(this.deleteAccountSuccess);
-					console.log(this.deleteAccountRequest);
-					this.isConnectInStore();
-					this.$router.push('/');
-									
-				} else {
-					this.showAlert(deleteAccountRequestResponse, "danger");
-				}  
+				const confirmResponse = confirm("Etes vous sur de vouloir supprimer définitivement votre compte?");
+				if (confirmResponse) {
+					const deleteRequestOptions = {
+						method: "Delete",
+						headers: { 
+							"Content-Type": "application/json",
+							"Authorization": `Bearer ${this.token}`},
+					};
+					const deleteRequest = await fetch(this.urlApi + `/users/${this.userId}`, deleteRequestOptions);
+					const deleteAccountRequestResponse = await deleteRequest.json();
+					if(deleteRequest.ok === true ){
+					
+						this.deleteAccountResponse(deleteAccountRequestResponse);
+						this.deleteSuccess();
+						this.isConnectInStore();
+						this.$router.push('/');
+					} else {
+						this.showAlert(deleteAccountRequestResponse, "danger");
+					}  
+				} 
 			} else {
 				this.showAlert(loginResponse, "danger");
 			}

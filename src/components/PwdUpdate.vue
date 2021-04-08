@@ -1,7 +1,10 @@
 <template>
+
 <!-- <b-form  class="vue-template"> -->
 	<b-form class="formPwdUpdate"  >
-			<b-link  class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible :variant='variantResult'  @dismiss-count-down="countDownChanged" >
+	
+
+			<b-link   class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible :variant='variantResult'  @dismiss-count-down="countDownChanged" >
       {{apiResponse.message}}
     </b-alert></b-link>
 			<b-form-group v-if="!updatePwdSuccess" style="font-weight:bold" id="input-group-1"   label="Actuel mot de passe:" label-for="input-1" description="Au moins 8 caractères, 1 majuscule, 1 chiffre et un caratere special" >
@@ -16,12 +19,14 @@
 			<b-row>
 				<b-col>
 					<button   v-if="!updatePwdSuccess" type="submit"  @click="validPwd" class="btn btn-success btn-lg btn-block" >Changer de mot de passe</button>
+					<button   v-if="newPassword === repeatNewPassword && newPassword !== null && repeatNewPassword !== null"  @click="onUpdatePwd"  class="btn btn-success btn-lg btn-block">Sauvegarder mot de passe</button>
 				</b-col>
-				<b-col>
-					<button  v-if="!updatePwdSuccess" type="submit"  @click="deleteAccount" class="btn btn-danger btn-lg btn-block" >Supprimer mon compte</button>
+				<b-col v-if="!updatePwdSuccess">
+					<button   type="submit"  @click="deleteAccount" class="btn btn-danger btn-lg btn-block" >Supprimer mon compte</button>
 				</b-col>
+
 			</b-row>
-            <button   v-if="newPassword === repeatNewPassword && newPassword !== null && repeatNewPassword !== null"  @click="onUpdatePwd"  class="btn btn-success btn-lg btn-block">Sauvegarder mot de passe</button>
+            
             <p class="forgot-password text-right mt-2 mb-4">
             </p>
        </b-form> 
@@ -39,6 +44,8 @@ export default {
 	name: 'FormValidateUser',
 	data(){
 		return{
+			boxOne: '',
+			boxTwo: '',
 			updateUser:true,
 			updatePwdSuccess:false,
 			savePwd:false,
@@ -79,6 +86,33 @@ export default {
 		...mapState(['successSubscribe','sucessUpdateUser', 'deleteAccountSuccess','deleteAccountRequest','token','isConnect','userId','user'])
 	},
 	methods:{
+		async showMsgBoxOne() {
+			this.boxOne = '';
+			const modal = await this.$bvModal.msgBoxConfirm('Etes vous sur de vouloir supprimer votre compte définitivement?');
+			this.boxOne = await modal;
+				
+				
+		},
+		showMsgBoxTwo() {
+			this.boxTwo = '';
+			this.$bvModal.msgBoxConfirm('Please confirm that you want to delete everything.', {
+				title: 'Please Confirm',
+				size: 'sm',
+				buttonSize: 'sm',
+				okVariant: 'danger',
+				okTitle: 'YES',
+				cancelTitle: 'NO',
+				footerClass: 'p-2',
+				hideHeaderClose: false,
+				centered: true
+			})
+				.then(value => {
+					this.boxTwo = value;
+				})
+				.catch(err => {
+					console.log(err);
+				});
+		},
 		alertHover(){
 			this.dismissCountDown = true;
 		},
@@ -91,7 +125,15 @@ export default {
 		countDownChanged(dismissCountDown) {
 			this.dismissCountDown = dismissCountDown;
 		},
-
+		bodyUpdate(){
+			return {
+				first_name:this.first_name === ""? this.user.first_name : this.first_name,
+				last_name:this.last_name === ""? this.user.last_name : this.last_name,
+				pseudo:this.pseudo === ""? this.user.pseudo : this.pseudo,
+				email:this.email === ""? this.user.email : this.email,
+				password:this.repeatNewPassword 
+			};
+		},
 		showAlert(apiResponse, variant) {
 			this.variantResult = variant;
 			console.log(apiResponse);
@@ -119,7 +161,7 @@ export default {
 					email:this.user.email,
 					password:this.oldPassword})
 			};
-			const response = await fetch(this.urlApi + "/users/login", requestOptions);
+			const response = await fetch(this.urlApi + "/users/verifypwd", requestOptions);
 			const dataResponse = await response.json();
 			console.log(this.dataResponse.message);
 			if(response.ok === true ){
@@ -150,14 +192,7 @@ export default {
 					headers: { 
 						"Content-Type": "application/json",
 						"Authorization": `Bearer ${this.token}`},
-					body: JSON.stringify({
-						
-						first_name:this.first_name === ""? this.user.first_name : this.first_name,
-						last_name:this.last_name === ""? this.user.last_name : this.last_name,
-						pseudo:this.pseudo === ""? this.user.pseudo : this.pseudo,
-						email:this.email === ""? this.user.email : this.email,
-						password:this.repeatNewPassword 
-					})
+					body: JSON.stringify(this.bodyUpdate())
 				};
 				const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
 				const updateResponse = await response.json();
@@ -189,8 +224,9 @@ export default {
 			const loginRequest = await fetch(this.urlApi + "/users/login", requestOptions);
 			const loginResponse = await loginRequest.json();	
 			if(loginRequest.ok === true ){
-				const confirmResponse = confirm("Etes vous sur de vouloir supprimer définitivement votre compte?");
-				if (confirmResponse) {
+				await this.showMsgBoxTwo();
+				//const confirmResponse = confirm("Etes vous sur de vouloir supprimer définitivement votre compte?");
+				if (this.boxOne) {
 					const deleteRequestOptions = {
 						method: "Delete",
 						headers: { 
@@ -247,6 +283,9 @@ export default {
 }
 .linkAlert{
 	text-decoration: none;
+}
+.btn{
+	height: 100%;
 }
 /* .vue-template{
 	display: flex;

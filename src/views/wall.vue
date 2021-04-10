@@ -5,6 +5,9 @@
  <b-row class="wall">
 	<b-col md="3" sm>
 		<h4>{{user.first_name}} {{user.last_name}}</h4>
+		<h6> ({{user.pseudo}})</h6>
+		<div>Inscrit le {{momentDateMouse(user.createdAt)}}</div>
+		<!-- <div>Dernière connexion {{momentDate(user.updatedAt)}}</div> --><br>
 	</b-col>
 	<b-col  md="6" sm>
 		<b-alert  :show="dismissCountDown" dismissible variant="success"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
@@ -29,12 +32,12 @@
 			<b-button v-if='textArea !== ""' class="mt-5" variant='outline-primary' block @click="createPost">Publier</b-button>
 		</b-modal>
 <!-- publications -->
-	<b-card title="" sub-title="" v-for="item in allPosts" :key="item.id" class="post">
+	<b-card title="" sub-title="" v-for="(item,index) in allPosts" :key="item.id" class="post">
 		<div class='headerCard'>
 		<div  class='headerCard'>
 			<b-link to="/wall/user" @click='findAllPostsByUserId(item.user.id);'><b-img   src="https://picsum.photos/50" fluid alt="Responsive image" class="authorImg link"></b-img></b-link>
 				<div class='textHeader' >
-					<b-link to="wall/user" @click='findAllPostsByUserId(item.user.id);' class="authorPost link">{{item.user.pseudo}}</b-link>
+					<b-link to="wall/user" @click='findAllPostsByUserId(item.user.id);' class="authorPost link">{{ item.user.pseudo}}</b-link>
 					<b-link class="link" v-b-tooltip.leftbottom.v-info ="momentDateMouse(item.createdAt)" >{{ momentDate(item.createdAt)}}</b-link>
 					</div>
 				
@@ -52,8 +55,8 @@
 				</b-button>
 			</b-col>
 			<b-col>
-				<b-button   block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
-				<b-card-text class="comment"  >Commenter</b-card-text>
+				<b-button   @click='startCommentOn(index)' block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
+				<b-card-text class="comment"   >Commenter{{index}}</b-card-text>
 				</b-button>
 			</b-col>
 			<b-col v-if="item.user_id === userId || user.is_admin === 1">
@@ -61,11 +64,14 @@
 				<b-card-text class="delete" >Supprimer</b-card-text>
 			</b-button>
 			</b-col>
-		</b-row>
+		</b-row><br>  
+		<b-form-group   v-if="startComment === index">
+			<b-input autofocus class="inputComment" v-model='comment'></b-input>
+		</b-form-group>
 	</b-card>
 	</b-col>
 	<b-col  md= '3' sm>
-	<div>menudroit</div>
+	
 	</b-col>
 </b-row>	
 </div>
@@ -81,11 +87,13 @@ export default {
 	name: 'wall',
 	data(){
 		return{
+			comment:"",
+			startComment:-1, //false, //0,
 			dropdownDisplay :'display:none',
 			textArea: "Quoi de neuf?" + this.$store.state.user.first_name + "......",
 			first_name:this.$store.state.user.first_name,
 			last_name:this.$store.state.user.last_name,
-			pseudo: this.$store.state.user.pseudo,
+			//pseudo: this.$store.state.user.pseudo,
 			password:null,
 			email:this.$store.state.user.email,
 			dismissSecs: 5,
@@ -115,6 +123,18 @@ export default {
 			'allPostsByUserId']),
 	},
 	methods:{
+		startCommentOn(postIndex){
+			if(postIndex !== this.startComment && postIndex !== -1){
+				this.startComment = postIndex;
+			} else if (postIndex === -1) {
+				console.log(this.comment);
+				this.startComment = postIndex;
+			}else if(postIndex === this.startComment) {
+				this.startComment = -1;
+			}
+
+			
+		},
 		DisplayOn(){
 			return this.dropdownDisplay = this.dropdownDisplay ==='display:none'? 'display:block' : 'display:none';
 		},
@@ -242,6 +262,31 @@ export default {
 			const response =confirm('Etes vous sur de vouloir supprimer ce post?');
 			if(response){
 				this.findAllPosts();
+			} else {
+				console.log('gege');
+			}
+			
+			
+			
+		},
+		async createComment(comment){
+			//this.$bvModal.hide('publication');
+			//console.log(this.textArea);
+			const requestOptions = {
+				method: "Delete",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+				
+			};
+			await fetch(this.urlApi + `/comment/${comment}`, requestOptions);
+			
+			const response =confirm('Etes vous sur de vouloir supprimer ce post?');
+			if(response){
+				//this.findAllComments();
+				//this.findAllCommentsByPostId()
+			} else {
+				console.log('gege');
 			}
 			
 			
@@ -263,6 +308,9 @@ export default {
 
 
 <style lang="scss" scoped>
+.inputComment{
+	border-radius:20px;
+}
 .headerCard{
 	font-size: 0.8rem;
 	display:flex;
@@ -302,14 +350,15 @@ export default {
 
 .post {
 	margin-top:1rem;
-	
+	background-color:rgb(230, 227, 227)
+}
 .textPost{
 	text-align: justify;
 }	
 .btnLikeComment{
 	padding:0;
 	border:none
-}
+
 	
 }
 .likeComment {
@@ -337,6 +386,7 @@ export default {
 }
 .card-body{
 	padding:0;
+	
 	
 	
 }

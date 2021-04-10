@@ -11,7 +11,9 @@
 			Inscription reussie!</b-alert>
 		<b-link v-b-modal.publication @click='resetModal' style='text-decoration:none'>
 		</b-link>
-		<h2>Fil d'actualité de {{allPostsByUserId[0].user.pseudo}}</h2><br>
+		<h2>Fil d'actualité de {{allPostsByUserId[0].user.pseudo}}</h2>
+		<div>Inscrit le {{momentDateMouse(allPostsByUserId[0].user.createdAt)}}</div>
+	<div>Dernière connexion {{momentDateMouse(allPostsByUserId[0].user.updatedAt)}}</div><br>
 		<b-link  block variant="outline-secondary" class='postInput'  style='color:rgb(217, 120, 80 )' >{{textArea}}</b-link>
 <!-- modal publication -->
 		<b-modal id="publication" hide-footer size="lg" @close='alertCloseModal'>
@@ -60,7 +62,7 @@
 	</b-card>
 	</b-col>
 	<b-col  md= '3' sm>
-	<div>menudroit</div>
+	<div></div>
 	</b-col>
 </b-row>	
 </div>

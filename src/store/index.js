@@ -12,9 +12,10 @@ export default new Vuex.Store({
 		token: null,
 		userId: null,
 		user: null,
-		allUsers:[],
+		allUsers: [],
 		allPosts: [],
-		deleteAccountRequest:{},
+		allPostsByUserId: [],
+		deleteAccountRequest: {},
 		deleteAccountSuccess: false,
 	},
 	mutations: {
@@ -36,14 +37,19 @@ export default new Vuex.Store({
 		ALLPOSTS(state, allPostsDataRequest) {
 			return (state.allPosts = allPostsDataRequest);
 		},
+		ALLPOSTSBYUSERID(state, allPostsByUserIdDataRequest) {
+			return (state.allPostsByUserId = allPostsByUserIdDataRequest);
+		},
 		ALLUSERS(state, allUsersDataRequest) {
 			return (state.allUsers = allUsersDataRequest);
 		},
 		DELETEACCOUNT(state, deleteRequest) {
-			return state.deleteAccountRequest = deleteRequest;
+			return (state.deleteAccountRequest = deleteRequest);
 		},
 		DELETESUCCESS(state) {
-			return (state.deleteAccountSuccess = !state.deleteAccountSuccess ? true : false);
+			return (state.deleteAccountSuccess = !state.deleteAccountSuccess
+				? true
+				: false);
 		},
 	},
 	actions: {},

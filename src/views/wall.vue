@@ -39,10 +39,7 @@
 				<div class='textHeader' >
 					<b-link to="wall/user" @click='findAllPostsByUserId(item.user.id);' class="authorPost link">{{ item.user.pseudo}}</b-link>
 					<b-link class="link" v-b-tooltip.leftbottom.v-info ="momentDateMouse(item.createdAt)" >{{ momentDate(item.createdAt)}}</b-link>
-					</div>
-				
- 
-		
+				</div>
 		</div>
 		<div class="menuHeader">...</div>
 		</div>
@@ -51,11 +48,11 @@
 		<b-row class="likeComment" >
 			<b-col>
 				<b-button block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15">
-				<b-card-text class="like" v-on:click='createComment(item.id, item.user_id)'>J'aime</b-card-text>
+				<b-card-text class="like" v-on:click='createComment(item.id, user.id)'>J'aime</b-card-text>
 				</b-button>
 			</b-col>
 			<b-col>
-				<b-button   @click='startCommentOn(index)' block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
+				<b-button   @click="setFocus( index )" block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
 				<b-card-text class="comment" >Commenter</b-card-text>
 				</b-button>
 			</b-col>
@@ -65,11 +62,25 @@
 			</b-button>
 			</b-col>
 		</b-row><br>  
-		<b-form-group   v-if="startComment === index">
-			<b-input autofocus class="inputComment" v-model='comment'></b-input>
+		<b-form-group  >
+			<b-input   :data-key="index" class="inputComment"  v-model='comment[index]' v-on:keyup.enter="createComment(item.id,user.id,index)"></b-input>
 		</b-form-group>
-		<b-card v-for="(comment) in allComments" :key="comment.id" class="inputComment">{{comment}}
-			</b-card> 
+		<div>
+ <b-card v-for="(comment) in allPosts[index].tblComments" :key="comment.id" class="commentCard">
+	<div >
+	<b-link href="#" class="link">{{comment.user.pseudo}}</b-link>
+	<b-link v-if="comment.user_id === $store.state.userId"><b-card-text   class='textPost'>{{ comment.comment_content }}</b-card-text></b-link>
+    <b-card-text v-else class='textComment'>
+     {{comment.comment_content}}
+    </b-card-text>
+</div>
+  
+  </b-card>
+</div>
+
+
+		
+			
 	</b-card>
 	</b-col>
 	<b-col  md= '3' sm>
@@ -89,7 +100,7 @@ export default {
 	name: 'wall',
 	data(){
 		return{
-			comment:"",
+			comment:[],
 			startComment:-1, //false, //0,
 			dropdownDisplay :'display:none',
 			textArea: "Quoi de neuf?" + this.$store.state.user.first_name + "......",
@@ -110,9 +121,6 @@ export default {
 		allPosts() {
 			return this.$store.state.allPosts;
 		},
-		allComments() {
-			return this.$store.state.allPosts;
-		},
 		allPostsByUserId() {
 			return this.$store.state.allPostsByUserId;
 		},
@@ -125,11 +133,23 @@ export default {
 			'user',
 			'allUsers',
 			'allPosts',
-			'allComments',
 			'allPostsByUserId']),
 	},
 	methods:{
-		startCommentOn(postIndex){
+		setFocus(index) {
+			console.log(index);
+			const inputs = document.querySelectorAll('.inputComment');
+			console.log(inputs);
+			inputs.forEach(ele => { 
+				console.log(ele.dataset.key);
+				if (ele.dataset.key == index) {
+					ele.focus();
+				} 
+			});
+		},
+   
+
+		/* startCommentOn(postIndex){
 			if(postIndex !== this.startComment && postIndex !== -1){
 				this.startComment = postIndex;
 			} else if (postIndex === -1) {
@@ -140,7 +160,7 @@ export default {
 			}
 
 			
-		},
+		}, */
 		DisplayOn(){
 			return this.dropdownDisplay = this.dropdownDisplay ==='display:none'? 'display:block' : 'display:none';
 		},
@@ -173,9 +193,6 @@ export default {
 		},
 		allPostsInStore(allPostsData){
 			this.$store.commit('ALLPOSTS',allPostsData);
-		},
-		allCommentsInStore(allCommentsData){
-			this.$store.commit('ALLCOMMENTS', allCommentsData);
 		},
 		allPostsByUserIdInStore(allPostsByUserIdData){
 			this.$store.commit('ALLPOSTSBYUSERID',allPostsByUserIdData);
@@ -278,9 +295,10 @@ export default {
 			
 			
 		},
-		async createComment(postId, userId){
+		async createComment(postId, userId,index){
 			//this.$bvModal.hide('publication');
 			//console.log(this.textArea);
+			
 			const requestOptions = {
 				method: "Post",
 				headers: { 
@@ -288,18 +306,18 @@ export default {
 					"Authorization": `Bearer ${this.token}`},
 				body:JSON.stringify({
 					comment:{
-						comment_content: this.comment,
-						post_id: postId ,
+						comment_content: this.comment[index],
+						post_id: postId,
 						user_id: userId
 					}
 				})
 			};
 			await fetch(this.urlApi + `/comments`, requestOptions);
-			await this.findAllComments();
-		
+			await this.findAllPosts();
+			this.comment=[];
 			/* if(response){
 				//this.findAllComments();
-				//this.findAllCommentsByPostId()
+				//this.findAllComments()
 			} else {
 				console.log('gege');
 			} */
@@ -307,28 +325,12 @@ export default {
 			
 			
 		},
-		async findAllComments() {
-			const requestOptions = {
-				method: "Get",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-			};
-			const response = await fetch(this.urlApi + `/comments`, requestOptions);
-			this.allCommentsData = await response.json();
-			if(this.allCommentsData.count !== 0 && this.isConnect){
-				return this.allCommentsInStore(this.allCommentsData.data.rows);
-			} else{
-				this.allCommentsInStore('');
-			}
-		},
-
 	},
 	mounted(){
 		
 		this.findAllPosts();
 		this.findAllUsers();
-		this.findAllComments();
+		
 		if (this.$store.state.successSubscribe){
 			this.showAlert();
 			this.successSubscrirtionShow();
@@ -340,8 +342,16 @@ export default {
 
 
 <style lang="scss" scoped>
+
+.commentCard{
+	display:flex;
+	width: fit-content;
+	text-align: left;
+	border-radius:30px;
+
+}
 .inputComment{
-	border-radius:20px;
+	border-radius:30px;
 }
 .headerCard{
 	font-size: 0.8rem;
@@ -370,8 +380,9 @@ export default {
 	width:70%;
 }
 .card{
-	width:100%;
-	padding:1rem
+	//width:100%;
+	padding:1rem;
+
 }
 .wall{
 	margin-top: 5rem;

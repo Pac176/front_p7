@@ -224,7 +224,7 @@ export default {
 			const loginRequest = await fetch(this.urlApi + "/users/login", requestOptions);
 			const loginResponse = await loginRequest.json();	
 			if(loginRequest.ok === true ){
-				await this.showMsgBoxTwo();
+				await this.showMsgBoxOne();
 				//const confirmResponse = confirm("Etes vous sur de vouloir supprimer définitivement votre compte?");
 				if (this.boxOne) {
 					const deleteRequestOptions = {

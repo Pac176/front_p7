@@ -30,6 +30,20 @@
 				</div>
 			</div>
 			<b-button v-if='textArea !== ""' class="mt-5" variant='outline-primary' block @click="createPost">Publier</b-button>
+		</b-modal> 
+		<b-modal id="updatePublication" hide-footer size="lg" @close='alertCloseModal'>
+			<template #modal-title >
+			Modifier ma publication
+			</template>
+			<div class="d-block text-center">
+				<div>
+					<b-form-textarea  v-model='postToUpdate.post_content' autofocus id="updateTextarea" style='border: none;  -webkit-box-shadow: none;'   rows="1"	max-rows="10">
+
+					</b-form-textarea>
+					<pre class="mt-3 mb-0"></pre>
+				</div>
+			</div>
+			<b-button  class="mt-5" variant='outline-primary' block @click="updatePost">Modifier</b-button>
 		</b-modal>
 <!-- publications -->
 	<b-card title="" sub-title="" v-for="(item,index) in allPosts" :key="item.id" class="post">
@@ -42,9 +56,11 @@
 				</div>
 		</div>
 		<div class="menuHeader">...</div>
+		
 		</div>
-			<b-link v-if="item.user_id === $store.state.userId"><b-card-text   class='textPost'>{{item.post_content}}</b-card-text></b-link>
-			<b-card-text v-else class='textPost'>{{item.post_content}}</b-card-text>
+	
+			<b-link v-if="item.user_id === $store.state.userId" class="link" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text v-b-tooltip.right.hover.v-primary title="Modifier" class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
+			<b-card-text v-else class='textPost '>{{item.post_content}}</b-card-text><br>
 		<b-row class="likeComment" >
 			<b-col>
 				<b-button block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15">
@@ -62,21 +78,29 @@
 			</b-button>
 			</b-col>
 		</b-row><br>  
-		<b-form-group  >
-			<b-input   :data-key="index" class="inputComment"  v-model='comment[index]' v-on:keyup.enter="createComment(item.id,user.id,index)"></b-input>
-		</b-form-group>
-		<div>
- <b-card v-for="(comment) in allPosts[index].tblComments" :key="comment.id" class="commentCard">
+		<div v-for="(comment) in allPosts[index].tblComments" :key="comment.id" class='commentAndAction'>
+		<b-card class="commentCard">
+
 	<div >
-	<b-link href="#" class="link">{{comment.user.pseudo}}</b-link>
-	<b-link v-if="comment.user_id === $store.state.userId"><b-card-text   class='textPost'>{{ comment.comment_content }}</b-card-text></b-link>
+	<b-link href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</b-link>
+	<b-link v-if="comment.user_id === $store.state.userId" class="link linkUser" ><b-card-text   class='textPost'>{{ comment.comment_content }}</b-card-text></b-link>
     <b-card-text v-else class='textComment'>
      {{comment.comment_content}}
     </b-card-text>
-</div>
+	</div>
+
   
   </b-card>
-</div>
+	<div v-if="item.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
+	<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
+	<b-link class='link deleteComment' @click='deleteComment(comment.id)' >Supprimer</b-link>
+</div></div>
+		<b-form-group  v-if='commentToUpdate !== ""'>
+			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(item.id,user.id,index)"></b-input>
+		</b-form-group>
+		<b-form-group  v-else>
+			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="createComment(item.id,user.id,index)"></b-input>
+		</b-form-group>
 
 
 		
@@ -100,7 +124,10 @@ export default {
 	name: 'wall',
 	data(){
 		return{
-			comment:[],
+			postToUpdate:{},
+			commentToUpdate:{},
+			//comment:[],
+			allComments:[],
 			startComment:-1, //false, //0,
 			dropdownDisplay :'display:none',
 			textArea: "Quoi de neuf?" + this.$store.state.user.first_name + "......",
@@ -141,7 +168,7 @@ export default {
 			const inputs = document.querySelectorAll('.inputComment');
 			console.log(inputs);
 			inputs.forEach(ele => { 
-				console.log(ele.dataset.key);
+				
 				if (ele.dataset.key == index) {
 					ele.focus();
 				} 
@@ -211,13 +238,45 @@ export default {
 			const response = await fetch(this.urlApi + `/posts`, requestOptions);
 			console.log(response);
 			this.allPostsData = await response.json();
-			console.log(this.$store.state.user);
 			if(this.allPostsData.count !== 0 && this.isConnect){
 				return this.allPostsInStore(this.allPostsData.data.rows);
 			} else{
 				this.allPostsInStore('');
 			}
 		
+		},
+		async findOnePost(postId) {
+			
+			const requestOptions = {
+				method: "Get",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+			};
+			const response = await fetch(this.urlApi + `/posts/${postId}`, requestOptions);
+			this.onePostData = await response.json();
+			this.postToUpdate = this.onePostData.data;
+		
+			
+		},
+		async findOneComment(commentId,index) {
+			
+			const requestOptions = {
+				method: "Get",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+			};
+			const response = await fetch(this.urlApi + `/comments/${commentId}`, requestOptions);
+			this.oneCommentData = await response.json();
+			
+			this.commentToUpdate = this.oneCommentData.data;
+			
+			this.setFocus(index);
+			
+	
+		
+			
 		},
 		async findAllPostsByUserId(userId) {
 			const requestOptions = {
@@ -273,6 +332,51 @@ export default {
 			
 			
 		},
+		async updatePost(){
+			this.$bvModal.hide('updatePublication');
+			console.log(this.postToUpdate);
+			const requestOptions = {
+				method: "Put",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+				body:JSON.stringify({
+					post:{ 
+						post_content: this.postToUpdate.post_content,
+						userId: 2
+					}
+				})
+			};
+			await fetch(this.urlApi + `/posts/${this.postToUpdate.id}`, requestOptions);
+			await this.findAllPosts();
+			
+		
+			
+			
+		},
+		async updateComment(){
+			this.$bvModal.hide('updatePublication');
+			console.log(this.commentToUpdate);
+			const requestOptions = {
+				method: "Put",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+				body:JSON.stringify({
+					comment:{ 
+						comment_content: this.commentToUpdate.comment_content,
+						userId:this.commentToUpdate.user_id
+					}
+				})
+			};
+			await fetch(this.urlApi + `/comments/${this.commentToUpdate.id}`, requestOptions);
+			await this.findAllPosts();
+			this.commentToUpdate={};
+			
+		
+			
+			
+		},
 		async deletePost(post){
 			//this.$bvModal.hide('publication');
 			//console.log(this.textArea);
@@ -295,8 +399,30 @@ export default {
 			
 			
 		},
-		async createComment(postId, userId,index){
+		async deleteComment(comment){
 			//this.$bvModal.hide('publication');
+			//console.log(this.textArea);
+			const requestOptions = {
+				method: "Delete",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+				
+			};
+			await fetch(this.urlApi + `/comments/${comment}`, requestOptions);
+			
+			const response =confirm('Etes vous sur de vouloir supprimer ce commentaire?');
+			if(response){
+				this.findAllPosts();
+			} else {
+				console.log('gege');
+			}
+			
+			
+			
+		},
+		async createComment(postId, userId,index){
+			this.$bvModal.hide('publication');
 			//console.log(this.textArea);
 			
 			const requestOptions = {
@@ -342,16 +468,40 @@ export default {
 
 
 <style lang="scss" scoped>
+.actionsComment{
+	align-self: flex-end;
+	
+}
+.deleteComment{
+	font-size: 0.7rem;
+	margin-right: 1.5rem;
+	margin-left: 0.5rem;
+}
+.updateComment{
+	font-size: 0.7rem;
+	
+}
 
 .commentCard{
 	display:flex;
 	width: fit-content;
 	text-align: left;
 	border-radius:30px;
+	margin-bottom:0.1rem
+	
+	
 
+}
+.commentAndAction{
+	display:flex;
+	flex-direction: column;
+	width: fit-content;
+	//text-align:right;
+	
 }
 .inputComment{
 	border-radius:30px;
+	margin-top:0.8rem
 }
 .headerCard{
 	font-size: 0.8rem;
@@ -381,7 +531,7 @@ export default {
 }
 .card{
 	//width:100%;
-	padding:1rem;
+	padding:0.6rem;
 
 }
 .wall{
@@ -433,9 +583,12 @@ export default {
 	
 	
 }
-.link{
-	text-decoration: none;
+.link, .link:hover{
+	text-decoration:none;
 	color:black
+}
+.linkUser:hover{
+color:rgb(164, 61, 145)
 }
 ////////////////////////////////@forward 
 

@@ -68,7 +68,7 @@
 				</b-button>
 			</b-col>
 			<b-col>
-				<b-button   @click="setFocus( index )" block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
+				<b-button   @click="function(){setFocus( index ); switchToUpdate=false}" block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
 				<b-card-text class="comment" >Commenter</b-card-text>
 				</b-button>
 			</b-col>
@@ -83,23 +83,21 @@
 
 	<div >
 	<b-link href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</b-link>
-	<b-link v-if="comment.user_id === $store.state.userId" class="link linkUser" ><b-card-text   class='textPost'>{{ comment.comment_content }}</b-card-text></b-link>
-    <b-card-text v-else class='textComment'>
-     {{comment.comment_content}}
-    </b-card-text>
+	<b-card-text   class='textPost'>{{ comment.comment_content }}</b-card-text>
+   
 	</div>
 
   
   </b-card>
-	<div v-if="item.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
+	<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
 	<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
 	<b-link class='link deleteComment' @click='deleteComment(comment.id)' >Supprimer</b-link>
 </div></div>
-		<b-form-group  v-if='commentToUpdate !== ""'>
-			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(item.id,user.id,index)"></b-input>
+		<b-form-group  v-if='switchToUpdate !== false'>
+			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(item.id,user.id,index)" placeholder='Je modifie mon commentaire....'></b-input>
 		</b-form-group>
 		<b-form-group  v-else>
-			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="createComment(item.id,user.id,index)"></b-input>
+			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index)" placeholder='Je commente......'></b-input>
 		</b-form-group>
 
 
@@ -124,9 +122,10 @@ export default {
 	name: 'wall',
 	data(){
 		return{
+			switchToUpdate:false,
 			postToUpdate:{},
-			commentToUpdate:{},
-			//comment:[],
+			commentToUpdate:'er',
+			newComment:[],
 			allComments:[],
 			startComment:-1, //false, //0,
 			dropdownDisplay :'display:none',
@@ -269,11 +268,9 @@ export default {
 			};
 			const response = await fetch(this.urlApi + `/comments/${commentId}`, requestOptions);
 			this.oneCommentData = await response.json();
-			
 			this.commentToUpdate = this.oneCommentData.data;
-			
 			this.setFocus(index);
-			
+			this.switchToUpdate = true;
 	
 		
 			
@@ -432,7 +429,7 @@ export default {
 					"Authorization": `Bearer ${this.token}`},
 				body:JSON.stringify({
 					comment:{
-						comment_content: this.comment[index],
+						comment_content: this.newComment[index],
 						post_id: postId,
 						user_id: userId
 					}
@@ -440,7 +437,7 @@ export default {
 			};
 			await fetch(this.urlApi + `/comments`, requestOptions);
 			await this.findAllPosts();
-			this.comment=[];
+			this.newComment=[];
 			/* if(response){
 				//this.findAllComments();
 				//this.findAllComments()
@@ -453,7 +450,7 @@ export default {
 		},
 	},
 	mounted(){
-		
+		console.log(this.user);
 		this.findAllPosts();
 		this.findAllUsers();
 		

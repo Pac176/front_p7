@@ -9,12 +9,13 @@
 		<div>Inscrit le {{momentDateMouse(user.createdAt)}}</div>
 		<!-- <div>Dernière connexion {{momentDate(user.updatedAt)}}</div> --><br>
 	</b-col>
-	<b-col  md="6" sm>
+	<b-col  md="7" sm style='padding:0 1.5 0 0 rem'>
 		<b-alert  :show="dismissCountDown" dismissible variant="success"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
 			Inscription reussie!</b-alert>
 		<b-link v-b-modal.publication @click='resetModal' class="link">
 		<h2>Fil d'actualité</h2><br>
-		<b-link  block variant="outline-secondary" class='postInput'  style='color:rgb(217, 120, 80 )' >{{textArea}}</b-link>
+		<h2 v-if='noPosts' style='font-style:italic; color:#FD2D01;'>{{noPosts}}</h2><br>
+		<b-link  block variant="outline-secondary" class='postInput'  style='color:#FD2D01' >{{textArea}}</b-link>
 		</b-link>
 <!-- modal publication -->
 		<b-modal id="publication" hide-footer size="lg" @close='alertCloseModal'>
@@ -64,20 +65,20 @@
 		<b-row class="likeComment" >
 			<b-col>
 				<b-button block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15">
-				<b-card-text class="like" v-on:click='createComment(item.id, user.id)'>J'aime</b-card-text>
+				<b-card-text  v-on:click='createComment(item.id, user.id)'>J'aime</b-card-text>
 				</b-button>
 			</b-col>
 			<b-col>
-				<b-button   @click="function(){setFocus( index ); switchToUpdate=false}" block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
-				<b-card-text class="comment" >Commenter</b-card-text>
+				<b-button   @click="function(){setFocusInput( index ); switchToUpdate=false}" block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
+				<b-card-text  >Commenter</b-card-text>
 				</b-button>
 			</b-col>
 			<b-col v-if="item.user_id === userId || user.is_admin === 1">
-				<b-button  @click='deletePost(item.id)' block variant="outline-secondary"  class='btnLikeComment' ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616755730/delete_sg8ndk.svg" alt="" height="15">
-				<b-card-text class="delete" >Supprimer </b-card-text>
+				<b-button :data-key="index" @click='deletePost(item.id,index)' block variant="outline-secondary"  class='btnLikeComment' ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616755730/delete_sg8ndk.svg" alt="" height="15">
+				<b-card-text  >Supprimer </b-card-text>
 			</b-button>
 			</b-col>
-		</b-row><br>  
+		</b-row> 
 		<div v-for="(comment) in allPosts[index].tblComments" :key="comment.id" class='commentAndAction'>
 		<b-card class="commentCard">
 
@@ -94,18 +95,18 @@
 	<b-link class='link deleteComment' @click='deleteComment(comment.id)' >Supprimer</b-link>
 </div></div>
 		<b-form-group  v-if='switchToUpdate !== false'>
-			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(item.id,user.id,index)" placeholder='Je modifie mon commentaire....'></b-input>
+			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)" placeholder=''></b-input>
 		</b-form-group>
 		<b-form-group  v-else>
-			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index)" placeholder='Je commente......'></b-input>
+			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index)" placeholder=''></b-input>
 		</b-form-group>
 
 
 		
 			
 	</b-card>
-	</b-col>
-	<b-col  md= '3' sm>
+</b-col>
+	<b-col  md= '2' sm> 
 	
 	</b-col>
 </b-row>	
@@ -122,6 +123,7 @@ export default {
 	name: 'wall',
 	data(){
 		return{
+			noPosts:null,
 			switchToUpdate:false,
 			postToUpdate:{},
 			commentToUpdate:'er',
@@ -129,7 +131,7 @@ export default {
 			allComments:[],
 			startComment:-1, //false, //0,
 			dropdownDisplay :'display:none',
-			textArea: "Quoi de neuf?" + this.$store.state.user.first_name + "......",
+			textArea:"Quoi de neuf? " + this.$store.state.user.pseudo + "......",
 			//first_name:this.$store.state.user.first_name,
 			//last_name:this.$store.state.user.last_name,
 			//pseudo: this.$store.state.user.pseudo,
@@ -162,14 +164,29 @@ export default {
 			'allPostsByUserId']),
 	},
 	methods:{
-		setFocus(index) {
-			console.log(index);
+		setFocusInput(index) {
+			const inputs = document.querySelectorAll('.inputComment');
+			inputs.forEach(ele => { 
+				if (ele.dataset.key == index) {
+					ele.focus();
+				} 
+			});
+		},
+		outFocusInput(index) {
 			const inputs = document.querySelectorAll('.inputComment');
 			console.log(inputs);
 			inputs.forEach(ele => { 
-				
 				if (ele.dataset.key == index) {
-					ele.focus();
+					ele.blur();
+				} 
+			});
+		},
+		outFocusButton(index) {
+			const buttons = document.querySelectorAll('.btnLikeComment');
+			console.log(buttons);
+			buttons.forEach(ele => { 
+				if (ele.dataset.key == index) {
+					ele.blur();
 				} 
 			});
 		},
@@ -239,7 +256,10 @@ export default {
 			this.allPostsData = await response.json();
 			if(this.allPostsData.count !== 0 && this.isConnect){
 				return this.allPostsInStore(this.allPostsData.data.rows);
-			} else{
+			} else if(this.allPostsData.count === 0){
+				this.noPosts = this.allPostsData.message;
+				return this.allPostsInStore("");
+			}else{
 				this.allPostsInStore('');
 			}
 		
@@ -269,7 +289,7 @@ export default {
 			const response = await fetch(this.urlApi + `/comments/${commentId}`, requestOptions);
 			this.oneCommentData = await response.json();
 			this.commentToUpdate = this.oneCommentData.data;
-			this.setFocus(index);
+			this.setFocusInput(index);
 			this.switchToUpdate = true;
 	
 		
@@ -324,8 +344,8 @@ export default {
 			};
 			await fetch(this.urlApi + `/posts`, requestOptions);
 			await this.findAllPosts();
-			this.textArea= "Quoi de neuf?" + this.$store.state.user.first_name + "......";
-			
+			this.textArea= "Quoi de neuf?" + this.$store.state.user.pseudo + "......";
+			this.noPosts=null;
 			
 			
 		},
@@ -351,7 +371,7 @@ export default {
 			
 			
 		},
-		async updateComment(){
+		async updateComment(index){
 			this.$bvModal.hide('updatePublication');
 			console.log(this.commentToUpdate);
 			const requestOptions = {
@@ -369,12 +389,12 @@ export default {
 			await fetch(this.urlApi + `/comments/${this.commentToUpdate.id}`, requestOptions);
 			await this.findAllPosts();
 			this.commentToUpdate={};
-			
-		
+			this.switchToUpdate = false;
+			this.outFocusInput(index);
 			
 			
 		},
-		async deletePost(post){
+		async deletePost(post,index){
 			//this.$bvModal.hide('publication');
 			//console.log(this.textArea);
 			const requestOptions = {
@@ -384,12 +404,15 @@ export default {
 					"Authorization": `Bearer ${this.token}`},
 				
 			};
-			await fetch(this.urlApi + `/posts/${post}`, requestOptions);
-			
 			const response =confirm('Etes vous sur de vouloir supprimer ce post?');
+			
+			
 			if(response){
+				await fetch(this.urlApi + `/posts/${post}`, requestOptions);
 				this.findAllPosts();
+				console.log(this.allPosts);
 			} else {
+				this.outFocusButton(index);
 				console.log('gege');
 			}
 			
@@ -438,6 +461,7 @@ export default {
 			await fetch(this.urlApi + `/comments`, requestOptions);
 			await this.findAllPosts();
 			this.newComment=[];
+			this.outFocusInput(index);
 			/* if(response){
 				//this.findAllComments();
 				//this.findAllComments()
@@ -448,9 +472,30 @@ export default {
 			
 			
 		},
+		async likePost(){
+			
+			const requestOptions = {
+				method: "Put",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+				body:JSON.stringify({
+					post:{ 
+						post_content: this.postToUpdate.post_content,
+						userId: 2
+					}
+				})
+			};
+			await fetch(this.urlApi + `/posts/${this.postToUpdate.id}`, requestOptions);
+			
+			
+		
+			
+			
+		},
 	},
 	mounted(){
-		console.log(this.user);
+		console.log(this.allPosts);
 		this.findAllPosts();
 		this.findAllUsers();
 		
@@ -547,8 +592,10 @@ export default {
 }	
 .btnLikeComment{
 	padding:0;
-	border:none
-
+	border:none;	
+	text-decoration: none;
+	color: rgb(206, 53, 53);
+	font-size:0.8rem;
 	
 }
 .likeComment {
@@ -557,12 +604,9 @@ export default {
 	justify-content: space-around;
 	width:100%;
 	margin:0
+	
+}
 
-}
-.comment, .like, .delete {
-	text-decoration: none;
-	color: rgb(115, 20, 20);
-}
 .postInput{
 	overflow:hidden;
 	margin:0rem;
@@ -572,7 +616,8 @@ export default {
 	display: flex;
 	align-items: center;
 	text-decoration:none;
-	border:1px rgb(224, 201, 201) solid
+	border:1px rgb(224, 201, 201) solid;
+	padding-left:0.8rem;
 }
 .card-body{
 	padding:0;

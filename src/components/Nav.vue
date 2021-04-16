@@ -8,7 +8,7 @@
     <b-navbar-nav id="menuGauche">
         <b-nav-item class="routerLink" to="/wall" >Fil d'actualité</b-nav-item>
         <b-nav-item class="routerLink" to='/myAccount/user' >Mon Compte</b-nav-item>
-        <b-nav-item v-if="isAdmin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
+        <b-nav-item v-if="user.is_admin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
         
     </b-navbar-nav>
      <b-navbar-nav id="menuDroit">   
@@ -53,7 +53,10 @@ export default {
 <style scoped lang="scss">
 
 
-
+.fixed-top{
+  font-size:0.5rem;
+  color:red
+}
 
 h3 {
   margin: 40px 0 0;
@@ -100,7 +103,13 @@ display:flex
 display:flex
 }
 }
+.navbar-dark .navbar-nav .nav-link {
+   font-size:1.5rem;
+   color:rgb(199, 197, 197);
+}
 
+.navbar-dark:hover .navbar-nav:hover .nav-link:hover {
+  color:rgb(231, 146, 146);}
 
 </style>
  

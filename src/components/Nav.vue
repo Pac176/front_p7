@@ -8,7 +8,7 @@
     <b-navbar-nav id="menuGauche">
         <b-nav-item class="routerLink" to="/wall" >Fil d'actualité</b-nav-item>
         <b-nav-item class="routerLink" to='/myAccount/user' >Mon Compte</b-nav-item>
-        <b-nav-item v-if="user.is_admin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
+        <b-nav-item  v-if="user.is_admin" class="routerLink" to="/MyAccount">Tableau de bord</b-nav-item> 
         
     </b-navbar-nav>
      <b-navbar-nav id="menuDroit">   

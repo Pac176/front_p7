@@ -62,15 +62,18 @@
 	
 			<b-link v-if="item.user_id === $store.state.userId" class="link" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text v-b-tooltip.right.hover.v-primary title="Modifier" class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
 			<b-card-text v-else class='textPost '>{{item.post_content}}</b-card-text><br>
+			<b-card-text v-if='userLike(item)'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618743029/Groupjaimebleu_qo5cda.svg" alt="" height="20">{{user.pseudo}}</b-card-text>
 		<b-row class="likeComment" >
 			<b-col>
-				<b-button block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15">
-				<b-card-text  v-on:click='createComment(item.id, user.id)'>J'aime</b-card-text>
+				<b-button  v-on:click='function(){likePost(item.id,index); userLike(item)}' block variant="outline-secondary" class='btnLikeComment'>
+					<img v-if='userLike(item)' src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618743029/Groupjaimebleu_qo5cda.svg" alt="" height="20" >
+					<img v-else  src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15">
+				<b-card-text >J'aime</b-card-text>
 				</b-button>
 			</b-col>
 			<b-col>
 				<b-button   @click="function(){setFocusInput( index ); switchToUpdate=false}" block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
-				<b-card-text  >Commenter</b-card-text>
+				<b-card-text >Répondre</b-card-text>
 				</b-button>
 			</b-col>
 			<b-col v-if="item.user_id === userId || user.is_admin === 1">
@@ -84,7 +87,7 @@
 
 	<div >
 	<b-link href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</b-link>
-	<b-card-text   class='textPost'>{{ comment.comment_content }}</b-card-text>
+	<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
    
 	</div>
 
@@ -123,10 +126,11 @@ export default {
 	name: 'wall',
 	data(){
 		return{
+			isUserLike:[],
 			noPosts:null,
 			switchToUpdate:false,
 			postToUpdate:{},
-			commentToUpdate:'er',
+			//commentToUpdate:'er',
 			newComment:[],
 			allComments:[],
 			startComment:-1, //false, //0,
@@ -164,6 +168,16 @@ export default {
 			'allPostsByUserId']),
 	},
 	methods:{
+		userLike(item){
+			if(item.like.length !== 0) {
+				console.log('ok');
+				return item.like.includes(item.like.find(el=>el.user_id === this.user.id));
+				
+				
+					
+			}
+		
+		},
 		setFocusInput(index) {
 			const inputs = document.querySelectorAll('.inputComment');
 			inputs.forEach(ele => { 
@@ -348,6 +362,7 @@ export default {
 			this.noPosts=null;
 			
 			
+			
 		},
 		async updatePost(){
 			this.$bvModal.hide('updatePublication');
@@ -472,22 +487,22 @@ export default {
 			
 			
 		},
-		async likePost(){
-			
+		async likePost(postId){
+			console.log('gege');
 			const requestOptions = {
-				method: "Put",
+				method: "Post",
 				headers: { 
 					"Content-Type": "application/json",
 					"Authorization": `Bearer ${this.token}`},
 				body:JSON.stringify({
-					post:{ 
-						post_content: this.postToUpdate.post_content,
-						userId: 2
+					like:{ 
+						postId: postId,
+						userId: this.userId
 					}
 				})
 			};
-			await fetch(this.urlApi + `/posts/${this.postToUpdate.id}`, requestOptions);
-			
+			await fetch(this.urlApi + `/posts/like`, requestOptions);
+			this.findAllPosts();
 			
 		
 			

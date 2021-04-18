@@ -65,21 +65,21 @@
 			<div class="usersLikes"><b-card-text v-b-tooltip.hover :title="item.like.map(x=>x.user.pseudo)" v-if='item.like.map(x=>x.user.pseudo).length>=1'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" ><span v-html="item.like.map(x=>x.user.pseudo).length" style='margin-left:0.4rem;'></span></b-card-text></div>
 		<b-row class="likeComment" >
 			<b-col>
-				<b-button  v-on:click='function(){likePost(item.id,index); userLike(item)}' block variant="outline-secondary" class='btnLikeComment'>
-					<img v-if='userLike(item)' src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618753322/Group_1bluejaime_ymp6es.svg" alt="" height="22" >
-					<img v-else  src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15">
-				<b-card-text >J'aime</b-card-text>
-				</b-button>
+				<div  v-on:click='function(){likePost(item.id,index); userLike(item);outFocusButton(index)}' block variant="outline-secondary" class='btnLikeComment'>
+					<div  v-if='userLike(item)'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618753322/Group_1bluejaime_ymp6es.svg" alt="" height="22" ><b-card-text style='color:rgb(34,143,222); border:none'>J'aime</b-card-text></div>
+					<div  v-else><img   src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15" style=' border:none'><b-card-text >J'aime</b-card-text></div>
+				</div>
+				
 			</b-col>
 			<b-col>
-				<b-button   @click="function(){setFocusInput( index ); switchToUpdate=false}" block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
+				<div  @click="function(){setFocusInput( index ); switchToUpdate=false}" block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
 				<b-card-text >Répondre</b-card-text>
-				</b-button>
+				</div>
 			</b-col>
 			<b-col v-if="item.user_id === userId || user.is_admin === 1">
-				<b-button :data-key="index" @click='deletePost(item.id,index)' block variant="outline-secondary"  class='btnLikeComment' ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616755730/delete_sg8ndk.svg" alt="" height="15">
+				<div :data-key="index" @click='deletePost(item.id,index)' block variant="outline-secondary"  class='btnLikeComment' ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616755730/delete_sg8ndk.svg" alt="" height="15">
 				<b-card-text  >Supprimer </b-card-text>
-			</b-button>
+			</div>
 			</b-col>
 		</b-row> 
 		<div v-for="(comment) in allPosts[index].tblComments" :key="comment.id" class='commentAndAction'>
@@ -614,9 +614,15 @@ export default {
 	padding:0;
 	border:none;	
 	text-decoration: none;
-	color: rgb(206, 53, 53);
+	color: rgb(206, 48, 48);
 	font-size:0.8rem;
-	
+	cursor: pointer;
+}
+.btnLikeComment:hover{
+	background-color: rgb(230, 210, 208);
+	cursor: pointer;
+	border-radius: 20rem;
+	color:rgb(34,143,222)
 }
 .likeComment {
 	display: flex;

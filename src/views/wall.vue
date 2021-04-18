@@ -62,7 +62,7 @@
 	
 			<b-link v-if="item.user_id === $store.state.userId" class="link" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text v-b-tooltip.right.hover.v-primary title="Modifier" class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
 			<b-card-text v-else class='textPost '>{{item.post_content}}</b-card-text><br>
-			<div class="usersLikes"><b-card-text v-if='userLike(item)' ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" ><span v-html="user.pseudo" style='margin-left:0.4rem;'></span></b-card-text></div>
+			<div class="usersLikes"><b-card-text v-if='item.like.map(x=>x.user.pseudo).length>=1'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" ><span v-html="item.like.map(x=>x.user.pseudo).length" style='margin-left:0.4rem;'></span></b-card-text></div>
 		<b-row class="likeComment" >
 			<b-col>
 				<b-button  v-on:click='function(){likePost(item.id,index); userLike(item)}' block variant="outline-secondary" class='btnLikeComment'>

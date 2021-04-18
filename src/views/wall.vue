@@ -62,11 +62,11 @@
 	
 			<b-link v-if="item.user_id === $store.state.userId" class="link" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text v-b-tooltip.right.hover.v-primary title="Modifier" class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
 			<b-card-text v-else class='textPost '>{{item.post_content}}</b-card-text><br>
-			<b-card-text v-if='userLike(item)'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618743029/Groupjaimebleu_qo5cda.svg" alt="" height="20">{{user.pseudo}}</b-card-text>
+			<div class="usersLikes"><b-card-text v-if='userLike(item)' ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" ><span v-html="user.pseudo" style='margin-left:0.4rem;'></span></b-card-text></div>
 		<b-row class="likeComment" >
 			<b-col>
 				<b-button  v-on:click='function(){likePost(item.id,index); userLike(item)}' block variant="outline-secondary" class='btnLikeComment'>
-					<img v-if='userLike(item)' src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618743029/Groupjaimebleu_qo5cda.svg" alt="" height="20" >
+					<img v-if='userLike(item)' src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618753322/Group_1bluejaime_ymp6es.svg" alt="" height="22" >
 					<img v-else  src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15">
 				<b-card-text >J'aime</b-card-text>
 				</b-button>
@@ -171,7 +171,7 @@ export default {
 		userLike(item){
 			if(item.like.length !== 0) {
 				console.log('ok');
-				return item.like.includes(item.like.find(el=>el.user_id === this.user.id));
+				return item.like.includes(item.like.find(el=>el.user.id === this.user.id));
 				
 				
 					
@@ -525,6 +525,11 @@ export default {
 
 
 <style lang="scss" scoped>
+.usersLikes{
+	display:flex;
+	font-style:italic;
+	color:rgb(48, 104, 189)
+}
 .actionsComment{
 	align-self: flex-end;
 	

@@ -13,10 +13,10 @@
 		<b-alert  :show="dismissCountDown" dismissible variant="success"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
 			Inscription reussie!</b-alert>
 		<b-link v-b-modal.publication @click='resetModal' class="link">
-		<h2>Fil d'actualité de {{allPostsByUserId[0].user.pseudo}}</h2>
-		<div>Inscrit le {{momentDateMouse(allPostsByUserId[0].user.createdAt)}}</div>
-		<div>Dernière connexion {{momentDateMouse(allPostsByUserId[0].user.updatedAt)}}</div><br>
-		
+		<h2 v-if='allPostsByUserId.length >= 1'>Fil d'actualité de {{allPostsByUserId[0].user.pseudo}}</h2>
+		<div v-if='allPostsByUserId.length >= 1'>Inscrit le {{momentDateMouse(allPostsByUserId[0].user.createdAt)}}</div>
+		<div v-if='allPostsByUserId.length >= 1'>Dernière connexion {{momentDateMouse(allPostsByUserId[0].user.updatedAt)}}</div><br> 
+		<h2 v-if='noPosts' style='font-style:italic; color:#FD2D01;'>{{noPosts}}</h2><br>
 		</b-link>
 <!-- modal publication -->
 		<b-modal id="publication" hide-footer size="lg" @close='alertCloseModal'>
@@ -59,7 +59,7 @@
 		</div>
 		<div class="menuHeader">...</div>
 		
-		</div>{{allPostsByUserId}}
+		</div>
 			<b-link v-if="item.user_id === $store.state.userId" class="link" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text v-b-tooltip.right.hover.v-primary title="Modifier" class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
 			<b-card-text v-else class='textPost '>{{item.post_content}}</b-card-text><br>
 			<div class="usersLikes" v-show='item.like.map(x=>x.user.pseudo).length>=1'><b-card-text v-b-tooltip.hover :title="item.like.map(x=>x.user.pseudo)" ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" ><span v-html="item.like.map(x=>x.user.pseudo).length" style='margin-left:0.4rem;'></span></b-card-text></div>
@@ -92,7 +92,7 @@
 
 <!-- comments -->
 <div class='commentGroup' block>
-	<div v-for="(comment) in allPosts[index].tblComments" :key="comment.id" class='commentAndAction'>
+	<div v-for="(comment) in allPostsByUserId[index].tblComments" :key="comment.id" class='commentAndAction'>
 		<b-card class="commentCard">
 				<div >
 					<b-link href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</b-link>
@@ -102,14 +102,14 @@
 <!-- menu Comments -->
 		<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
 			<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
-			<b-link class='link deleteComment' @click='deleteComment(comment.id)' >Supprimer</b-link>
+			<b-link class='link deleteComment' @click='deleteComment(comment.id,item.user.id)' >Supprimer</b-link>
 		</div>
 	</div>
 </div>	
 <!-- input comment -->
 
 		<b-form-group  v-if='switchToUpdate !== false'>
-			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)"></b-input>
+			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(item.user.id,index)"></b-input>
 		</b-form-group>
 		<b-form-group  v-else>
 			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index)"></b-input>
@@ -316,13 +316,14 @@ export default {
 			};
 			const response = await fetch(this.urlApi + `/posts/users/${userId}`, requestOptions);
 			this.allPostsByUserIdData = await response.json();
-			console.log(this.allPostsByUserIdData.count);
+			console.log(this.allPostsByUserIdData);
 
 			if(this.allPostsByUserIdData.count !== 0 && this.isConnect){
 				this.allPostsByUserIdInStore(this.allPostsByUserIdData.data);
 			} else{
 				console.log(this.allPostsByUserId);
 				this.allPostsByUserIdInStore('');
+				this.noPosts = "Vous n'avez aucune publication";
 			}
 			console.log(this.allPostsByUserId);
 		},
@@ -388,8 +389,8 @@ export default {
 			
 			
 		},
-		async updateComment(index){
-			this.$bvModal.hide('updatePublication');
+		async updateComment(userId,index){
+			//this.$bvModal.hide('updatePublication');
 			console.log(this.commentToUpdate);
 			const requestOptions = {
 				method: "Put",
@@ -404,7 +405,7 @@ export default {
 				})
 			};
 			await fetch(this.urlApi + `/comments/${this.commentToUpdate.id}`, requestOptions);
-			await this.findAllPosts();
+			await this.findAllPostsByUserId(userId);
 			this.commentToUpdate={};
 			this.switchToUpdate = false;
 			this.outFocusInput(index);
@@ -436,7 +437,7 @@ export default {
 			
 			
 		},
-		async deleteComment(comment){
+		async deleteComment(comment, userId){
 			//this.$bvModal.hide('publication');
 			//console.log(this.textArea);
 			const requestOptions = {
@@ -450,7 +451,7 @@ export default {
 			
 			const response =confirm('Etes vous sur de vouloir supprimer ce commentaire?');
 			if(response){
-				this.findAllPosts();
+				await this.findAllPostsByUserId(userId);
 			} else {
 				console.log('gege');
 			}
@@ -476,7 +477,7 @@ export default {
 				})
 			};
 			await fetch(this.urlApi + `/comments`, requestOptions);
-			await this.findAllPosts();
+			await this.findAllPostsByUserId(userId);
 			this.newComment=[];
 			this.outFocusInput(index);
 			/* if(response){

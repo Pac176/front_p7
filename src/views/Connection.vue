@@ -62,25 +62,27 @@ export default {
 		showAlert(variant) {
 			this.variantResult = variant;
 			this.dismissCountDown = this.dismissSecs;
-		
 		},
 		userInStore(userData){
 			this.$store.commit('USER',userData);
 		},
 		async findOneUser () {
-			const requestOptions = {
-				method: "Get",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-			};
-			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
-			this.userData = await response.json();
-			this.userInStore(this.userData.data);
+			try {
+				const requestOptions = {
+					method: "Get",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+				};
+				const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
+				this.userData = await response.json();
+				this.userInStore(this.userData.data); 
+			} catch (error) {
+				console.log(error,  "Erreure sur la fonction findOneUser");
+			}
 		},
 		async onConnect (event) {
 			try {
-				
 				event.preventDefault();
 				const requestOptions = {
 					method: "POST",
@@ -103,19 +105,12 @@ export default {
 				}else{
 					this.showAlert('danger');
 				}
-  
-			} catch (e) {
-				console.log(e);
+			} catch (error) {
+				console.log(error,  "Erreure sur la fonction onConnect");
 			}
-
-			
 		}
-
-    
 	}
 };
-
-
 </script>
 
 <style lang="scss" >
@@ -124,15 +119,12 @@ export default {
 	display:flex;
 	flex-direction: column;
 	width:95%
-
-}
+	}
 }
 @media screen and (min-width:700px) {
 	.formConnect{
 	width:50%
-
-}
-
+	}
 }
 .connect{
 	margin-top:5rem

@@ -61,13 +61,22 @@
 		</div>
 			<b-link v-if="item.user_id === $store.state.userId" class="link" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text v-b-tooltip.right.hover.v-primary title="Modifier" class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
 			<b-card-text v-else class='textPost '>{{item.post_content}}</b-card-text><br>
-			<div class="usersLikes" v-show='item.like.map(x=>x.user.pseudo).length>=1'><b-card-text v-b-tooltip.hover :title="item.like.map(x=>x.user.pseudo)" ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" ><span v-html="item.like.map(x=>x.user.pseudo).length" style='margin-left:0.4rem;'></span></b-card-text></div>
+			<div class='counterLike'>
+			<div class="usersLikes" v-show='item.like.map(x=>x.user.pseudo).length>=1'><b-card-text v-b-tooltip.hover :title="item.like.map(x=>x.user.pseudo)" >
+				<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" >
+				<span v-html="item.like.map(x=>x.user.pseudo).length" style='margin-left:0.4rem;'>
+				</span>
+				</b-card-text>
+			</div>
+			</div>
 <!-- MenuPost -->	
 		<b-row class="likeComment" >
 			<b-col>
 				<div  v-on:click='function(){likePost(item.id,index); userLike(item);outFocusButton(index)}' block variant="outline-secondary" class='btnLikeComment'>
-					<div  v-if='userLike(item)'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618753322/Group_1bluejaime_ymp6es.svg" alt="" height="22" ><b-card-text style='color:rgb(34,143,222); border:none'>J'aime</b-card-text></div>
-					<div  v-else><img   src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15" style=' border:none'><b-card-text >J'aime</b-card-text></div>
+					<div  v-if='userLike(item)'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618753322/Group_1bluejaime_ymp6es.svg" alt="" height="22" >
+					<b-card-text style='color:rgb(34,143,222); border:none'>J'aime</b-card-text></div>
+					<div  v-else><img   src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15" style=' border:none'>
+					<b-card-text >J'aime</b-card-text></div>
 				</div>
 				
 			</b-col>
@@ -525,6 +534,10 @@ export default {
 
 
 <style lang="scss" scoped>
+
+.counterLike{
+	height: 2rem;
+}
 .usersLikes{
 	display:flex;
 	font-style:italic;

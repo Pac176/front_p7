@@ -81,7 +81,7 @@
 				</div>
 			</b-col>
 			<b-col v-if="item.user_id === userId || user.is_admin === 1">
-				<div :data-key="index" @click='deletePost(item.id,index)' block variant="outline-secondary"  class='btnLikeComment' >
+				<div :data-key="index" @click='deletePost(item.id,item.user.id,index)' block variant="outline-secondary"  class='btnLikeComment' >
 					<div>
 						<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616755730/delete_sg8ndk.svg" alt="" height="15">
 						<b-card-text  >Supprimer </b-card-text>
@@ -316,11 +316,15 @@ export default {
 			};
 			const response = await fetch(this.urlApi + `/posts/users/${userId}`, requestOptions);
 			this.allPostsByUserIdData = await response.json();
+			console.log(this.allPostsByUserIdData.count);
+
 			if(this.allPostsByUserIdData.count !== 0 && this.isConnect){
-				this.allPostsByUserIdInStore(this.allPostsByUserIdData.data.rows);
+				this.allPostsByUserIdInStore(this.allPostsByUserIdData.data);
 			} else{
+				console.log(this.allPostsByUserId);
 				this.allPostsByUserIdInStore('');
 			}
+			console.log(this.allPostsByUserId);
 		},
 		async findAllUsers() {
 			const requestOptions = {
@@ -407,7 +411,7 @@ export default {
 			
 			
 		},
-		async deletePost(post,index){
+		async deletePost(postId,userId,index){
 			//this.$bvModal.hide('publication');
 			//console.log(this.textArea);
 			const requestOptions = {
@@ -421,9 +425,9 @@ export default {
 			
 			
 			if(response){
-				await fetch(this.urlApi + `/posts/${post}`, requestOptions);
-				this.findAllPosts();
-				console.log(this.allPosts);
+				await fetch(this.urlApi + `/posts/${postId}`, requestOptions);
+				this.findAllPostsByUserId(userId);
+				
 			} else {
 				this.outFocusButton(index);
 				console.log('gege');
@@ -508,7 +512,7 @@ export default {
 		},
 	},
 	mounted(){
-		console.log(this.allPosts);
+		/* console.log(this.allPosts);
 		this.findAllPosts();
 		this.findAllUsers();
 		
@@ -516,7 +520,7 @@ export default {
 			this.showAlert();
 			this.successSubscrirtionShow();
 		}
-		
+		 */
 	}
 };
 </script>

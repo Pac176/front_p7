@@ -214,20 +214,6 @@ export default {
 				} 
 			});
 		},
-   
-
-		/* startCommentOn(postIndex){
-			if(postIndex !== this.startComment && postIndex !== -1){
-				this.startComment = postIndex;
-			} else if (postIndex === -1) {
-				console.log(this.comment);
-				this.startComment = postIndex;
-			}else if(postIndex === this.startComment) {
-				this.startComment = -1;
-			}
-
-			
-		}, */
 		DisplayOn(){
 			return this.dropdownDisplay = this.dropdownDisplay ==='display:none'? 'display:block' : 'display:none';
 		},
@@ -278,15 +264,16 @@ export default {
 			const response = await fetch(this.urlApi + `/posts`, requestOptions);
 			console.log(response);
 			this.allPostsData = await response.json();
+			console.log(this.allPostsData);
 			if(this.allPostsData.count !== 0 && this.isConnect){
-				return this.allPostsInStore(this.allPostsData.data.rows);
+				return this.allPostsInStore(this.allPostsData.data);
 			} else if(this.allPostsData.count === 0){
 				this.noPosts = this.allPostsData.message;
 				return this.allPostsInStore("");
 			}else{
 				this.allPostsInStore('');
+			
 			}
-		
 		},
 		async findOnePost(postId) {
 			
@@ -328,11 +315,14 @@ export default {
 			};
 			const response = await fetch(this.urlApi + `/posts/users/${userId}`, requestOptions);
 			this.allPostsByUserIdData = await response.json();
+			console.log(this.allPostsByUserIdData.count);
+
 			if(this.allPostsByUserIdData.count !== 0 && this.isConnect){
-				this.allPostsByUserIdInStore(this.allPostsByUserIdData.data.rows);
+				this.allPostsByUserIdInStore(this.allPostsByUserIdData.data);
 			} else{
 				this.allPostsByUserIdInStore('');
 			}
+			console.log(this.allPostsByUserId);
 		},
 		async findAllUsers() {
 			const requestOptions = {

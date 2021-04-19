@@ -13,8 +13,10 @@
 		<b-alert  :show="dismissCountDown" dismissible variant="success"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
 			Inscription reussie!</b-alert>
 		<b-link v-b-modal.publication @click='resetModal' class="link">
-		<h2>Fil d'actualité</h2><br>
-		<h2 v-if='noPosts' style='font-style:italic; color:#FD2D01;'>{{noPosts}}</h2><br>
+		<h2>Fil d'actualité de {{allPostsByUserId[0].user.pseudo}}</h2>
+		<div>Inscrit le {{momentDateMouse(allPostsByUserId[0].user.createdAt)}}</div>
+		<div>Dernière connexion {{momentDateMouse(allPostsByUserId[0].user.updatedAt)}}</div><br>
+		
 		</b-link>
 <!-- modal publication -->
 		<b-modal id="publication" hide-footer size="lg" @close='alertCloseModal'>
@@ -46,7 +48,7 @@
 			<b-button  class="mt-5" variant='outline-primary' block @click="updatePost">Modifier</b-button>
 		</b-modal>
 <!-- publications -->
-	<b-card title="" sub-title="" v-for="(item,index) in allPosts" :key="item.id" class="post">
+	<b-card title="" sub-title="" v-for="(item,index) in allPostsByUserId" :key="item.id" class="post">
 		<div class='headerCard'>
 		<div  class='headerCard'>
 			<b-card-text ><b-img   src="https://picsum.photos/50" fluid alt="Responsive image" class="authorImg link"></b-img></b-card-text>
@@ -57,14 +59,14 @@
 		</div>
 		<div class="menuHeader">...</div>
 		
-		</div>
+		</div>{{allPostsByUserId}}
 			<b-link v-if="item.user_id === $store.state.userId" class="link" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text v-b-tooltip.right.hover.v-primary title="Modifier" class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
 			<b-card-text v-else class='textPost '>{{item.post_content}}</b-card-text><br>
 			<div class="usersLikes" v-show='item.like.map(x=>x.user.pseudo).length>=1'><b-card-text v-b-tooltip.hover :title="item.like.map(x=>x.user.pseudo)" ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" ><span v-html="item.like.map(x=>x.user.pseudo).length" style='margin-left:0.4rem;'></span></b-card-text></div>
 <!-- MenuPost -->	
 		<b-row class="likeComment" >
 			<b-col>
-				<div  v-on:click='function(){likePost(item.id,index); userLike(item);outFocusButton(index)}' block variant="outline-secondary" class='btnLikeComment'>
+				<div  v-on:click='function(){likePost(item.id,item.user.id,index); userLike(item);outFocusButton(index)}' block variant="outline-secondary" class='btnLikeComment'>
 					<div  v-if='userLike(item)'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618753322/Group_1bluejaime_ymp6es.svg" alt="" height="22" ><b-card-text style='color:rgb(34,143,222); border:none'>J'aime</b-card-text></div>
 					<div  v-else><img   src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15" style=' border:none'><b-card-text >J'aime</b-card-text></div>
 				</div>
@@ -483,7 +485,7 @@ export default {
 			
 			
 		},
-		async likePost(postId){
+		async likePost(postId,userId){
 			console.log('gege');
 			const requestOptions = {
 				method: "Post",
@@ -498,7 +500,7 @@ export default {
 				})
 			};
 			await fetch(this.urlApi + `/posts/like`, requestOptions);
-			this.findAllPosts();
+			this.findAllPostsByUserId(userId);
 			
 		
 			

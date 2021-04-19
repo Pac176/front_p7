@@ -59,10 +59,10 @@
 		<div class="menuHeader">...</div>
 		
 		</div>
-	
 			<b-link v-if="item.user_id === $store.state.userId" class="link" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text v-b-tooltip.right.hover.v-primary title="Modifier" class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
 			<b-card-text v-else class='textPost '>{{item.post_content}}</b-card-text><br>
-			<div class="usersLikes"><b-card-text v-b-tooltip.hover :title="item.like.map(x=>x.user.pseudo)" v-if='item.like.map(x=>x.user.pseudo).length>=1'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" ><span v-html="item.like.map(x=>x.user.pseudo).length" style='margin-left:0.4rem;'></span></b-card-text></div>
+			<div class="usersLikes" v-show='item.like.map(x=>x.user.pseudo).length>=1'><b-card-text v-b-tooltip.hover :title="item.like.map(x=>x.user.pseudo)" ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" ><span v-html="item.like.map(x=>x.user.pseudo).length" style='margin-left:0.4rem;'></span></b-card-text></div>
+<!-- MenuPost -->	
 		<b-row class="likeComment" >
 			<b-col>
 				<div  v-on:click='function(){likePost(item.id,index); userLike(item);outFocusButton(index)}' block variant="outline-secondary" class='btnLikeComment'>
@@ -72,36 +72,46 @@
 				
 			</b-col>
 			<b-col>
-				<div  @click="function(){setFocusInput( index ); switchToUpdate=false}" block variant="outline-secondary" class='btnLikeComment'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
-				<b-card-text >Répondre</b-card-text>
+				<div  @click="function(){setFocusInput( index ); switchToUpdate=false}" block variant="outline-secondary" class='btnLikeComment'>
+					<div>
+						<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
+						<b-card-text >Répondre</b-card-text>
+					</div>
 				</div>
 			</b-col>
 			<b-col v-if="item.user_id === userId || user.is_admin === 1">
-				<div :data-key="index" @click='deletePost(item.id,index)' block variant="outline-secondary"  class='btnLikeComment' ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616755730/delete_sg8ndk.svg" alt="" height="15">
-				<b-card-text  >Supprimer </b-card-text>
-			</div>
+				<div :data-key="index" @click='deletePost(item.id,index)' block variant="outline-secondary"  class='btnLikeComment' >
+					<div>
+						<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616755730/delete_sg8ndk.svg" alt="" height="15">
+						<b-card-text  >Supprimer </b-card-text>
+					</div>
+				</div>
 			</b-col>
 		</b-row> 
-		<div v-for="(comment) in allPosts[index].tblComments" :key="comment.id" class='commentAndAction'>
+
+<!-- comments -->
+<div class='commentGroup' block>
+	<div v-for="(comment) in allPosts[index].tblComments" :key="comment.id" class='commentAndAction'>
 		<b-card class="commentCard">
-
-	<div >
-	<b-link href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</b-link>
-	<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
-   
+				<div >
+					<b-link href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</b-link>
+					<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
+				</div>
+		</b-card>
+<!-- menu Comments -->
+		<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
+			<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
+			<b-link class='link deleteComment' @click='deleteComment(comment.id)' >Supprimer</b-link>
+		</div>
 	</div>
+</div>	
+<!-- input comment -->
 
-  
-  </b-card>
-	<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
-	<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
-	<b-link class='link deleteComment' @click='deleteComment(comment.id)' >Supprimer</b-link>
-</div></div>
 		<b-form-group  v-if='switchToUpdate !== false'>
-			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)" placeholder=''></b-input>
+			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)"></b-input>
 		</b-form-group>
 		<b-form-group  v-else>
-			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index)" placeholder=''></b-input>
+			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index)"></b-input>
 		</b-form-group>
 
 
@@ -550,6 +560,7 @@ export default {
 	text-align: left;
 	border-radius:30px;
 	margin-bottom:0.1rem;
+	margin-top:0.5rem;
 	background-color:rgb(235, 221, 221)
 	
 
@@ -558,12 +569,12 @@ export default {
 	display:flex;
 	flex-direction: column;
 	width: fit-content;
-	//text-align:right;
-	
 }
+
 .inputComment{
 	border-radius:30px;
-	margin-top:0.8rem
+	margin: 0.8rem 0.5rem 0.5rem 0.5rem;
+	max-width:-webkit-fill-available;
 }
 .headerCard{
 	font-size: 0.8rem;
@@ -611,12 +622,18 @@ export default {
 	text-align: justify;
 }	
 .btnLikeComment{
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	height: 3rem;
 	padding:0;
 	border:none;	
 	text-decoration: none;
 	color: rgb(206, 48, 48);
 	font-size:0.8rem;
 	cursor: pointer;
+	border-top:1px rgb(235, 185, 185) solid;
+	border-bottom:1px rgb(235, 185, 185) solid
 }
 .btnLikeComment:hover{
 	background-color: rgb(230, 210, 208);

@@ -149,9 +149,13 @@ export default {
 					} else {
 						this.updateUser = false;
 						this.showAlert(updateResponse,'success');
-					}
-				} 
+					} 
+				} else {
+					this.updateUser = false;
+					this.showAlert(updateResponse,'danger');
+				}
 			} catch (error) {
+				console.log('erreure');
 				this.showAlert({message: error},'danger');
 			}
 		}

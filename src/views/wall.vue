@@ -189,7 +189,6 @@ export default {
 	methods:{
 		userLike(item){
 			if(item.like.length !== 0) {
-				console.log('ok');
 				return item.like.includes(item.like.find(el=>el.user.id === this.user.id));
 				
 				
@@ -207,7 +206,6 @@ export default {
 		},
 		outFocusInput(index) {
 			const inputs = document.querySelectorAll('.inputComment');
-			console.log(inputs);
 			inputs.forEach(ele => { 
 				if (ele.dataset.key == index) {
 					ele.blur();
@@ -216,7 +214,6 @@ export default {
 		},
 		outFocusButton(index) {
 			const buttons = document.querySelectorAll('.btnLikeComment');
-			console.log(buttons);
 			buttons.forEach(ele => { 
 				if (ele.dataset.key == index) {
 					ele.blur();
@@ -263,7 +260,6 @@ export default {
 			this.$store.commit('ALLUSERS',allUsersData);
 		},
 		async findAllPosts() {
-			console.log('gege');
 			const requestOptions = {
 				method: "Get",
 				headers: { 
@@ -271,9 +267,7 @@ export default {
 					"Authorization": `Bearer ${this.token}`},
 			};
 			const response = await fetch(this.urlApi + `/posts`, requestOptions);
-			console.log(response);
 			this.allPostsData = await response.json();
-			console.log(this.allPostsData);
 			if(this.allPostsData.count !== 0 && this.isConnect){
 				return this.allPostsInStore(this.allPostsData.data);
 			} else if(this.allPostsData.count === 0){
@@ -324,14 +318,12 @@ export default {
 			};
 			const response = await fetch(this.urlApi + `/posts/users/${userId}`, requestOptions);
 			this.allPostsByUserIdData = await response.json();
-			console.log(this.allPostsByUserIdData.count);
-
 			if(this.allPostsByUserIdData.count !== 0 && this.isConnect){
 				this.allPostsByUserIdInStore(this.allPostsByUserIdData.data);
 			} else{
 				this.allPostsByUserIdInStore('');
 			}
-			console.log(this.allPostsByUserId);
+			
 		},
 		async findAllUsers() {
 			const requestOptions = {
@@ -341,9 +333,7 @@ export default {
 					"Authorization": `Bearer ${this.token}`},
 			};
 			const response = await fetch(this.urlApi + `/users`, requestOptions);
-			console.log(response);
 			this.allUsersData = await response.json();
-			console.log(this.$store.state.user);
 			if(this.allUsersData.count !== 0 && this.isConnect){
 				return this.allUsersInStore(this.allUsersData.data.rows);
 			} 
@@ -351,7 +341,6 @@ export default {
 		},
 		async createPost(){
 			this.$bvModal.hide('publication');
-			console.log(this.textArea);
 			const requestOptions = {
 				
 				method: "Post",
@@ -375,7 +364,6 @@ export default {
 		},
 		async updatePost(){
 			this.$bvModal.hide('updatePublication');
-			console.log(this.postToUpdate);
 			const requestOptions = {
 				method: "Put",
 				headers: { 
@@ -397,7 +385,6 @@ export default {
 		},
 		async updateComment(index){
 			this.$bvModal.hide('updatePublication');
-			console.log(this.commentToUpdate);
 			const requestOptions = {
 				method: "Put",
 				headers: { 
@@ -419,8 +406,6 @@ export default {
 			
 		},
 		async deletePost(post,index){
-			//this.$bvModal.hide('publication');
-			//console.log(this.textArea);
 			const requestOptions = {
 				method: "Delete",
 				headers: { 
@@ -434,18 +419,15 @@ export default {
 			if(response){
 				await fetch(this.urlApi + `/posts/${post}`, requestOptions);
 				this.findAllPosts();
-				console.log(this.allPosts);
 			} else {
 				this.outFocusButton(index);
-				console.log('gege');
+				
 			}
 			
 			
 			
 		},
 		async deleteComment(comment){
-			//this.$bvModal.hide('publication');
-			//console.log(this.textArea);
 			const requestOptions = {
 				method: "Delete",
 				headers: { 
@@ -467,8 +449,6 @@ export default {
 		},
 		async createComment(postId, userId,index){
 			this.$bvModal.hide('publication');
-			//console.log(this.textArea);
-			
 			const requestOptions = {
 				method: "Post",
 				headers: { 
@@ -486,18 +466,9 @@ export default {
 			await this.findAllPosts();
 			this.newComment=[];
 			this.outFocusInput(index);
-			/* if(response){
-				//this.findAllComments();
-				//this.findAllComments()
-			} else {
-				console.log('gege');
-			} */
-			
-			
-			
+						
 		},
 		async likePost(postId){
-			console.log('gege');
 			const requestOptions = {
 				method: "Post",
 				headers: { 
@@ -519,7 +490,7 @@ export default {
 		},
 	},
 	mounted(){
-		console.log(this.allPosts);
+		
 		this.findAllPosts();
 		this.findAllUsers();
 		

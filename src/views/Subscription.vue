@@ -5,14 +5,7 @@
 	<FormValidateUser class="formValidateUser"></FormValidateUser>
   </div>
 </template>
- <div class="myAccount">
-	<Nav></Nav><br><br><br>
-	<h1>Mettre a Jour mes informations</h1>
-	<b-row>
-		<b-col  class="formUpdateUser" md="6"><FormUpdateUser></FormUpdateUser></b-col> 
-		<b-col  class="formPwdUpdateUser" md="6"><PwdUpdate></PwdUpdate></b-col> 
-	</b-row>
- </div>
+
 <script>
 // @ is an alias to /src
 import Nav from '@/components/Nav.vue';

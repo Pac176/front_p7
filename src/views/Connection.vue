@@ -22,7 +22,7 @@
 </template>
 
 <script>
-// @ is an alias to /src
+
 import Nav from '@/components/Nav.vue';
 import { required,  helpers } from 'vuelidate/lib/validators';
 const emailRegex = helpers.regex('emailRegex', /^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,6}$/);
@@ -109,15 +109,14 @@ export default {
 				const response = await fetch(this.urlApi + "/users/login", requestOptions);
 				const dataResponse = await response.json();
 				this.dataResponse = dataResponse;
-				if(response.ok === true ){
+				if (response.ok === true ){
 					this.isConnectInStore();
 					this.tokenInStore(this.dataResponse.token);
 					this.userIdInStore(this.dataResponse.userId);
 					await this.findOneUser();
-					console.log(this.user);
 					this.$router.push('/wall');
 					
-				}else{
+				} else {
 					this.showAlert('danger');
 				}
 			} catch (error) {

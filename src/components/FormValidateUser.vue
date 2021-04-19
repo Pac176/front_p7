@@ -23,11 +23,10 @@
        </b-form>
 </template>
 <script>
-// @ is an alias to /src
 import { required,  helpers, minLength, maxLength, alphaNum } from 'vuelidate/lib/validators';
+import {mapState} from 'vuex';
 const emailRegex = helpers.regex('emailRegex', /^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,6}$/);
 const pwdRegex = helpers.regex('pwdRegex', /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/);
-import {mapState} from 'vuex';
 export default {
 	name: 'FormValidateUser',
 	data(){
@@ -90,7 +89,6 @@ export default {
 		},
 		showAlert(apiResponse, variant) {
 			this.variantResult = variant;
-			console.log(apiResponse);
 			this.apiResponse = apiResponse;
 			this.dismissCountDown = this.dismissSecs;
 		
@@ -159,7 +157,6 @@ export default {
 					"Content-Type": "application/json",
 					"Authorization": `Bearer ${this.token}`},
 			};
-			console.log(this.userId);
 			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
 			this.userData = await response.json();
 			this.userInStore(this.userData.data);
@@ -193,7 +190,6 @@ export default {
 					this.showAlert(updateResponse, 'danger');
 				} 
 			} catch (error) {
-				
 				console.log(error.message);
 			}
 		}

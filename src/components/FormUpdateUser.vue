@@ -2,7 +2,6 @@
 	<b-form class="formUpdate"  @submit="onUpdateUser">
 		<b-link  class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible  :variant='variantResult'  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged" id='alert'>
     {{apiResponse.message}}</b-alert></b-link>
-		
            <b-form-group style="font-weight:bold" id="input-group-1"  label="Modifier votre Nom:"  label-for="input-1" > 
               <b-form-input  style="font-style:italic" id="input-1" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' :placeholder="user.first_name"   ></b-form-input>
             </b-form-group>
@@ -12,30 +11,22 @@
             <b-form-group style="font-weight:bold" id="input-group-3"  label="Modifier votre pseudo:" label-for="input-3" >
               <b-form-input style="font-style:italic" id="input-3"  v-model.trim="$v.pseudo.$model" :class='{"is-invalid":$v.pseudo.$error,"is-valid":!$v.pseudo.$invalid}'  :placeholder="user.pseudo" ></b-form-input>
             </b-form-group> 
-           <!-- <b-form-group style="font-weight:bold" id="input-group-4"   label="Mot de passe:" label-for="input-4" description="Au moins 8 caractères, 1 majuscule, 1 chiffre et un caratere special" >
-              <b-form-input style="font-style:italic" id="input-4"  type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
-            </b-form-group>  -->
             <b-form-group style="font-weight:bold" id="input-group-5"  label="Modifier votre adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
-              <b-form-input style="font-style:italic" id="input-5"  type="email" v-model.trim="$v.email.$model" :class='{"is-invalid":$v.email.$error,"is-valid":!$v.email.$invalid}' :placeholder="user.email"  ></b-form-input>
+            <b-form-input style="font-style:italic" id="input-5"  type="email" v-model.trim="$v.email.$model" :class='{"is-invalid":$v.email.$error,"is-valid":!$v.email.$invalid}' :placeholder="user.email"  ></b-form-input>
             </b-form-group> 
             <button   type="submit"   class="btn btn-success btn-lg btn-block">Modifier mes donnees</button>
             <p class="forgot-password text-right mt-2 mb-4">
             </p>
        </b-form>
-	
 </template>
 
 <script>
-// @ is an alias to /src
-
-
 import {mapState} from 'vuex';
 import { required,  helpers, minLength, maxLength, alphaNum } from 'vuelidate/lib/validators';
 const emailRegex = helpers.regex('emailRegex', /^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,6}$/);
 const pwdRegex = helpers.regex('pwdRegex', /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/);
 
 export default {
-  
 	name: 'FormUpdateUser',
 	data(){
 		return{
@@ -53,10 +44,6 @@ export default {
 			userData:{},
 			urlApi:'http://localhost:3000/api/groupomania',
 		};
-	},
-	components: {
-	
-		
 	},
 	validations:{
 		first_name:{
@@ -122,9 +109,7 @@ export default {
 			this.userInStore(this.userData.data);
 		},
 		async onUpdateUser (event) {
-			console.log(this.user);
 			event.preventDefault();
-			
 			try { 
 				const requestOptions = {
 					method: "Put",
@@ -162,14 +147,10 @@ export default {
 	},
 	mounted(){
 		this.findOneUser();
-	
-		
 	}
 };
 </script>
-
 <style lang="scss" scoped>
-
 @media screen and (max-width:500px) {
 	.formUpdate{
 	display:flex;
@@ -199,11 +180,4 @@ export default {
 .linkAlert{
 	text-decoration: none;
 }
-/* .vue-template{
-	display: flex;
-	margin:0;
-	text-align: left;
-	justify-content: center;
-	padding-top: 2rem;
-  } */
 </style>

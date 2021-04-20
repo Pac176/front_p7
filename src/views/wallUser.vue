@@ -334,8 +334,8 @@ export default {
 			};
 			const response = await fetch(this.urlApi + `/users`, requestOptions);
 			this.allUsersData = await response.json();
-			if(this.allUsersData.count !== 0 && this.isConnect){
-				return this.allUsersInStore(this.allUsersData.data.rows);
+			if(this.allUsersData.length !== 0 && this.isConnect){
+				return this.allUsersInStore(this.allUsersData.data);
 			} 
 		
 		},

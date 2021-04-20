@@ -189,54 +189,49 @@ export default {
 	methods:{
 		userLike(item){
 			if(item.like.length !== 0) {
-				return item.like.includes(item.like.find(el=>el.user.id === this.user.id));
-				
-				
-					
+				return item.like.includes(item.like.find(post=>post.user.id === this.user.id));
 			}
-		
 		},
 		setFocusInput(index) {
 			const inputs = document.querySelectorAll('.inputComment');
-			inputs.forEach(ele => { 
-				if (ele.dataset.key == index) {
-					ele.focus();
+			inputs.forEach(input => { 
+				if (input.dataset.key == index) {
+					input.focus();
 				} 
 			});
 		},
 		outFocusInput(index) {
 			const inputs = document.querySelectorAll('.inputComment');
-			inputs.forEach(ele => { 
-				if (ele.dataset.key == index) {
-					ele.blur();
+			inputs.forEach(input => { 
+				if (input.dataset.key == index) {
+					input.blur();
 				} 
 			});
 		},
 		outFocusButton(index) {
 			const buttons = document.querySelectorAll('.btnLikeComment');
-			buttons.forEach(ele => { 
-				if (ele.dataset.key == index) {
-					ele.blur();
+			buttons.forEach(button => { 
+				if (button.dataset.key == index) {
+					button.blur();
 				} 
 			});
 		},
-		DisplayOn(){
-			return this.dropdownDisplay = this.dropdownDisplay ==='display:none'? 'display:block' : 'display:none';
-		},
 		momentDateMouse(item){
 			return moment(item).format('LLL');
-		
 		},
 		momentDate(item){
-			
 			return moment(item).fromNow();
 		},
 		async alertCloseModal(bvModalEvent){
-			const response =confirm('Etes vous sur de quitter la publication?');
-			if(response){
-				this.textArea = "Quoi de neuf?" + this.$store.state.user.first_name + "......";
-			} else { 
-				bvModalEvent.preventDefault ();}
+			try {
+				const response =confirm('Etes vous sur de quitter la publication?');
+				if(response){
+					this.textArea = "Quoi de neuf?" + this.$store.state.user.first_name + "......";
+				} else {
+					bvModalEvent.preventDefault ();}
+			} catch (error) {
+				console.log("erreure sur la alertCloseModal");
+			}
 		},
 		resetModal(){
 			return this.textArea = '';
@@ -260,22 +255,25 @@ export default {
 			this.$store.commit('ALLUSERS',allUsersData);
 		},
 		async findAllPosts() {
-			const requestOptions = {
-				method: "Get",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-			};
-			const response = await fetch(this.urlApi + `/posts`, requestOptions);
-			this.allPostsData = await response.json();
-			if(this.allPostsData.count !== 0 && this.isConnect){
-				return this.allPostsInStore(this.allPostsData.data);
-			} else if(this.allPostsData.count === 0){
-				this.noPosts = this.allPostsData.message;
-				return this.allPostsInStore("");
-			}else{
-				this.allPostsInStore('');
-			
+			try {
+				const requestOptions = {
+					method: "Get",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+				};
+				const response = await fetch(this.urlApi + `/posts`, requestOptions);
+				this.allPostsData = await response.json();
+				if(this.allPostsData.count !== 0 && this.isConnect){
+					return this.allPostsInStore(this.allPostsData.data);
+				} else if(this.allPostsData.count === 0){
+					this.noPosts = this.allPostsData.message;
+					return this.allPostsInStore("");
+				}else{
+					this.allPostsInStore('');
+				}
+			} catch (error) {
+				console.log(error,"erreure sur findAllPosts");
 			}
 		},
 		async findOnePost(postId) {
@@ -334,8 +332,8 @@ export default {
 			};
 			const response = await fetch(this.urlApi + `/users`, requestOptions);
 			this.allUsersData = await response.json();
-			if(this.allUsersData.count !== 0 && this.isConnect){
-				return this.allUsersInStore(this.allUsersData.data.rows);
+			if(this.allUsersData.length !== 0 && this.isConnect){
+				return this.allUsersInStore(this.allUsersData.data);
 			} 
 		
 		},

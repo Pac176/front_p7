@@ -7,7 +7,7 @@
      {{this.dataResponse.message}}
     </b-alert>
 		<b-form-group style="font-weight:bold" id="input-group-1"  label="Modifier votre adresse Email:" label-for="input-1"  description="Sous la forme xxxx@xxxxx.xxxx">
-            <b-form-input style="font-style:italic" id="input-1"  type="email" v-model.trim="$v.email.$model" :class='{"is-invalid":$v.email.$error,"is-valid":!$v.email.$invalid}' :placeholder="user.email"  ></b-form-input>
+            <b-form-input style="font-style:italic" id="input-1"  type="email" v-model.trim="$v.email.$model" :class='{"is-invalid":$v.email.$error,"is-valid":!$v.email.$invalid}' placeholder="Entrez votre email"  ></b-form-input>
             </b-form-group>
             <b-form-group style="font-weight:bold" id="input-group-2"   label="Mot de passe:" label-for="input-2" description="Au moins 8 caractères, 1 majuscule, 1chiffre et un caratere special" >
               <b-form-input style="font-style:italic" id="input-2" type="password" v-model.trim="$v.password.$model" :class='{"is-invalid":$v.password.$error,"is-valid":!$v.password.$invalid}' placeholder="Entrez votre mot de passe"   required ></b-form-input>

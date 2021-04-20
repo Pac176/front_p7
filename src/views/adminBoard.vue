@@ -3,8 +3,18 @@
 <div>
  <Nav></Nav><br><br><br><br>
 <div>Nombre d'utilisateurs inscrits: {{allUsers.length}}</div>
-<div>Nombre de posts publiés: {{allPosts.length}}</div>
-<div>Nombre de commentaires: </div>
+<div>Nombre de posts publiés:{{allPosts.length}} </div><br>
+
+
+	<b-table striped hover :items="allUsers" :fields="fields"  selectable select-mode='single' @row-selected="onRowSelected">
+	
+
+	</b-table>
+
+
+
+
+
 
 </div>
 </template>
@@ -19,6 +29,39 @@ export default {
 	name: 'wall',
 	data(){
 		return{
+			selected:[0],
+			fields:[
+				{
+					key: 'id',
+					label:'index',
+					sortable: true
+				},
+				{
+					key: 'first_name',
+					sortable: true
+				},
+				{
+					key: 'last_name',
+					sortable: true
+				},
+				{
+					key: 'pseudo',
+					sortable: true
+				},
+				{
+					key: 'nb_posts',
+					sortable: true
+				},
+				{
+					key: 'nb_connections',
+					sortable: true
+				},
+				{
+					key: 'is_admin',
+					sortable: true
+				},
+			], 
+			updateUserStatut:{},
 			isUserLike:[],
 			noPosts:null,
 			switchToUpdate:false,
@@ -55,15 +98,23 @@ export default {
 			'allPostsByUserId']),
 	},
 	methods:{
+		onRowSelected(items ) {
+			this.selected = items;
+			console.log(this.selected[0]);
+			if(this.selected){
+				if(this.selected[0].id === 1){
+					return 	alert("Vous ne pouvez pas changer le statut de l'admin en chef!!");
+				} else{
+					this.onAdminUser(this.selected[0]);
+				}
+				
+			}
+		},
 		userLike(item){
 			if(item.like.length !== 0) {
 				console.log('ok');
 				return item.like.includes(item.like.find(el=>el.user.id === this.user.id));
-				
-				
-					
 			}
-		
 		},
 		setFocusInput(index) {
 			const inputs = document.querySelectorAll('.inputComment');
@@ -90,23 +141,6 @@ export default {
 					ele.blur();
 				} 
 			});
-		},
-   
-
-		/* startCommentOn(postIndex){
-			if(postIndex !== this.startComment && postIndex !== -1){
-				this.startComment = postIndex;
-			} else if (postIndex === -1) {
-				console.log(this.comment);
-				this.startComment = postIndex;
-			}else if(postIndex === this.startComment) {
-				this.startComment = -1;
-			}
-
-			
-		}, */
-		DisplayOn(){
-			return this.dropdownDisplay = this.dropdownDisplay ==='display:none'? 'display:block' : 'display:none';
 		},
 		momentDateMouse(item){
 			return moment(item).format('LLL');
@@ -144,8 +178,56 @@ export default {
 		allUsersInStore(allUsersData){
 			this.$store.commit('ALLUSERS',allUsersData);
 		},
+		userInStore(userData){
+			this.$store.commit('USER',userData);
+		},
+		async findOneUser () {
+			const requestOptions = {
+				method: "Get",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+			};
+			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
+			this.userData = await response.json();
+			console.log(this.userData.data);
+			this.updateUserStatut = this.userData.data;
+		},
+		async onAdminUser (user) {
+			const findOneUserOptions = {
+				method: "Get",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+			};
+			const responseFindOne = await fetch(this.urlApi + `/users/${user.id}`, findOneUserOptions);
+			this.userData = await responseFindOne.json();
+			console.log(this.userData.data);
+			this.updateUserStatut = this.userData.data;
+			const response = confirm('Etes vous sur de changer de statut de cet utilisateur?');
+			if(response){
+				const requestOptions = {
+					method: "Put",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+					body:JSON.stringify({
+						first_name: user.first_name,
+						last_name:user.last_name,
+						pseudo:user.pseudo,
+						email:this.updateUserStatut.email,
+						password: this.updateUserStatut.password,
+						is_admin: user.is_admin? false : true
+					})
+				};
+				const response = await fetch(this.urlApi + `/users/${user.id}`, requestOptions);
+				await response.json();
+				await this.findAllUsers();
+				this.selected = user;
+			}
+
+		}, 
 		async findAllPosts() {
-			console.log('gege');
 			const requestOptions = {
 				method: "Get",
 				headers: { 
@@ -153,17 +235,16 @@ export default {
 					"Authorization": `Bearer ${this.token}`},
 			};
 			const response = await fetch(this.urlApi + `/posts`, requestOptions);
-			console.log(response);
 			this.allPostsData = await response.json();
 			if(this.allPostsData.count !== 0 && this.isConnect){
-				return this.allPostsInStore(this.allPostsData.data.rows);
+				return this.allPostsInStore(this.allPostsData.data);
 			} else if(this.allPostsData.count === 0){
 				this.noPosts = this.allPostsData.message;
 				return this.allPostsInStore("");
 			}else{
 				this.allPostsInStore('');
+			
 			}
-		
 		},
 		async findOnePost(postId) {
 			
@@ -219,187 +300,18 @@ export default {
 					"Authorization": `Bearer ${this.token}`},
 			};
 			const response = await fetch(this.urlApi + `/users`, requestOptions);
-			console.log(response);
 			this.allUsersData = await response.json();
-			console.log(this.$store.state.user);
-			if(this.allUsersData.count !== 0 && this.isConnect){
-				return this.allUsersInStore(this.allUsersData.data.rows);
+			if(this.allUsersData.length !== 0 && this.isConnect){
+				return this.allUsersInStore(this.allUsersData.data);
 			} 
 		
 		},
-		async createPost(){
-			this.$bvModal.hide('publication');
-			console.log(this.textArea);
-			const requestOptions = {
-				
-				method: "Post",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-				body:JSON.stringify({
-					post:{ 
-						post_content : this.textArea,
-						user_id : this.userId
-					}
-				})
-			};
-			await fetch(this.urlApi + `/posts`, requestOptions);
-			await this.findAllPosts();
-			this.textArea= "Quoi de neuf?" + this.$store.state.user.pseudo + "......";
-			this.noPosts=null;
-			
-			
-			
-		},
-		async updatePost(){
-			this.$bvModal.hide('updatePublication');
-			console.log(this.postToUpdate);
-			const requestOptions = {
-				method: "Put",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-				body:JSON.stringify({
-					post:{ 
-						post_content: this.postToUpdate.post_content,
-						userId: 2
-					}
-				})
-			};
-			await fetch(this.urlApi + `/posts/${this.postToUpdate.id}`, requestOptions);
-			await this.findAllPosts();
-			
 		
-			
-			
-		},
-		async updateComment(index){
-			this.$bvModal.hide('updatePublication');
-			console.log(this.commentToUpdate);
-			const requestOptions = {
-				method: "Put",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-				body:JSON.stringify({
-					comment:{ 
-						comment_content: this.commentToUpdate.comment_content,
-						userId:this.commentToUpdate.user_id
-					}
-				})
-			};
-			await fetch(this.urlApi + `/comments/${this.commentToUpdate.id}`, requestOptions);
-			await this.findAllPosts();
-			this.commentToUpdate={};
-			this.switchToUpdate = false;
-			this.outFocusInput(index);
-			
-			
-		},
-		async deletePost(post,index){
-			//this.$bvModal.hide('publication');
-			//console.log(this.textArea);
-			const requestOptions = {
-				method: "Delete",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-				
-			};
-			const response =confirm('Etes vous sur de vouloir supprimer ce post?');
-			
-			
-			if(response){
-				await fetch(this.urlApi + `/posts/${post}`, requestOptions);
-				this.findAllPosts();
-				console.log(this.allPosts);
-			} else {
-				this.outFocusButton(index);
-				console.log('gege');
-			}
-			
-			
-			
-		},
-		async deleteComment(comment){
-			//this.$bvModal.hide('publication');
-			//console.log(this.textArea);
-			const requestOptions = {
-				method: "Delete",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-				
-			};
-			await fetch(this.urlApi + `/comments/${comment}`, requestOptions);
-			
-			const response =confirm('Etes vous sur de vouloir supprimer ce commentaire?');
-			if(response){
-				this.findAllPosts();
-			} else {
-				console.log('gege');
-			}
-			
-			
-			
-		},
-		async createComment(postId, userId,index){
-			this.$bvModal.hide('publication');
-			//console.log(this.textArea);
-			
-			const requestOptions = {
-				method: "Post",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-				body:JSON.stringify({
-					comment:{
-						comment_content: this.newComment[index],
-						post_id: postId,
-						user_id: userId
-					}
-				})
-			};
-			await fetch(this.urlApi + `/comments`, requestOptions);
-			await this.findAllPosts();
-			this.newComment=[];
-			this.outFocusInput(index);
-			/* if(response){
-				//this.findAllComments();
-				//this.findAllComments()
-			} else {
-				console.log('gege');
-			} */
-			
-			
-			
-		},
-		async likePost(postId){
-			console.log('gege');
-			const requestOptions = {
-				method: "Post",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-				body:JSON.stringify({
-					like:{ 
-						postId: postId,
-						userId: this.userId
-					}
-				})
-			};
-			await fetch(this.urlApi + `/posts/like`, requestOptions);
-			this.findAllPosts();
-			
-		
-			
-			
-		},
 	},
 	mounted(){
 		
 		this.findAllPosts();
-		this.findAllUsers();
+		
 		
 		
 		

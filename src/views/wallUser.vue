@@ -63,7 +63,7 @@
 			<b-link v-if="item.user_id === $store.state.userId" class="link" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text v-b-tooltip.right.hover.v-primary title="Modifier" class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
 			<b-card-text v-else class='textPost '>{{item.post_content}}</b-card-text><br>
 			<div class='counterLike'>
-			<div class="usersLikes" v-show='item.like.map(x=>x.user.pseudo).length>=1'><b-card-text v-b-tooltip.hover :title="item.like.map(x=>x.user.pseudo)" ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" >
+			<div class="usersLikes" v-show='item.like.map(x=>x.user.pseudo).length>=1'><b-card-text v-b-tooltip.hover :title="item.like.map(x=>x.user.pseudo + ',	')" ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" >
 			<span v-html="item.like.map(x=>x.user.pseudo).length" style='margin-left:0.4rem;'></span>
 			</b-card-text>
 			</div></div>
@@ -105,13 +105,17 @@
 					<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
 				</div>
 		</b-card>
-<!-- menu Comments -->
+		<b-link v-b-toggle="'my-collapse-'+ index" class='link'>il y a {{allPosts[index].tblComments.length}} commentaire(s) sur ce post...</b-link>
+<!-- comments -->
+<b-collapse :id="'my-collapse-'+ index" :data-key="index">
 		<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
 			<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
 			<b-link class='link deleteComment' @click='deleteComment(comment.id,item.user.id)' >Supprimer</b-link>
 		</div>
+	</b-collapse>
 	</div>
 </div>	
+
 <!-- input comment -->
 
 		<b-form-group  v-if='switchToUpdate !== false'>

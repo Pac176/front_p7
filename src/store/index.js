@@ -18,6 +18,7 @@ export default new Vuex.Store({
 		user: null,
 		allUsers: [],
 		allPosts: [],
+		allComments:[],
 		allPostsByUserId: [],
 		deleteAccountRequest: {},
 		deleteAccountSuccess: false,
@@ -46,6 +47,9 @@ export default new Vuex.Store({
 		},
 		ALLUSERS(state, allUsersDataRequest) {
 			return (state.allUsers = allUsersDataRequest);
+		},
+		ALLCOMMENTS(state, allCommentsDataRequest) {
+			return (state.allComments = allCommentsDataRequest);
 		},
 		DELETEACCOUNT(state, deleteRequest) {
 			return (state.deleteAccountRequest = deleteRequest);

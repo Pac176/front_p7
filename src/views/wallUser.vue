@@ -139,6 +139,7 @@ export default {
 			noPosts:null,
 			switchToUpdate:false,
 			postToUpdate:{},
+			commentToUpdate:{},
 			newComment:[],
 			allComments:[],
 			startComment:-1, //false, //0,

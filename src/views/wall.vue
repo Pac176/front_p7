@@ -117,7 +117,7 @@
 				</div>
 		</b-card>
 <!-- menu Comments -->
-<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619193650/Group_1menu3pointscollapsecomment_b8aayz.svg" height="20"></b-link>
+<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg" height="20" class='imgMenuCollapse'></b-link>
 		</div>
 	
 
@@ -139,10 +139,10 @@
 <!-- input comment -->
 
 		<b-form-group  v-if='switchToUpdate !== false'>
-			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)"></b-input>
+			<b-input   :id="'inputComment'+index" :data-key="index" class="inputComment"  v-model='commentToUpdate[index].comment_content' v-on:keyup.enter="updateComment(index)"></b-input>
 		</b-form-group>
 		<b-form-group  v-else>
-			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index);" ></b-input>
+			<b-input   :id="'inputComment'+index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index);" ></b-input>
 		</b-form-group>
 
 
@@ -171,6 +171,7 @@ export default {
 			noPosts:null,
 			switchToUpdate:false,
 			postToUpdate:{},
+			commentToUpdate:{},
 			newComment:[],
 			allComments:[],
 			startComment:-1, //false, //0,
@@ -323,6 +324,7 @@ export default {
 			const response = await fetch(this.urlApi + `/comments/${commentId}`, requestOptions);
 			this.oneCommentData = await response.json();
 			this.commentToUpdate = this.oneCommentData.data;
+			console.log(this.commentToUpdate);
 			this.setFocusInput(index);
 			this.switchToUpdate = true;
 	
@@ -420,7 +422,7 @@ export default {
 			};
 			await fetch(this.urlApi + `/comments/${this.commentToUpdate.id}`, requestOptions);
 			await this.findAllPosts();
-			this.commentToUpdate={};
+			//this.commentToUpdate={};
 			this.switchToUpdate = false;
 			this.outFocusInput(index);
 			
@@ -532,6 +534,11 @@ export default {
 }
 .menuCommentCollapse{
 	align-self: center;
+	
+}
+.imgMenuCollapse:hover{
+	border-radius:50%;
+	background-color: rgb(204, 103, 103);
 	
 }
 #menuCommentCollapse{

@@ -8,6 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
+		wallUserId:null,
 		urlApi:process.env.URL_API,
 		isConnect: false,
 		isAdmin: false,
@@ -54,6 +55,9 @@ export default new Vuex.Store({
 				? true
 				: false);
 		},
+		WALLUSERID(state, wallUserdata) {
+			return (state.wallUserId = wallUserdata);
+		}
 	},
 	actions: {},
 	modules: {},

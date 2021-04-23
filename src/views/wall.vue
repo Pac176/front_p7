@@ -172,7 +172,6 @@ export default {
 			switchToUpdate:false,
 			postToUpdate:{},
 			newComment:[],
-			allComments:[],
 			startComment:-1, //false, //0,
 			dropdownDisplay :'display:none',
 			textArea:"Quoi de neuf? " + this.$store.state.user.first_name + "......",
@@ -203,6 +202,7 @@ export default {
 			'user',
 			'allUsers',
 			'allPosts',
+			'allComments',
 			'allPostsByUserId']),
 	},
 	methods:{
@@ -269,6 +269,9 @@ export default {
 		},
 		allPostsByUserIdInStore(allPostsByUserIdData){
 			this.$store.commit('ALLPOSTSBYUSERID',allPostsByUserIdData);
+		},
+		allCommentsInStore(allCommentsData){
+			this.$store.commit('ALLCOMMENTS',allCommentsData);
 		},
 		allUsersInStore(allUsersData){
 			this.$store.commit('ALLUSERS',allUsersData);
@@ -357,6 +360,23 @@ export default {
 			this.allUsersData = await response.json();
 			if(this.allUsersData.length !== 0 && this.isConnect){
 				return this.allUsersInStore(this.allUsersData.data);
+			} 
+		
+		},
+		async findAllComments() {
+			const requestOptions = {
+				method: "Get",
+				headers: { 
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${this.token}`},
+			};
+			const response = await fetch(this.urlApi + `/comments`, requestOptions);
+			const allCommentsData = await response.json();
+			
+			if(allCommentsData.data.length !== 0 && this.isConnect){
+				
+				return this.allCommentsInStore(allCommentsData.data);
+				
 			} 
 		
 		},
@@ -511,7 +531,7 @@ export default {
 		},
 	},
 	mounted(){
-		
+		this.findAllComments();
 		this.findAllPosts();
 		this.findAllUsers();
 		

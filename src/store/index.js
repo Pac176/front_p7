@@ -49,7 +49,7 @@ export default new Vuex.Store({
 			return (state.allUsers = allUsersDataRequest);
 		},
 		ALLCOMMENTS(state, allCommentsDataRequest) {
-			return (state.allCommentss = allCommentsDataRequest);
+			return (state.allComments = allCommentsDataRequest);
 		},
 		DELETEACCOUNT(state, deleteRequest) {
 			return (state.deleteAccountRequest = deleteRequest);

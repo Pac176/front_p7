@@ -62,8 +62,8 @@ export default {
 			badValidation:false,
 			oldPassword:null,
 			newPassword:null,
-			repeatNewPassword:null,
-			urlApi:'http://localhost:3000/api/groupomania',
+			repeatNewPassword:null
+			
 		};
 	},
 	validations:{
@@ -83,7 +83,7 @@ export default {
 	
 	},
 	computed:{
-		...mapState(['successSubscribe','sucessUpdateUser', 'deleteAccountSuccess','deleteAccountRequest','token','isConnect','userId','user'])
+		...mapState(['urlApi','successSubscribe','sucessUpdateUser', 'deleteAccountSuccess','deleteAccountRequest','token','isConnect','userId','user'])
 	},
 	methods:{
 		async showMsgBoxOne() {
@@ -131,7 +131,8 @@ export default {
 				last_name:this.last_name === ""? this.user.last_name : this.last_name,
 				pseudo:this.pseudo === ""? this.user.pseudo : this.pseudo,
 				email:this.email === ""? this.user.email : this.email,
-				password:this.repeatNewPassword 
+				password:this.repeatNewPassword,
+				is_admin:this.user.is_admin
 			};
 		},
 		showAlert(apiResponse, variant) {

@@ -153,20 +153,15 @@ export default {
 			noPosts:null,
 			switchToUpdate:false,
 			postToUpdate:{},
-			//commentToUpdate:'er',
 			newComment:[],
 			allComments:[],
 			startComment:-1, //false, //0,
 			dropdownDisplay :'display:none',
-			textArea:"Quoi de neuf? " + this.$store.state.user.pseudo + "......",
-			//first_name:this.$store.state.user.first_name,
-			//last_name:this.$store.state.user.last_name,
-			//pseudo: this.$store.state.user.pseudo,
+			textArea:"Quoi de neuf? " + this.$store.state.user.first_name + "......",
 			password:null,
-			//email:this.$store.state.user.email,
 			dismissSecs: 5,
-			dismissCountDown: 0,
-			urlApi:'http://localhost:3000/api/groupomania',
+			dismissCountDown: 0
+			
 		};
 	},
 	components: {
@@ -180,6 +175,7 @@ export default {
 			return this.$store.state.allPostsByUserId;
 		},
 		...mapState([
+			'urlApi',
 			'successSubscribe',
 			'token',
 			'isConnect',

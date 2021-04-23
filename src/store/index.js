@@ -1,11 +1,14 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from "vuex-persistedstate";
+import dotenv from "dotenv";
+dotenv.config();
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
+		urlApi:process.env.URL_API,
 		isConnect: false,
 		isAdmin: false,
 		successSubscribe: false,

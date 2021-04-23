@@ -38,7 +38,7 @@ export default {
 			dismissSecs: 5,
 			dismissCountDown: 0,
 			dataResponse:{},
-			urlApi:'http://localhost:3000/api/groupomania',
+			
 		};
 	},
 	validations:{
@@ -56,7 +56,7 @@ export default {
 		Nav
 	},
 	computed:{
-		...mapState(['successSubscribe','token','isConnect','userId','user'])
+		...mapState(['urlApi','successSubscribe','token','isConnect','userId','user'])
 	},
 	methods:{
 		isConnectInStore(){

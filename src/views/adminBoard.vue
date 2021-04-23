@@ -72,8 +72,8 @@ export default {
 			dropdownDisplay :'display:none',
 			textArea:"Quoi de neuf? " + this.$store.state.user.pseudo + "......",
 			password:null,
-			dismissCountDown: 0,
-			urlApi:'http://localhost:3000/api/groupomania',
+			dismissCountDown: 0
+			
 		};
 	},
 	components: {
@@ -217,7 +217,7 @@ export default {
 						pseudo:user.pseudo,
 						email:this.updateUserStatut.email,
 						password: this.updateUserStatut.password,
-						is_admin: user.is_admin? false : true
+						is_admin: user.is_admin === 0 ?  1 : 0
 					})
 				};
 				const response = await fetch(this.urlApi + `/users/${user.id}`, requestOptions);

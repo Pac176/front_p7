@@ -42,8 +42,7 @@ export default {
 			last_name:null, 
 			pseudo: null,
 			password:null,
-			email: null, 
-			urlApi:'http://localhost:3000/api/groupomania',
+			email: null
 		};
 	},
 	validations:{
@@ -77,7 +76,7 @@ export default {
 	
 	},
 	computed:{
-		...mapState(['successSubscribe','sucessUpdateUser','token','isConnect','userId','user'])
+		...mapState(['urlApi','successSubscribe','sucessUpdateUser','token','isConnect','userId','user'])
 	},
 	methods:{
 
@@ -174,7 +173,7 @@ export default {
 						last_name:this.last_name,
 						pseudo:this.pseudo,
 						email:this.email,
-						
+						is_admin:false,
 						
 					})
 				};

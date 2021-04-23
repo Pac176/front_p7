@@ -33,11 +33,11 @@ export default {
 	data(){
 		return{
 			userData:{},
-			urlApi:'http://localhost:3000/api/groupomania',
+		
 		};
 	},
 	computed:{
-		...mapState(['successSubscribe','token','isConnect','userId','isAdmin','user'])
+		...mapState(['urlApi','successSubscribe','token','isConnect','userId','isAdmin','user'])
 	},
 	methods:{
 		isConnectInStore(){

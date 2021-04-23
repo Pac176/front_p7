@@ -41,8 +41,7 @@ export default {
 			pseudo: "",
 			password:"",
 			email: "",
-			userData:{},
-			urlApi:'http://localhost:3000/api/groupomania',
+			userData:{}
 		};
 	},
 	validations:{
@@ -76,7 +75,7 @@ export default {
 	
 	},
 	computed:{
-		...mapState(['successSubscribe','token','isConnect','userId','isAdmin','user'])
+		...mapState(['urlApi','successSubscribe','token','isConnect','userId','isAdmin','user'])
 	},
 	methods:{
 		alertHover(){
@@ -121,7 +120,8 @@ export default {
 						last_name:this.last_name === ""? this.user.last_name : this.last_name,
 						pseudo:this.pseudo === ""? this.user.pseudo : this.pseudo,
 						email:this.email === ""? this.user.email : this.email,
-						password: this.user.password 
+						password: this.user.password, 
+						is_admin:this.user.is_admin
 					})
 				};
 				const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);

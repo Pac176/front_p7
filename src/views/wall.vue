@@ -139,10 +139,10 @@
 <!-- input comment -->
 
 		<b-form-group  v-if='switchToUpdate !== false'>
-			<b-input   :id="'inputComment'+index" :data-key="index" class="inputComment"  v-model='commentToUpdate[index].comment_content' v-on:keyup.enter="updateComment(index)"></b-input>
+			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)"></b-input>
 		</b-form-group>
 		<b-form-group  v-else>
-			<b-input   :id="'inputComment'+index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index);" ></b-input>
+			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index);" ></b-input>
 		</b-form-group>
 
 
@@ -171,7 +171,6 @@ export default {
 			noPosts:null,
 			switchToUpdate:false,
 			postToUpdate:{},
-			commentToUpdate:{},
 			newComment:[],
 			allComments:[],
 			startComment:-1, //false, //0,
@@ -324,7 +323,6 @@ export default {
 			const response = await fetch(this.urlApi + `/comments/${commentId}`, requestOptions);
 			this.oneCommentData = await response.json();
 			this.commentToUpdate = this.oneCommentData.data;
-			console.log(this.commentToUpdate);
 			this.setFocusInput(index);
 			this.switchToUpdate = true;
 	
@@ -422,7 +420,7 @@ export default {
 			};
 			await fetch(this.urlApi + `/comments/${this.commentToUpdate.id}`, requestOptions);
 			await this.findAllPosts();
-			//this.commentToUpdate={};
+			this.commentToUpdate={};
 			this.switchToUpdate = false;
 			this.outFocusInput(index);
 			

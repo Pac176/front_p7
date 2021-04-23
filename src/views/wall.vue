@@ -96,11 +96,30 @@
 					</div>
 				</div>
 			</b-col>
-		</b-row> 
-<b-link v-b-toggle="'my-collapse-'+ index" class='link'>il y a {{allPosts[index].tblComments.length}} commentaire(s) sur ce post...</b-link>
+		</b-row>
+<div v-if="allPosts[index].tblComments.length < 3">
+<div class='commentGroup' block>
+	<div v-for="(comment) in allPosts[index].tblComments" :key="comment.id" class='commentAndAction'>
+		<b-card class="commentCard">
+				<div >
+					<b-link href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</b-link>
+					<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
+				</div>
+		</b-card>
+<!-- menu Comments -->
+		<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
+			<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
+			<b-link class='link deleteComment' @click='deleteComment(comment.id)' >Supprimer</b-link>
+		</div>
+	</div>
+</div>	
+
+</div>
+<div >
+<b-link v-b-toggle="'my-collapse-'+ index" class='link not-collapsed'>il y a {{allPosts[index].tblComments.length}} commentaire(s) sur ce post...</b-link>
 <!-- comments -->
  <b-collapse :id="'my-collapse-'+ index" :data-key="index">
-   
+
 <div class='commentGroup' block>
 	<div v-for="(comment) in allPosts[index].tblComments" :key="comment.id" class='commentAndAction'>
 		<b-card class="commentCard">
@@ -117,13 +136,18 @@
 	</div>
 </div>	
  </b-collapse>
+
+
+
+</div>
+
 <!-- input comment -->
 
 		<b-form-group  v-if='switchToUpdate !== false'>
 			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)"></b-input>
 		</b-form-group>
 		<b-form-group  v-else>
-			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index)"></b-input>
+			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index);" ></b-input>
 		</b-form-group>
 
 
@@ -148,7 +172,6 @@ export default {
 	name: 'wall',
 	data(){
 		return{
-			
 			isUserLike:[],
 			noPosts:null,
 			switchToUpdate:false,
@@ -176,6 +199,7 @@ export default {
 		},
 		...mapState([
 			'urlApi',
+			'wallUserId',
 			'successSubscribe',
 			'token',
 			'isConnect',
@@ -254,6 +278,9 @@ export default {
 		allUsersInStore(allUsersData){
 			this.$store.commit('ALLUSERS',allUsersData);
 		},
+		wallUserIdInStore(wallUserData){
+			this.$store.commit('WALLUSERID', wallUserData);
+		},
 		async findAllPosts() {
 			try {
 				const requestOptions = {
@@ -317,6 +344,7 @@ export default {
 			const response = await fetch(this.urlApi + `/posts/users/${userId}`, requestOptions);
 			this.allPostsByUserIdData = await response.json();
 			if(this.allPostsByUserIdData.count !== 0 && this.isConnect){
+				this.wallUserIdInStore(userId);
 				this.allPostsByUserIdInStore(this.allPostsByUserIdData.data);
 			} else{
 				this.allPostsByUserIdInStore('');

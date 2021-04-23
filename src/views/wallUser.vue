@@ -19,20 +19,7 @@
 		<h2 v-if='noPosts' style='font-style:italic; color:#FD2D01;'>{{noPosts}}</h2><br>
 		</b-link>
 <!-- modal publication -->
-		<b-modal id="publication" hide-footer size="lg" @close='alertCloseModal'>
-			<template #modal-title >
-			Creer une Publication
-			</template>
-			<div class="d-block text-center">
-				<div>
-					<b-form-textarea v-model='textArea' autofocus id="textarea" style='border: none;  -webkit-box-shadow: none;' placeholder=""  rows="1"	max-rows="10">
-
-					</b-form-textarea>
-					<pre class="mt-3 mb-0"></pre>
-				</div>
-			</div>
-			<b-button v-if='textArea !== ""' class="mt-5" variant='outline-primary' block @click="createPost">Publier</b-button>
-		</b-modal> 
+	
 		<b-modal id="updatePublication" hide-footer size="lg" @close='alertCloseModal'>
 			<template #modal-title >
 			Modifier ma publication
@@ -53,7 +40,7 @@
 		<div  class='headerCard'>
 			<b-card-text ><b-img   src="https://picsum.photos/50" fluid alt="Responsive image" class="authorImg link"></b-img></b-card-text>
 				<div class='textHeader' >
-					<b-card-text  class="authorPost link">{{ item.user.pseudo}}</b-card-text>
+					<div  class="authorPost link">{{ item.user.pseudo}}</div>
 					<b-link class="link" v-b-tooltip.leftbottom.v-info ="momentDateMouse(item.createdAt)" >{{ momentDate(item.createdAt)}}</b-link>
 				</div>
 		</div>
@@ -90,31 +77,32 @@
 				<div :data-key="index" @click='deletePost(item.id,item.user.id,index)' block variant="outline-secondary"  class='btnLikeComment' >
 					<div>
 						<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616755730/delete_sg8ndk.svg" alt="" height="15">
-						<b-card-text  >Supprimer </b-card-text>
+						<b-card-text  >Supprimer</b-card-text>
 					</div>
 				</div>
 			</b-col>
 		</b-row> 
 
+<b-link v-b-toggle="'my-collapse-'+ index" class='link'>il y a {{allPostsByUserId[index].tblComments.length}} commentaire(s) sur ce post...</b-link>
 <!-- comments -->
+<b-collapse :id="'my-collapse-'+ index" :data-key="index">
 <div class='commentGroup' block>
 	<div v-for="(comment) in allPostsByUserId[index].tblComments" :key="comment.id" class='commentAndAction'>
 		<b-card class="commentCard">
 				<div >
-					<b-link href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</b-link>
+					<div href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</div>
 					<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
 				</div>
 		</b-card>
-		<b-link v-b-toggle="'my-collapse-'+ index" class='link'>il y a {{allPosts[index].tblComments.length}} commentaire(s) sur ce post...</b-link>
 <!-- comments -->
-<b-collapse :id="'my-collapse-'+ index" :data-key="index">
-		<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
+
+		<div v-if="comment.user.id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
 			<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
 			<b-link class='link deleteComment' @click='deleteComment(comment.id,item.user.id)' >Supprimer</b-link>
 		</div>
-	</b-collapse>
 	</div>
 </div>	
+</b-collapse>
 
 <!-- input comment -->
 
@@ -122,7 +110,7 @@
 			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(item.user.id,index)" ></b-input>
 		</b-form-group>
 		<b-form-group  v-else>
-			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,item.user.id,index)" ></b-input>
+			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index)" ></b-input>
 		</b-form-group>
 
 
@@ -144,7 +132,7 @@ import Nav from '@/components/Nav.vue';
 import {mapState} from 'vuex';
 import moment from "moment";
 export default {
-	name: 'wall',
+	name: 'wallUser',
 	data(){
 		return{
 			isUserLike:[],
@@ -155,7 +143,6 @@ export default {
 			allComments:[],
 			startComment:-1, //false, //0,
 			dropdownDisplay :'display:none',
-			textArea:"Quoi de neuf? " + this.$store.state.user.pseudo + "......",
 			password:null,
 			dismissSecs: 5,
 			dismissCountDown: 0
@@ -173,6 +160,7 @@ export default {
 			return this.$store.state.allPostsByUserId;
 		},
 		...mapState([
+			'wallUserId',
 			'urlApi',
 			'successSubscribe',
 			'token',
@@ -443,7 +431,7 @@ export default {
 				})
 			};
 			await fetch(this.urlApi + `/comments`, requestOptions);
-			await this.findAllPostsByUserId(userId);
+			await this.findAllPostsByUserId(this.wallUserId);
 			this.newComment=[];
 			this.outFocusInput(index);
 						
@@ -490,13 +478,18 @@ export default {
 		},
 	},
 	mounted(){
-	
+		this.findAllPostsByUserId(this.wallUserId);
+		
 	}
 };
 </script>
 
 
 <style lang="scss" scoped>
+.authorPost {
+	font-weight:bolder;
+}
+
 .counterLike{
 	height: 2rem;
 }

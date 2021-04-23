@@ -1,7 +1,6 @@
 <template>
-
 <div>
- <Nav></Nav><br>
+ <Nav></Nav> 
  <b-row class="wall">
 	<b-col md="3" sm>
 		<h4>{{user.first_name}} {{user.last_name}}</h4>
@@ -9,7 +8,7 @@
 		<div>Inscrit le {{momentDateMouse(user.createdAt)}}</div>
 		<!-- <div>Dernière connexion {{momentDate(user.updatedAt)}}</div> --><br>
 	</b-col>
-	<b-col  md="7" sm style='padding:0 1.5 0 0 rem'>
+	<b-col  md="7" sm style='padding:0 1.5 0 0 rem;' >
 		<b-alert  :show="dismissCountDown" dismissible variant="success"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
 			Inscription reussie!</b-alert>
 		<b-link v-b-modal.publication @click='resetModal' class="link">
@@ -98,21 +97,7 @@
 			</b-col>
 		</b-row>
 <div v-if="allPosts[index].tblComments.length < 3">
-<div class='commentGroup' block>
-	<div v-for="(comment) in allPosts[index].tblComments" :key="comment.id" class='commentAndAction'>
-		<b-card class="commentCard">
-				<div >
-					<b-link href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</b-link>
-					<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
-				</div>
-		</b-card>
-<!-- menu Comments -->
-		<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
-			<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
-			<b-link class='link deleteComment' @click='deleteComment(comment.id)' >Supprimer</b-link>
-		</div>
-	</div>
-</div>	
+
 
 </div>
 <div >
@@ -122,17 +107,27 @@
 
 <div class='commentGroup' block>
 	<div v-for="(comment) in allPosts[index].tblComments" :key="comment.id" class='commentAndAction'>
+		<div class='commentCollapseMenu'>
 		<b-card class="commentCard">
-				<div >
-					<b-link href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</b-link>
+		
+
+				<div class='commentText'>
+					<div href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</div>
 					<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
 				</div>
 		</b-card>
 <!-- menu Comments -->
+<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619193650/Group_1menu3pointscollapsecomment_b8aayz.svg" height="20"></b-link>
+		</div>
+	
+
+<b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
 		<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
 			<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
 			<b-link class='link deleteComment' @click='deleteComment(comment.id)' >Supprimer</b-link>
 		</div>
+</b-collapse>
+
 	</div>
 </div>	
  </b-collapse>
@@ -188,7 +183,7 @@ export default {
 		};
 	},
 	components: {
-		Nav
+		Nav 
 	},
 	computed:{
 		allPosts() {
@@ -531,6 +526,25 @@ export default {
 
 
 <style lang="scss" scoped>
+.commentCollapseMenu{
+	display:flex;
+	
+}
+.menuCommentCollapse{
+	align-self: center;
+	
+}
+#menuCommentCollapse{
+	align-self: center;
+}
+.commentText{
+	display: flex;
+	flex-direction: column;
+
+}
+.authorPost{
+	font-weight:bolder;
+}
 
 .counterLike{
 	height: 2rem;
@@ -558,17 +572,22 @@ export default {
 	display:flex;
 	width: fit-content;
 	text-align: left;
-	border-radius:30px;
+	border-radius:15px;
 	margin-bottom:0.1rem;
 	margin-top:0.5rem;
-	background-color:rgb(235, 221, 221)
+	background-color:rgb(235, 221, 221);
+	-moz-box-shadow:    inset 0 0 7px #000000;
+   -webkit-box-shadow: inset 0 0 7px #000000;
+   box-shadow:         inset 0 0 7px #000000;
+	font-family:Verdana, Geneva, Tahoma, sans-serif
 	
-
 }
+
 .commentAndAction{
 	display:flex;
 	flex-direction: column;
 	width: fit-content;
+
 }
 
 .inputComment{
@@ -582,7 +601,7 @@ export default {
 	flex-direction: rows;
 	margin-bottom: 1rem;
 	justify-content:space-between ;
-
+	
 }
 .textHeader{
 	display: flex;
@@ -603,20 +622,15 @@ export default {
 	width:70%;
 }
 .card{
-	//width:100%;
-	padding:0.6rem;
+	background-color: #E8F3F3;
+	padding:0.4rem;
 
-}
-.wall{
-	margin-top: 5rem;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
 }
 
 .post {
 	margin-top:1rem;
-	background-color:rgb(255, 252, 252)
+	background-color:rgb(243, 232, 232);
+	box-shadow: -8px -5px 2px 1px rgba(129, 21, 21, 0.2);
 }
 .textPost{
 	text-align: justify;
@@ -633,7 +647,8 @@ export default {
 	font-size:0.8rem;
 	cursor: pointer;
 	border-top:1px rgb(235, 185, 185) solid;
-	border-bottom:1px rgb(235, 185, 185) solid
+	border-bottom:1px rgb(235, 185, 185) solid;
+	font-weight: bolder
 }
 .btnLikeComment:hover{
 	background-color: rgb(230, 210, 208);
@@ -666,7 +681,6 @@ export default {
 	padding:0;
 	
 	
-	
 }
 .link, .link:hover{
 	text-decoration:none;
@@ -676,5 +690,11 @@ export default {
 color:rgb(164, 61, 145)
 }
 ////////////////////////////////@forward 
+.wall{
+	margin-top: 5rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
 
 </style>

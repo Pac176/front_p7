@@ -160,8 +160,7 @@ export default {
 	margin:0;
 	text-align: left;
 	justify-content: center;
-	padding-top: 2rem;
-	color: red;
+	
     }
 }
 @media screen and (min-width:500px) {
@@ -180,4 +179,5 @@ export default {
 .linkAlert{
 	text-decoration: none;
 }
+
 </style>

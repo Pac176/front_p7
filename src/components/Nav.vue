@@ -46,7 +46,8 @@ export default {
  
 };
 </script>
-<style scoped lang="scss">
+<style scoped lang="scss" >
+
 @media screen and (min-width:992px) {
   #connectMenu{
   display:flex;

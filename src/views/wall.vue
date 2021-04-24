@@ -2,19 +2,19 @@
 <div>
  <Nav></Nav> 
  <b-row class="wall">
-	<b-col md="3" sm>
+	<b-col md="2" sm>
 		<h4>{{user.first_name}} {{user.last_name}}</h4>
 		<h6> ({{user.pseudo}})</h6>
 		<div>Inscrit le {{momentDateMouse(user.createdAt)}}</div>
 		<!-- <div>Dernière connexion {{momentDate(user.updatedAt)}}</div> --><br>
 	</b-col>
-	<b-col  md="7" sm style='padding:0 1.5 0 0 rem;' >
+	<b-col  md="8" sm style='padding:0 1.5 0 0 rem;' >
 		<b-alert  :show="dismissCountDown" dismissible variant="success"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
 			Inscription reussie!</b-alert>
 		<h2>Fil d'actualité</h2><br>
 		<b-link v-b-modal.publication @click='resetModal' class="link">
 		<h2 v-if='noPosts' style='font-style:italic; color:#FD2D01;'>{{noPosts}}</h2><br>
-		<b-link  block variant="outline-secondary" class='postInput'  style='color:#FD2D01' >{{textArea}}</b-link>
+		<b-link  block variant="outline-secondary" class='postInput' >{{textArea}}</b-link>
 		</b-link>
 <!-- modal publication -->
 		<b-modal id="publication" hide-footer size="lg" @close='alertCloseModal'>
@@ -586,6 +586,9 @@ export default {
 
 
 <style lang="scss" scoped>
+@media screen and (max-width:500px) {
+	
+}
 .commentCollapseMenu{
 	display:flex;
 	
@@ -708,7 +711,7 @@ export default {
 	padding:0;
 	border:none;	
 	text-decoration: none;
-	color: rgb(206, 48, 48);
+	color: rgb(68, 13, 9);
 	font-size:0.8rem;
 	cursor: pointer;
 	border-top:1px rgb(235, 185, 185) solid;
@@ -733,7 +736,7 @@ export default {
 .postInput{
 	overflow:hidden;
 	margin:0rem;
-	border-radius: 20px;
+	border-radius: 30px;
 	height:3rem;
 	align-items: center;
 	display: flex;
@@ -741,6 +744,10 @@ export default {
 	text-decoration:none;
 	border:1px rgb(224, 201, 201) solid;
 	padding-left:0.8rem;
+	color: rgba(54, 37, 37, 0.993);
+	font-weight: bolder;
+	box-shadow: -8px -5px 2px 1px rgba(151, 12, 12, 0.2);
+
 }
 .card-body{
 	padding:0;
@@ -753,6 +760,9 @@ export default {
 }
 .linkUser:hover{
 color:rgb(164, 61, 145)
+}
+.row{
+	margin:0
 }
 ////////////////////////////////@forward 
 .wall{

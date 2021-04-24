@@ -80,7 +80,7 @@
 				
 			</b-col>
 			<b-col>
-				<div  @click="function(){setFocusInput( index ); switchToUpdate=false}" block variant="outline-secondary" class='btnLikeComment'>
+				<div  @click="function(){setFocusInput( index ); switchToUpdate[index]=false}" block variant="outline-secondary" class='btnLikeComment'>
 					<div>
 						<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
 						<b-card-text >Répondre</b-card-text>
@@ -138,11 +138,11 @@
 
 <!-- input comment -->
 
-		<b-form-group  v-if='switchToUpdate !== false'>
-			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)"></b-input>
+		<b-form-group  v-if='switchToUpdate[index] !== false'>
+			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)" placeholder='update'></b-input>
 		</b-form-group>
 		<b-form-group  v-else>
-			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index);" ></b-input>
+			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index);" placeholder='create'></b-input>
 		</b-form-group>
 
 
@@ -169,7 +169,8 @@ export default {
 		return{
 			isUserLike:[],
 			noPosts:null,
-			switchToUpdate:false,
+			switchToUpdate:[false],
+			commentToUpdate:{},
 			postToUpdate:{},
 			newComment:[],
 			startComment:-1, //false, //0,
@@ -213,11 +214,20 @@ export default {
 		},
 		setFocusInput(index) {
 			const inputs = document.querySelectorAll('.inputComment');
-			inputs.forEach(input => { 
-				if (input.dataset.key == index) {
-					input.focus();
-				} 
-			});
+			for (let i = 0; i < inputs.length; i++) {
+				if(inputs[i].dataset.key == index){
+					inputs[i].focus();
+				} else {
+					this.switchToUpdate[i]= false;
+
+				}
+			}
+
+
+
+
+		
+			
 		},
 		outFocusInput(index) {
 			const inputs = document.querySelectorAll('.inputComment');
@@ -316,6 +326,7 @@ export default {
 			
 		},
 		async findOneComment(commentId,index) {
+			this.switchToUpdate[index] = true;
 			
 			const requestOptions = {
 				method: "Get",
@@ -327,7 +338,6 @@ export default {
 			this.oneCommentData = await response.json();
 			this.commentToUpdate = this.oneCommentData.data;
 			this.setFocusInput(index);
-			this.switchToUpdate = true;
 	
 		
 			
@@ -374,7 +384,9 @@ export default {
 			const allCommentsData = await response.json();
 			
 			if(allCommentsData.data.length !== 0 && this.isConnect){
-				
+				for (let value of allCommentsData.data){
+					this.switchToUpdate[value.id]= false;
+				}
 				return this.allCommentsInStore(allCommentsData.data);
 				
 			} 
@@ -440,8 +452,7 @@ export default {
 			};
 			await fetch(this.urlApi + `/comments/${this.commentToUpdate.id}`, requestOptions);
 			await this.findAllPosts();
-			this.commentToUpdate={};
-			this.switchToUpdate = false;
+			this.switchToUpdate[index] = false;
 			this.outFocusInput(index);
 			
 			

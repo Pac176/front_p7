@@ -1,12 +1,7 @@
 <template>
-
-<!-- <b-form  class="vue-template"> -->
 	<b-form class="formPwdUpdate"  >
-	
-
-			<b-link   class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible :variant='variantResult'  @dismiss-count-down="countDownChanged" >
-      {{apiResponse.message}}
-    </b-alert></b-link>
+		<b-link class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible :variant='variantResult'  @dismiss-count-down="countDownChanged" >
+			{{apiResponse.message}}</b-alert></b-link>
 			<b-form-group v-if="!updatePwdSuccess" style="font-weight:bold" id="input-group-1"   label="Actuel mot de passe:" label-for="input-1" description="Au moins 8 caractères, 1 majuscule, 1 chiffre et un caratere special" >
               <b-form-input  style="font-style:italic" id="input-1" v-model.trim="$v.oldPassword.$model" :class='{"is-invalid":$v.oldPassword.$error,"is-valid":!$v.oldPassword.$invalid}' type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
             </b-form-group>
@@ -24,20 +19,13 @@
 				<b-col v-if="!updatePwdSuccess">
 					<button   type="submit"  @click="deleteAccount" class="btn btn-danger btn-lg btn-block" >Supprimer mon compte</button>
 				</b-col>
-
 			</b-row>
-            
             <p class="forgot-password text-right mt-2 mb-4">
             </p>
        </b-form> 
-	<!-- </b-form>	 -->   
-   
-
 </template>
 <script>
-// @ is an alias to /src
 import { required,  helpers, sameAs } from 'vuelidate/lib/validators';
-//const emailRegex = helpers.regex('emailRegex', /^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,6}$/);
 const pwdRegex = helpers.regex('pwdRegex', /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/);
 import {mapState} from 'vuex';
 export default {
@@ -83,17 +71,24 @@ export default {
 	
 	},
 	computed:{
-		...mapState(['urlApi','successSubscribe','sucessUpdateUser', 'deleteAccountSuccess','deleteAccountRequest','token','isConnect','userId','user'])
+		...mapState([
+			'urlApi',
+			'successSubscribe',
+			'sucessUpdateUser', 
+			'deleteAccountSuccess',
+			'deleteAccountRequest',
+			'token',
+			'isConnect',
+			'userId',
+			'user'])
 	},
 	methods:{
 		async showMsgBoxOne() {
 			this.boxOne = '';
 			const modal = await this.$bvModal.msgBoxConfirm('Etes vous sur de vouloir supprimer votre compte définitivement?');
 			this.boxOne = await modal;
-				
-				
 		},
-		showMsgBoxTwo() {
+		/* showMsgBoxTwo() {
 			this.boxTwo = '';
 			this.$bvModal.msgBoxConfirm('Please confirm that you want to delete everything.', {
 				title: 'Please Confirm',
@@ -112,7 +107,7 @@ export default {
 				.catch(err => {
 					console.log(err);
 				});
-		},
+		}, */
 		alertHover(){
 			this.dismissCountDown = true;
 		},
@@ -223,8 +218,9 @@ export default {
 					password:this.oldPassword})
 			};
 			const loginRequest = await fetch(this.urlApi + "/users/login", requestOptions);
-			const loginResponse = await loginRequest.json();	
-			if(loginRequest.ok === true ){
+			const loginResponse = await loginRequest.json();
+			console.log(loginResponse);	
+			if(loginRequest.ok === true && this.user.is_admin == 0){
 				await this.showMsgBoxOne();
 				//const confirmResponse = confirm("Etes vous sur de vouloir supprimer définitivement votre compte?");
 				if (this.boxOne) {
@@ -246,6 +242,8 @@ export default {
 						this.showAlert(deleteAccountRequestResponse, "danger");
 					}  
 				} 
+			} else if(this.user.is_admin == 1){
+				this.showAlert({message:"Vous ne pouvez pas supprimer le compte d'un admin"}, "danger");
 			} else {
 				this.showAlert(loginResponse, "danger");
 			}
@@ -259,7 +257,7 @@ export default {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 
 @media screen and (max-width:500px) {
 	.formPwdUpdate{
@@ -288,11 +286,5 @@ export default {
 .btn{
 	height: 100%;
 }
-/* .vue-template{
-	display: flex;
-	margin:0;
-	text-align: left;
-	justify-content: center;
-	padding-top: 2rem;
-  } */
+
 </style>

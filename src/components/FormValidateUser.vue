@@ -1,7 +1,7 @@
 <template>
 	<b-form class="formSubscribe"  @submit="onSubscription">
-			<b-alert :show="dismissCountDown" dismissible :variant='variantResult'   @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
-    {{apiResponse.message}}</b-alert>
+			<b-link class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible :variant='variantResult'  @dismiss-count-down="countDownChanged" >
+			{{apiResponse.message}}</b-alert></b-link>
 			<b-form-group style="font-weight:bold" id="input-group-1"   label="Votre nom:" label-for="input-2" >
               <b-form-input style="font-style:italic" id="input-1" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' placeholder="Entrez votre nom (uniquement des lettres)"  ></b-form-input>
             </b-form-group>
@@ -79,7 +79,12 @@ export default {
 		...mapState(['urlApi','successSubscribe','sucessUpdateUser','token','isConnect','userId','user'])
 	},
 	methods:{
-
+		alertHover(){
+			this.dismissCountDown = true;
+		},
+		alertHoverOut(){
+			this.dismissCountDown = 1;
+		},
 		isConnectInStore(){
 			this.$store.commit('ISCONNECT');
 		},
@@ -147,6 +152,7 @@ export default {
 				} 
 			} catch (error) {
 				this.showAlert({message: error},'danger');
+				console.log(error);
 			}
 		},
 		async findOneUser () {
@@ -160,7 +166,7 @@ export default {
 			this.userData = await response.json();
 			this.userInStore(this.userData.data);
 		},
-		async onUpdateUser (event) {
+		/* 		async onUpdateUser (event) {
 			event.preventDefault();
 			try {
 				const requestOptions = {
@@ -191,7 +197,7 @@ export default {
 			} catch (error) {
 				console.log(error.message);
 			}
-		}
+		} */
 		
 	}};		
 				
@@ -202,7 +208,11 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+
+.linkAlert{
+	text-decoration: none;
+}
 
 @media screen and (max-width:700px) {
 	.formSubscribe{
@@ -214,7 +224,7 @@ export default {
 	text-align: left;
 	justify-content: center;
 	padding-top: 2rem;
-	color: red;
+	
     }
 }
 @media screen and (min-width:700px) {
@@ -227,5 +237,10 @@ export default {
     }
 }
 
+.formValidateUser {
+	display:flex;
+	flex-direction: column;
+	align-self: center;
+}
 
 </style>

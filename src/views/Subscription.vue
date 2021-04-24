@@ -48,11 +48,7 @@ export default {
 	
 }
 
-.formValidateUser {
-	display:flex;
-	flex-direction: column;
-	align-self: center;
-}
+
 
 </style>
 

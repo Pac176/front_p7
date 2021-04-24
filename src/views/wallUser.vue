@@ -137,13 +137,13 @@ export default {
 		return{
 			isUserLike:[],
 			noPosts:null,
-			switchToUpdate:false,
-			postToUpdate:{},
+			switchToUpdate:[],
 			commentToUpdate:{},
+			postToUpdate:{},
 			newComment:[],
-			allComments:[],
 			startComment:-1, //false, //0,
 			dropdownDisplay :'display:none',
+			textArea:"Quoi de neuf? " + this.$store.state.user.first_name + "......",
 			password:null,
 			dismissSecs: 5,
 			dismissCountDown: 0
@@ -151,7 +151,7 @@ export default {
 		};
 	},
 	components: {
-		Nav
+		Nav 
 	},
 	computed:{
 		allPosts() {
@@ -161,8 +161,8 @@ export default {
 			return this.$store.state.allPostsByUserId;
 		},
 		...mapState([
-			'wallUserId',
 			'urlApi',
+			'wallUserId',
 			'successSubscribe',
 			'token',
 			'isConnect',
@@ -171,9 +171,15 @@ export default {
 			'user',
 			'allUsers',
 			'allPosts',
+			'allComments',
 			'allPostsByUserId']),
 	},
 	methods:{
+		switchToUpdateReset(){
+			for (let i=0; i<this.allPostsByUserId.length;i++){
+				this.switchToUpdate[i]=false;
+			}
+		},
 		userLike(item){
 			if(item.like.length !== 0) {
 				return item.like.includes(item.like.find(el=>el.user.id === this.user.id));
@@ -185,35 +191,36 @@ export default {
 		},
 		setFocusInput(index) {
 			const inputs = document.querySelectorAll('.inputComment');
-			inputs.forEach(ele => { 
-				if (ele.dataset.key == index) {
-					ele.focus();
+			for (let i = 0; i < inputs.length; i++) {
+				if(inputs[i].dataset.key == index){
+					inputs[i].focus();
 				} 
-			});
+			}
+
+
+
+
+		
+			
 		},
 		outFocusInput(index) {
 			const inputs = document.querySelectorAll('.inputComment');
-			inputs.forEach(ele => { 
-				if (ele.dataset.key == index) {
-					ele.blur();
+			inputs.forEach(input => { 
+				if (input.dataset.key == index) {
+					input.blur();
 				} 
 			});
 		},
 		outFocusButton(index) {
 			const buttons = document.querySelectorAll('.btnLikeComment');
-			buttons.forEach(ele => { 
-				if (ele.dataset.key == index) {
-					ele.blur();
+			buttons.forEach(button => { 
+				if (button.dataset.key == index) {
+					button.blur();
 				} 
 			});
 		},
-   
-		DisplayOn(){
-			return this.dropdownDisplay = this.dropdownDisplay ==='display:none'? 'display:block' : 'display:none';
-		},
 		momentDateMouse(item){
 			return moment(item).format('LLL');
-		
 		},
 		momentDate(item){
 			
@@ -244,27 +251,37 @@ export default {
 		allPostsByUserIdInStore(allPostsByUserIdData){
 			this.$store.commit('ALLPOSTSBYUSERID',allPostsByUserIdData);
 		},
+		allCommentsInStore(allCommentsData){
+			this.$store.commit('ALLCOMMENTS',allCommentsData);
+		},
 		allUsersInStore(allUsersData){
 			this.$store.commit('ALLUSERS',allUsersData);
 		},
+		wallUserIdInStore(wallUserData){
+			this.$store.commit('WALLUSERID', wallUserData);
+		},
 		async findAllPosts() {
-			const requestOptions = {
-				method: "Get",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-			};
-			const response = await fetch(this.urlApi + `/posts`, requestOptions);
-			this.allPostsData = await response.json();
-			if(this.allPostsData.count !== 0 && this.isConnect){
-				return this.allPostsInStore(this.allPostsData.data.rows);
-			} else if(this.allPostsData.count === 0){
-				this.noPosts = this.allPostsData.message;
-				return this.allPostsInStore("");
-			}else{
-				this.allPostsInStore('');
+			try {
+				const requestOptions = {
+					method: "Get",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+				};
+				const response = await fetch(this.urlApi + `/posts`, requestOptions);
+				this.allPostsData = await response.json();
+				if(this.allPostsData.count !== 0 && this.isConnect){
+					return this.allPostsInStore(this.allPostsData.data);
+
+				} else if(this.allPostsData.count === 0){
+					this.noPosts = this.allPostsData.message;
+					return this.allPostsInStore("");
+				}else{
+					this.allPostsInStore('');
+				}
+			} catch (error) {
+				console.log(error,"erreure sur findAllPosts");
 			}
-		
 		},
 		async findOnePost(postId) {
 			
@@ -282,6 +299,7 @@ export default {
 		},
 		async findOneComment(commentId,index) {
 			
+			
 			const requestOptions = {
 				method: "Get",
 				headers: { 
@@ -291,8 +309,10 @@ export default {
 			const response = await fetch(this.urlApi + `/comments/${commentId}`, requestOptions);
 			this.oneCommentData = await response.json();
 			this.commentToUpdate = this.oneCommentData.data;
+			this.switchToUpdateReset();
+			this.switchToUpdate[index] = true;
+			this.findAllPosts();
 			this.setFocusInput(index);
-			this.switchToUpdate = true;
 	
 		
 			
@@ -373,6 +393,7 @@ export default {
 			
 		},
 		async updateComment(userId,index){
+			//this.$bvModal.hide('updatePublication');
 			const requestOptions = {
 				method: "Put",
 				headers: { 
@@ -385,12 +406,12 @@ export default {
 					}
 				})
 			};
-			await fetch(this.urlApi + `/comments/${this.commentToUpdate.id}`, requestOptions);
-			await this.findAllPostsByUserId(userId);
-			this.commentToUpdate={};
-			this.switchToUpdate = false;
+			const response =await fetch(this.urlApi + `/comments/${this.commentToUpdate.id}`, requestOptions);
+			await response.json();
+			this.switchToUpdate[index] = false;
 			this.outFocusInput(index);
-			
+			this.findAllPostsByUserId(userId);
+			console.log(this.commentToUpdate);
 			
 		},
 		async deletePost(postId,userId,index){
@@ -487,7 +508,28 @@ export default {
 
 
 <style lang="scss" scoped>
-.authorPost {
+.commentCollapseMenu{
+	display:flex;
+	
+}
+.menuCommentCollapse{
+	align-self: center;
+	
+}
+.imgMenuCollapse:hover{
+	border-radius:50%;
+	background-color: rgb(204, 103, 103);
+	
+}
+#menuCommentCollapse{
+	align-self: center;
+}
+.commentText{
+	display: flex;
+	flex-direction: column;
+
+}
+.authorPost{
 	font-weight:bolder;
 }
 
@@ -517,17 +559,22 @@ export default {
 	display:flex;
 	width: fit-content;
 	text-align: left;
-	border-radius:30px;
+	border-radius:15px;
 	margin-bottom:0.1rem;
 	margin-top:0.5rem;
-	background-color:rgb(235, 221, 221)
+	background-color:rgb(235, 221, 221);
+	-moz-box-shadow:    inset 0 0 7px #000000;
+   -webkit-box-shadow: inset 0 0 7px #000000;
+   box-shadow:         inset 0 0 7px #000000;
+	font-family:Verdana, Geneva, Tahoma, sans-serif
 	
-
 }
+
 .commentAndAction{
 	display:flex;
 	flex-direction: column;
 	width: fit-content;
+
 }
 
 .inputComment{
@@ -541,7 +588,7 @@ export default {
 	flex-direction: rows;
 	margin-bottom: 1rem;
 	justify-content:space-between ;
-
+	
 }
 .textHeader{
 	display: flex;
@@ -562,20 +609,15 @@ export default {
 	width:70%;
 }
 .card{
-	//width:100%;
-	padding:0.6rem;
+	background-color: #E8F3F3;
+	padding:0.4rem;
 
-}
-.wall{
-	margin-top: 5rem;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
 }
 
 .post {
 	margin-top:1rem;
-	background-color:rgb(255, 252, 252)
+	background-color:rgb(243, 232, 232);
+	box-shadow: -8px -5px 2px 1px rgba(129, 21, 21, 0.2);
 }
 .textPost{
 	text-align: justify;
@@ -592,7 +634,8 @@ export default {
 	font-size:0.8rem;
 	cursor: pointer;
 	border-top:1px rgb(235, 185, 185) solid;
-	border-bottom:1px rgb(235, 185, 185) solid
+	border-bottom:1px rgb(235, 185, 185) solid;
+	font-weight: bolder
 }
 .btnLikeComment:hover{
 	background-color: rgb(230, 210, 208);
@@ -625,7 +668,6 @@ export default {
 	padding:0;
 	
 	
-	
 }
 .link, .link:hover{
 	text-decoration:none;
@@ -635,5 +677,11 @@ export default {
 color:rgb(164, 61, 145)
 }
 ////////////////////////////////@forward 
+.wall{
+	margin-top: 5rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
 
 </style>

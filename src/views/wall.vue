@@ -11,8 +11,8 @@
 	<b-col  md="7" sm style='padding:0 1.5 0 0 rem;' >
 		<b-alert  :show="dismissCountDown" dismissible variant="success"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
 			Inscription reussie!</b-alert>
-		<b-link v-b-modal.publication @click='resetModal' class="link">
 		<h2>Fil d'actualité</h2><br>
+		<b-link v-b-modal.publication @click='resetModal' class="link">
 		<h2 v-if='noPosts' style='font-style:italic; color:#FD2D01;'>{{noPosts}}</h2><br>
 		<b-link  block variant="outline-secondary" class='postInput'  style='color:#FD2D01' >{{textArea}}</b-link>
 		</b-link>

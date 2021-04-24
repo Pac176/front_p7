@@ -87,6 +87,7 @@ export default {
 			return this.$store.state.allPostsByUserId;
 		},
 		...mapState([
+			'urlApi',
 			'successSubscribe',
 			'token',
 			'isConnect',

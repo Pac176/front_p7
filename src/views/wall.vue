@@ -96,11 +96,35 @@
 				</div>
 			</b-col>
 		</b-row>
-<div v-if="allPosts[index].tblComments.length < 3">
+<div v-if="allPosts[index].tblComments.length < 4">
+<div class='commentGroup' block>
+	<div v-for="(comment) in allPosts[index].tblComments" :key="comment.id" class='commentAndAction'>
+		<div class='commentCollapseMenu'>
+		<b-card class="commentCard">
+		
 
+				<div class='commentText'>
+					<div href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</div>
+					<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
+				</div>
+		</b-card>
+<!-- menu Comments -->
+<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg" height="20" class='imgMenuCollapse'></b-link>
+		</div>
+	
+
+<b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
+		<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
+			<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
+			<b-link class='link deleteComment' @click='deleteComment(comment.id)' >Supprimer</b-link>
+		</div>
+</b-collapse>
+
+	</div>
+</div>
 
 </div>
-<div >
+<div v-else>
 <b-link v-b-toggle="'my-collapse-'+ index" class='link not-collapsed'>il y a {{allPosts[index].tblComments.length}} commentaire(s) sur ce post...</b-link>
 <!-- comments -->
  <b-collapse :id="'my-collapse-'+ index" :data-key="index">
@@ -138,11 +162,11 @@
 
 <!-- input comment -->
 
-		<b-form-group  v-if='switchToUpdate[index] !== false'>
-			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)" placeholder='update'></b-input>
+		<b-form-group  v-if='switchToUpdate[index] === true'>
+			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)" ></b-input>
 		</b-form-group>
 		<b-form-group  v-else>
-			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index);" placeholder='create'></b-input>
+			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index);"></b-input>
 		</b-form-group>
 
 
@@ -169,7 +193,7 @@ export default {
 		return{
 			isUserLike:[],
 			noPosts:null,
-			switchToUpdate:[false],
+			switchToUpdate:[],
 			commentToUpdate:{},
 			postToUpdate:{},
 			newComment:[],
@@ -207,6 +231,11 @@ export default {
 			'allPostsByUserId']),
 	},
 	methods:{
+		switchToUpdateReset(){
+			for (let i=0; i<this.allPosts.length;i++){
+				this.switchToUpdate[i]=false;
+			}
+		},
 		userLike(item){
 			if(item.like.length !== 0) {
 				return item.like.includes(item.like.find(post=>post.user.id === this.user.id));
@@ -217,10 +246,7 @@ export default {
 			for (let i = 0; i < inputs.length; i++) {
 				if(inputs[i].dataset.key == index){
 					inputs[i].focus();
-				} else {
-					this.switchToUpdate[i]= false;
-
-				}
+				} 
 			}
 
 
@@ -301,6 +327,7 @@ export default {
 				this.allPostsData = await response.json();
 				if(this.allPostsData.count !== 0 && this.isConnect){
 					return this.allPostsInStore(this.allPostsData.data);
+
 				} else if(this.allPostsData.count === 0){
 					this.noPosts = this.allPostsData.message;
 					return this.allPostsInStore("");
@@ -326,7 +353,7 @@ export default {
 			
 		},
 		async findOneComment(commentId,index) {
-			this.switchToUpdate[index] = true;
+			
 			
 			const requestOptions = {
 				method: "Get",
@@ -337,6 +364,9 @@ export default {
 			const response = await fetch(this.urlApi + `/comments/${commentId}`, requestOptions);
 			this.oneCommentData = await response.json();
 			this.commentToUpdate = this.oneCommentData.data;
+			this.switchToUpdateReset();
+			this.switchToUpdate[index] = true;
+			this.findAllPosts();
 			this.setFocusInput(index);
 	
 		
@@ -384,9 +414,7 @@ export default {
 			const allCommentsData = await response.json();
 			
 			if(allCommentsData.data.length !== 0 && this.isConnect){
-				for (let value of allCommentsData.data){
-					this.switchToUpdate[value.id]= false;
-				}
+				
 				return this.allCommentsInStore(allCommentsData.data);
 				
 			} 
@@ -437,7 +465,7 @@ export default {
 			
 		},
 		async updateComment(index){
-			this.$bvModal.hide('updatePublication');
+			//this.$bvModal.hide('updatePublication');
 			const requestOptions = {
 				method: "Put",
 				headers: { 
@@ -450,11 +478,12 @@ export default {
 					}
 				})
 			};
-			await fetch(this.urlApi + `/comments/${this.commentToUpdate.id}`, requestOptions);
-			await this.findAllPosts();
+			const response =await fetch(this.urlApi + `/comments/${this.commentToUpdate.id}`, requestOptions);
+			await response.json();
 			this.switchToUpdate[index] = false;
 			this.outFocusInput(index);
-			
+			this.findAllPosts();
+			console.log(this.commentToUpdate);
 			
 		},
 		async deletePost(post,index){
@@ -542,9 +571,9 @@ export default {
 		},
 	},
 	mounted(){
-		this.findAllComments();
 		this.findAllPosts();
-		this.findAllUsers();
+		this.findAllComments();
+		
 		
 		if (this.$store.state.successSubscribe){
 			this.showAlert();

@@ -83,31 +83,11 @@ export default {
 			'user'])
 	},
 	methods:{
-		async showMsgBoxOne() {
+		async showMsgDeleteAccount() {
 			this.boxOne = '';
 			const modal = await this.$bvModal.msgBoxConfirm('Etes vous sur de vouloir supprimer votre compte définitivement?');
 			this.boxOne = await modal;
 		},
-		/* showMsgBoxTwo() {
-			this.boxTwo = '';
-			this.$bvModal.msgBoxConfirm('Please confirm that you want to delete everything.', {
-				title: 'Please Confirm',
-				size: 'sm',
-				buttonSize: 'sm',
-				okVariant: 'danger',
-				okTitle: 'YES',
-				cancelTitle: 'NO',
-				footerClass: 'p-2',
-				hideHeaderClose: false,
-				centered: true
-			})
-				.then(value => {
-					this.boxTwo = value;
-				})
-				.catch(err => {
-					console.log(err);
-				});
-		}, */
 		alertHover(){
 			this.dismissCountDown = true;
 		},
@@ -132,10 +112,8 @@ export default {
 		},
 		showAlert(apiResponse, variant) {
 			this.variantResult = variant;
-			console.log(apiResponse);
 			this.apiResponse = apiResponse;
 			this.dismissCountDown = this.dismissSecs;
-		
 		},
 		isConnectInStore(){
 			this.$store.commit('ISCONNECT');
@@ -148,37 +126,47 @@ export default {
 		},
 		async validPwd (event) {
 			event.preventDefault();
-			const requestOptions = {
-				method: "POST",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-				body: JSON.stringify({
-					email:this.user.email,
-					password:this.oldPassword})
-			};
-			const response = await fetch(this.urlApi + "/users/verifypwd", requestOptions);
-			const dataResponse = await response.json();
-			console.log(this.dataResponse.message);
-			if(response.ok === true ){
-				this.updatePwdSuccess = true;
-				this.showAlert(dataResponse, "success");
-			} else {
-				this.showAlert(dataResponse, "danger");
+			try {
+				const requestOptions = {
+					method: "POST",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+					body: JSON.stringify({
+						email:this.user.email,
+						password:this.oldPassword})
+				};
+				const response = await fetch(this.urlApi + "/users/verifypwd", requestOptions);
+				const dataResponse = await response.json();
+				console.log(this.dataResponse.message);
+				if(response.ok === true ){
+					this.updatePwdSuccess = true;
+					this.showAlert(dataResponse, "success");
+				} else {
+					this.showAlert(dataResponse, "danger");
+				}
+			} catch (error) {
+				console.log(error,"erreure sur valipPwd");
 			}
+			
 			
 		},
 		async findOneUser () {
-			const requestOptions = {
-				method: "Get",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-			};
+			try {
+				const requestOptions = {
+					method: "Get",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+				};
 			
-			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
-			this.userData = await response.json();
-			this.userInStore(this.userData.data);
+				const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
+				this.userData = await response.json();
+				this.userInStore(this.userData.data);
+			} catch (error) {
+				console.log(error,"erreure sur findOneUser");
+			}
+		
 		},
 		async onUpdatePwd (event) {
 			event.preventDefault();
@@ -208,53 +196,51 @@ export default {
 		}, 
 		async deleteAccount(event){
 			event.preventDefault();
-			const requestOptions = {
-				method: "POST",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-				body: JSON.stringify({
-					email:this.user.email,
-					password:this.oldPassword})
-			};
-			const loginRequest = await fetch(this.urlApi + "/users/login", requestOptions);
-			const loginResponse = await loginRequest.json();
-			console.log(loginResponse);	
-			if(loginRequest.ok === true && this.user.is_admin == 0){
-				await this.showMsgBoxOne();
-				//const confirmResponse = confirm("Etes vous sur de vouloir supprimer définitivement votre compte?");
-				if (this.boxOne) {
-					const deleteRequestOptions = {
-						method: "Delete",
-						headers: { 
-							"Content-Type": "application/json",
-							"Authorization": `Bearer ${this.token}`},
-					};
-					const deleteRequest = await fetch(this.urlApi + `/users/${this.userId}`, deleteRequestOptions);
-					const deleteAccountRequestResponse = await deleteRequest.json();
-					if(deleteRequest.ok === true ){
-					
-						this.deleteAccountResponse(deleteAccountRequestResponse);
-						this.deleteSuccess();
-						this.isConnectInStore();
-						this.$router.push('/');
-					} else {
-						this.showAlert(deleteAccountRequestResponse, "danger");
-					}  
-				} 
-			} else if(this.user.is_admin == 1){
-				this.showAlert({message:"Vous ne pouvez pas supprimer le compte d'un admin"}, "danger");
-			} else {
-				this.showAlert(loginResponse, "danger");
+			try {
+				const requestOptions = {
+					method: "POST",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+					body: JSON.stringify({
+						email:this.user.email,
+						password:this.oldPassword})
+				};
+				const loginRequest = await fetch(this.urlApi + "/users/login", requestOptions);
+				const loginResponse = await loginRequest.json();
+				console.log(loginResponse);	
+				if(loginRequest.ok === true && this.user.is_admin == 0){
+					await this.showMsgDeleteAccount();
+					//const confirmResponse = confirm("Etes vous sur de vouloir supprimer définitivement votre compte?");
+					if (this.boxOne) {
+						const deleteRequestOptions = {
+							method: "Delete",
+							headers: { 
+								"Content-Type": "application/json",
+								"Authorization": `Bearer ${this.token}`},
+						};
+						const deleteRequest = await fetch(this.urlApi + `/users/${this.userId}`, deleteRequestOptions);
+						const deleteAccountRequestResponse = await deleteRequest.json();
+						if(deleteRequest.ok === true ){
+							this.deleteAccountResponse(deleteAccountRequestResponse);
+							this.deleteSuccess();
+							this.isConnectInStore();
+							this.$router.push('/');
+						} else {
+							this.showAlert(deleteAccountRequestResponse, "danger");
+						}  
+					} 
+				} else if(this.user.is_admin == 1){
+					this.showAlert({message:"Vous ne pouvez pas supprimer le compte d'un admin"}, "danger");
+				} else {
+					this.showAlert(loginResponse, "danger");
+				}
+			} catch (error) {
+				console.log(error.message,"erreure sur deleteAccount");
 			}
+			
 		},
 	}};		
-				
-				
-				
-		
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -277,7 +263,6 @@ export default {
 	text-align: left;
 	justify-content: center;
 	padding-top: 2rem;
-	
     }
 }
 .linkAlert{

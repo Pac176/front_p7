@@ -75,7 +75,14 @@ export default {
 	
 	},
 	computed:{
-		...mapState(['urlApi','successSubscribe','token','isConnect','userId','isAdmin','user'])
+		...mapState([
+			'urlApi',
+			'successSubscribe',
+			'token',
+			'isConnect',
+			'userId',
+			'isAdmin',
+			'user'])
 	},
 	methods:{
 		alertHover(){
@@ -97,15 +104,20 @@ export default {
 		
 		},
 		async findOneUser () {
-			const requestOptions = {
-				method: "Get",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-			};
-			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
-			this.userData = await response.json();
-			this.userInStore(this.userData.data);
+			try {
+				const requestOptions = {
+					method: "Get",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+				};
+				const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
+				this.userData = await response.json();
+				this.userInStore(this.userData.data);
+			} catch (error) {
+				console.log(error,"Erreure sur la findOneUser");
+			}
+			
 		},
 		async onUpdateUser (event) {
 			event.preventDefault();
@@ -140,7 +152,7 @@ export default {
 					this.showAlert(updateResponse,'danger');
 				}
 			} catch (error) {
-				console.log('erreure');
+				console.log(error,'erreure sur la onUpdateUser');
 				this.showAlert({message: error},'danger');
 			}
 		}

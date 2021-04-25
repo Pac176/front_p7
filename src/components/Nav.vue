@@ -35,15 +35,20 @@ export default {
 		};
 	},
 	computed:{
-		...mapState(['urlApi','successSubscribe','token','isConnect','userId','isAdmin','user'])
-	},
+		...mapState([
+			'urlApi',
+			'successSubscribe',
+			'token',
+			'isConnect',
+			'userId',
+			'isAdmin',
+			'user'
+		])},
 	methods:{
 		isConnectInStore(){
 			this.$store.commit('ISCONNECT');
-			
 		},
 	}
- 
 };
 </script>
 <style scoped lang="scss" >

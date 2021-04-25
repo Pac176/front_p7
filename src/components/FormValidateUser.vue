@@ -76,7 +76,15 @@ export default {
 	
 	},
 	computed:{
-		...mapState(['urlApi','successSubscribe','sucessUpdateUser','token','isConnect','userId','user'])
+		...mapState([
+			'urlApi',
+			'successSubscribe',
+			'sucessUpdateUser',
+			'token',
+			'isConnect',
+			'userId',
+			'user'
+		])
 	},
 	methods:{
 		alertHover(){
@@ -142,7 +150,7 @@ export default {
 					if (login.ok === true) {
 						this.tokenInStore(this.loginResponse.token);
 						this.userIdInStore(this.loginResponse.userId);
-						await this.findOneUser();
+						this.findOneUser();
 						this.$router.push('/Wall');
 						this.successSubscriptionShow();
 						this.isConnectInStore();
@@ -156,56 +164,22 @@ export default {
 			}
 		},
 		async findOneUser () {
-			const requestOptions = {
-				method: "Get",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-			};
-			const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
-			this.userData = await response.json();
-			this.userInStore(this.userData.data);
-		},
-		/* 		async onUpdateUser (event) {
-			event.preventDefault();
 			try {
 				const requestOptions = {
-					method: "Put",
+					method: "Get",
 					headers: { 
 						"Content-Type": "application/json",
 						"Authorization": `Bearer ${this.token}`},
-					body: JSON.stringify({
-						first_name:this.first_name,
-						last_name:this.last_name,
-						pseudo:this.pseudo,
-						email:this.email,
-						is_admin:false,
-						
-					})
 				};
 				const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
-				const updateResponse = await response.json();
-				if(response.ok === true ){
-					await this.findOneUser();
-					this.updateUser = true;
-					this.showAlert(updateResponse, 'success');
-					
-				} else {
-					this.updateUser = false;
-					this.showAlert(updateResponse, 'danger');
-				} 
+				this.userData = await response.json();
+				this.userInStore(this.userData.data);
 			} catch (error) {
-				console.log(error.message);
+				console.log(error,"Erreure sur la findOneUser!");
 			}
-		} */
-		
+			
+		},
 	}};		
-				
-				
-				
-		
-
-
 </script>
 
 <style lang="scss" scoped>

@@ -6,7 +6,7 @@
 			<b-alert :show="dismissCountDown" dismissible  :variant="variantResult"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
      {{this.dataResponse.message}}
     </b-alert>
-		<b-form-group style="font-weight:bold" id="input-group-1"  label="Modifier votre adresse Email:" label-for="input-1"  description="Sous la forme xxxx@xxxxx.xxxx">
+		<b-form-group style="font-weight:bold" id="input-group-1"  label="Entrez votre adresse Email:" label-for="input-1"  description="Sous la forme xxxx@xxxxx.xxxx">
             <b-form-input style="font-style:italic" id="input-1"  type="email" v-model.trim="$v.email.$model" :class='{"is-invalid":$v.email.$error,"is-valid":!$v.email.$invalid}' placeholder="Entrez votre email"  ></b-form-input>
             </b-form-group>
             <b-form-group style="font-weight:bold" id="input-group-2"   label="Mot de passe:" label-for="input-2" description="Au moins 8 caractères, 1 majuscule, 1chiffre et un caratere special" >
@@ -136,6 +136,7 @@ export default {
 <style lang="scss" >
 @media screen and (max-width:700px) {
 	.formConnect{
+	margin-top:3rem;
 	display:flex;
 	flex-direction: column;
 	width:95%
@@ -143,7 +144,8 @@ export default {
 }
 @media screen and (min-width:700px) {
 	.formConnect{
-	width:50%
+	width:50%;
+	margin-top:3rem
 	}
 
 }
@@ -156,6 +158,7 @@ export default {
 	text-align: left;
 	justify-content: center;
 	padding-top: 4rem;
+	
   }
 
 </style>

@@ -94,7 +94,7 @@
 							<div class='commentCollapseMenu'>
 								<b-card class="commentCard">
 									<div class='commentText'>
-										<div href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</div>
+										<div href="#" class="link authorComment" style='font-size:0.7rem'>{{comment.user.pseudo}}</div>
 										<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
 									</div>
 								</b-card>
@@ -119,7 +119,7 @@
 								<div class='commentCollapseMenu'>
 									<b-card class="commentCard">
 										<div class='commentText'>
-											<div href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</div>
+											<div href="#" class="link authorComment" style='font-size:0.7rem'>{{comment.user.pseudo}}</div>
 											<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
 										</div>
 									</b-card>
@@ -585,10 +585,9 @@ export default {
 	flex-direction: column;
 
 }
-.authorPost{
+.authorPost .authorComment{
 	font-weight:bolder;
 }
-
 .counterLike{
 	height: 2rem;
 }
@@ -618,7 +617,7 @@ export default {
 	border-radius:15px;
 	margin-bottom:0.1rem;
 	margin-top:0.5rem;
-	background-color:rgb(235, 221, 221);
+	background-color:rgb(233, 233, 233);
 	-moz-box-shadow:    inset 0 0 7px #000000;
    -webkit-box-shadow: inset 0 0 7px #000000;
    box-shadow:         inset 0 0 7px #000000;
@@ -665,15 +664,14 @@ export default {
 	width:70%;
 }
 .card{
-	background-color: #E8F3F3;
 	padding:0.4rem;
 
 }
 
 .post {
 	margin-top:1rem;
-	background-color:rgb(243, 232, 232);
-	box-shadow: -8px -5px 2px 1px rgba(129, 21, 21, 0.2);
+	background-color:rgb(250, 244, 244);
+	border: 2mm ridge rgba(189, 188, 188, 0.6);
 }
 .textPost{
 	text-align: justify;
@@ -721,7 +719,7 @@ export default {
 	padding-left:0.8rem;
 	color: rgba(54, 37, 37, 0.993);
 	font-weight: bolder;
-	box-shadow: -8px -5px 2px 1px rgba(151, 12, 12, 0.2);
+	border: 2.5mm ridge rgba(180, 155, 155, 0.6);
 
 }
 .card-body{
@@ -734,7 +732,7 @@ export default {
 	color:black
 }
 .linkUser:hover{
-color:rgb(164, 61, 145)
+color:rgb(61, 131, 164)
 }
 .row{
 	margin:0

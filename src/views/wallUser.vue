@@ -90,7 +90,7 @@
 	<div v-for="(comment) in allPostsByUserId[index].tblComments" :key="comment.id" class='commentAndAction'>
 		<b-card class="commentCard">
 				<div >
-					<div href="#" class="link" style='font-size:0.7rem'>{{comment.user.pseudo}}</div>
+					<div href="#" class="link authorComment" style='font-size:0.7rem'>{{comment.user.pseudo}}</div>
 					<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
 				</div>
 		</b-card>

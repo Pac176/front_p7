@@ -61,6 +61,7 @@ export default {
 <style lang='scss' scoped>
 h1 {
   color:rgb(228, 17, 17);
+  margin-bottom: 2rem;
 }
 #homeLogo {
   width:50%;

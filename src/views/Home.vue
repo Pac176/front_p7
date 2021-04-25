@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class='home'>
      <Nav></Nav><br><br><br><br>
      <b-link  style='text-decoration:none' class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible  :variant='variantResult'  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged" id='alert'>
     {{apiResponse.message}}</b-alert></b-link>
@@ -42,7 +42,6 @@ export default {
 			this.variantResult = variant;
 			this.apiResponse = apiResponse;
 			this.dismissCountDown = this.dismissSecs;
-		
 		},
 		successDeleteAccountAlert(){
 			this.$store.commit('DELETESUCCESS');
@@ -59,7 +58,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 h1 {
   color:rgb(228, 17, 17);
 }

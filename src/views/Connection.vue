@@ -56,7 +56,13 @@ export default {
 		Nav
 	},
 	computed:{
-		...mapState(['urlApi','successSubscribe','token','isConnect','userId','user'])
+		...mapState([
+			'urlApi',
+			'successSubscribe',
+			'token',
+			'isConnect',
+			'userId',
+			'user'])
 	},
 	methods:{
 		isConnectInStore(){

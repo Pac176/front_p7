@@ -585,7 +585,7 @@ export default {
 	flex-direction: column;
 
 }
-.authorPost .authorComment{
+.authorPost, .authorComment{
 	font-weight:bolder;
 }
 .counterLike{

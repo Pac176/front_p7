@@ -1,6 +1,6 @@
 <template>
   <div class="subscription">
-	<Nav></Nav><br><br><br>
+	<Nav></Nav>
 	<h1>Entrez vos informations:</h1>
 	<FormValidateUser class="formValidateUser"></FormValidateUser>
   </div>
@@ -11,16 +11,15 @@
 import Nav from '@/components/Nav.vue';
 import FormValidateUser from '../components/FormValidateUser.vue';
 import {mapState} from 'vuex';
-
 export default {
 	name: 'Subscription',
 	data(){
 		return{
-			first_name:null,
+			/* first_name:null,
 			last_name:null,
 			pseudo:null,
 			password:null,
-			email:null,	
+			email:null,	 */
 		};
 	},
 	computed:{
@@ -41,6 +40,9 @@ export default {
 
 
 <style lang="scss" scoped >
+h1{
+	margin-top:8rem;
+}
 .subscription{
 	margin-top:2rem;
 	display:flex;

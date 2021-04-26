@@ -1,26 +1,31 @@
 # front_p7
 
-## Project setup
-```
-npm install
-```
+projet developpé avec nodeJS V15.12
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+ ### Cloner le projet :
 
-### Compiles and minifies for production
-```
-npm run build
-```
+```````bash
 
-### Lints and fixes files
-```
-npm run lint
-```
+ git clone https://github.com/Pac176/front_p7.git
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+ cd back_p7
 
+ npm i
+```````
+### Creer un fichier .env et y mettre les variables de .env.dist
 
+```````bash
+
+touch .env
+
+cp .env.dist .env
+
+```````
+ 
+ ### lancer le front_p7
+
+```````bash
+
+npm start
+
+```````

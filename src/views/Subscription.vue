@@ -15,11 +15,6 @@ export default {
 	name: 'Subscription',
 	data(){
 		return{
-			/* first_name:null,
-			last_name:null,
-			pseudo:null,
-			password:null,
-			email:null,	 */
 		};
 	},
 	computed:{

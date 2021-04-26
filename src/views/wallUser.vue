@@ -12,6 +12,17 @@
 			<div v-if='allPostsByUserId.length >= 1'>Inscrit le {{momentDateMouse(allPostsByUserId[0].user.createdAt)}}</div>
 			<div v-if='allPostsByUserId.length >= 1'>Dernière connexion {{momentDateMouse(allPostsByUserId[0].user.updatedAt)}}</div><br> 
 			<h2 v-if='noPosts' style='font-style:italic; color:#FD2D01;'>{{noPosts}}</h2><br>
+<!-- modals -->
+					<b-modal id="updatePublication" hide-footer size="lg" @close='alertCloseModal'>
+						<template #modal-title >Modifier ma publication</template>
+							<div class="d-block text-center">
+								<div>
+									<b-form-textarea  v-model='postToUpdate.post_content' autofocus id="updateTextarea" style='border: none;  -webkit-box-shadow: none;'   rows="1"	max-rows="10"></b-form-textarea>
+									<pre class="mt-3 mb-0"></pre>
+								</div>
+							</div>
+						<b-button  class="mt-5" variant='outline-primary' block @click="updatePost">Modifier</b-button>
+					</b-modal>
 <!-- publications -->
 				<b-card title="" sub-title="" v-for="(item,index) in allPostsByUserId" :key="item.id" class="post">
 					<div class='headerCard'>
@@ -86,7 +97,7 @@
 					</div>
 <!-- Au dela de x comments -->
 					<div v-else>
-					<b-link v-b-toggle="'my-collapse-'+ index" class='link not-collapsed'>il y a {{allPostsByUserId[index].tblComments.length}} commentaire(s) sur ce post...</b-link>
+					<b-link v-if="comment.user_id === userId || user.is_admin === 1" v-b-toggle="'my-collapse-'+ index" class='link not-collapsed'>il y a {{allPostsByUserId[index].tblComments.length}} commentaire(s) sur ce post...</b-link>
 					<b-collapse :id="'my-collapse-'+ index" :data-key="index">
 						<div class='commentGroup' block>
 							<div v-for="(comment) in allPostsByUserId[index].tblComments" :key="comment.id" class='commentAndAction'>
@@ -385,19 +396,12 @@ export default {
 					})
 				};
 				await fetch(this.urlApi + `/posts/${this.postToUpdate.id}`, requestOptions);
-				await this.findAllPosts();
+				await this.findAllPostsByUserId(this.wallUserId);
 			} catch (error) {
 				console.log(error,'Erreure sur la updatePost');
 			}
-			
-			
-		
-			
-			
 		},
 		async updateComment(index){
-			console.log(this.commentToUpdate.comment_content);
-			console.log('gege');
 			try {
 				const requestOptions = {
 					method: "Put",
@@ -494,9 +498,6 @@ export default {
 			} catch (error) {
 				console.log(error,'Erreure sur la deleteComment');
 			}
-			
-			
-			
 		},
 		async likePost(postId,userId){
 			try {

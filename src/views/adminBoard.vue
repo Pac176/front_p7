@@ -1,22 +1,11 @@
 <template>
-
-<div>
- <Nav></Nav><br><br><br><br>
-<div>Nombre d'utilisateurs inscrits: {{allUsers.length}}</div>
-<div>Nombre de posts publiés:{{allPosts.length}} </div><br>
-
-
-	<b-table striped hover :items="allUsers" :fields="fields"  selectable select-mode='single' @row-selected="onRowSelected">
-	
-
-	</b-table>
-
-
-
-
-
-
-</div>
+	<div>
+ 		<Nav></Nav><br><br><br><br>
+			<div>Nombre d'utilisateurs inscrits: {{allUsers.length}}</div>
+			<div>Nombre de posts publiés:{{allPosts.length}} </div><br>
+			<b-table striped hover :items="allUsers" :fields="fields"  selectable select-mode='single' @row-selected="onRowSelected">
+			</b-table>
+	</div>
 </template>
 
 <script>

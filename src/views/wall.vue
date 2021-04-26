@@ -125,7 +125,7 @@
 										</div>
 									</b-card>
 	<!-- menu Comments au dela de x comments-->
-								<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg" height="20" class='imgMenuCollapse'></b-link>
+								<b-link v-if="comment.user_id === userId || user.is_admin === 1" v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg" height="20" class='imgMenuCollapse'></b-link>
 								</div>
 								<b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
 									<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
@@ -138,10 +138,10 @@
 					</b-collapse>
 					</div>
 <!-- input comment -->
-						<b-form-group  v-if='switchToUpdate[index] === true'><span>update</span>
+						<b-form-group  v-if='switchToUpdate[index] === true'>
 						<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)"></b-input>
 						</b-form-group>
-						<b-form-group  v-else><span>create</span>
+						<b-form-group  v-else>
 							<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index);"></b-input>
 						</b-form-group>
 				</b-card>

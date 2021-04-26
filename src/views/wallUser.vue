@@ -1,122 +1,126 @@
 <template>
-
-<div>
- <Nav></Nav><br>
- <b-row class="wall">
-	<b-col md="3" sm>
-		<h4>{{user.first_name}} {{user.last_name}}</h4>
-		<h6> ({{user.pseudo}})</h6>
-		<div>Inscrit le {{momentDateMouse(user.createdAt)}}</div>
-		<!-- <div>Dernière connexion {{momentDate(user.updatedAt)}}</div> --><br>
-	</b-col>
-	<b-col  md="7" sm style='padding:0 1.5 0 0 rem'>
-		<b-alert  :show="dismissCountDown" dismissible variant="success"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">
-			Inscription reussie!</b-alert>
-		<b-link v-b-modal.publication @click='resetModal' class="link">
-		<h2 v-if='allPostsByUserId.length >= 1'>Fil d'actualité de {{allPostsByUserId[0].user.pseudo}}</h2>
-		<div v-if='allPostsByUserId.length >= 1'>Inscrit le {{momentDateMouse(allPostsByUserId[0].user.createdAt)}}</div>
-		<div v-if='allPostsByUserId.length >= 1'>Dernière connexion {{momentDateMouse(allPostsByUserId[0].user.updatedAt)}}</div><br> 
-		<h2 v-if='noPosts' style='font-style:italic; color:#FD2D01;'>{{noPosts}}</h2><br>
-		</b-link>
-<!-- modal publication -->
-	
-		<b-modal id="updatePublication" hide-footer size="lg" @close='alertCloseModal'>
-			<template #modal-title >
-			Modifier ma publication
-			</template>
-			<div class="d-block text-center">
-				<div>
-					<b-form-textarea  v-model='postToUpdate.post_content' autofocus id="updateTextarea" style='border: none;  -webkit-box-shadow: none;'   rows="1"	max-rows="10">
-
-					</b-form-textarea>
-					<pre class="mt-3 mb-0"></pre>
-				</div>
-			</div>
-			<b-button  class="mt-5" variant='outline-primary' block @click="updatePost">Modifier</b-button>
-		</b-modal>
+	<div>
+		<Nav></Nav><br>
+		<b-row class="wall">
+		<b-col md="2" sm>
+			<h4>{{user.first_name}} {{user.last_name}}</h4>
+			<h6> ({{user.pseudo}})</h6>
+			<div>Inscrit le {{momentDateMouse(user.createdAt)}}</div>
+		</b-col>
+		<b-col  md="8" sm style='padding:0 1.5 0 0 rem'>
+			<h2 v-if='allPostsByUserId.length >= 1'>Fil d'actualité de {{allPostsByUserId[0].user.pseudo}}</h2>
+			<div v-if='allPostsByUserId.length >= 1'>Inscrit le {{momentDateMouse(allPostsByUserId[0].user.createdAt)}}</div>
+			<div v-if='allPostsByUserId.length >= 1'>Dernière connexion {{momentDateMouse(allPostsByUserId[0].user.updatedAt)}}</div><br> 
+			<h2 v-if='noPosts' style='font-style:italic; color:#FD2D01;'>{{noPosts}}</h2><br>
 <!-- publications -->
-	<b-card title="" sub-title="" v-for="(item,index) in allPostsByUserId" :key="item.id" class="post">
-		<div class='headerCard'>
-		<div  class='headerCard'>
-			<b-card-text ><b-img   src="https://picsum.photos/50" fluid alt="Responsive image" class="authorImg link"></b-img></b-card-text>
-				<div class='textHeader' >
-					<div  class="authorPost link">{{ item.user.pseudo}}</div>
-					<b-link class="link" v-b-tooltip.leftbottom.v-info ="momentDateMouse(item.createdAt)" >{{ momentDate(item.createdAt)}}</b-link>
-				</div>
-		</div>
-		<div class="menuHeader">...</div>
-		
-		</div>
-			<b-link v-if="item.user_id === $store.state.userId" class="link" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text v-b-tooltip.right.hover.v-primary title="Modifier" class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
-			<b-card-text v-else class='textPost '>{{item.post_content}}</b-card-text><br>
-			<div class='counterLike'>
-			<div class="usersLikes" v-show='item.like.map(x=>x.user.pseudo).length>=1'><b-card-text v-b-tooltip.hover :title="item.like.map(x=>x.user.pseudo + ',	')" ><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" >
-			<span v-html="item.like.map(x=>x.user.pseudo).length" style='margin-left:0.4rem;'></span>
-			</b-card-text>
-			</div></div>
+				<b-card title="" sub-title="" v-for="(item,index) in allPostsByUserId" :key="item.id" class="post">
+					<div class='headerCard'>
+						<div  class='headerCard'>
+							<b-img   src="https://picsum.photos/50" fluid alt="Responsive image" class="authorImg link"></b-img>
+								<div class='textHeader' >
+									<div  class="authorPost link">{{ item.user.pseudo}}</div>
+									<b-link class="link" v-b-tooltip.leftbottom.v-info ="momentDateMouse(item.createdAt)" >{{ momentDate(item.createdAt)}}</b-link>
+								</div>
+						</div>
+					</div>
+					<b-link v-if="item.user_id === $store.state.userId" class="link" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text v-b-tooltip.right.hover.v-primary title="Modifier" class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
+					<b-card-text v-else class='textPost '>{{item.post_content}}</b-card-text><br>
+<!-- CounterLike -->			
+					<div class='counterLike'>
+						<div class="usersLikes" v-show='item.like.map(x=>x.user.pseudo).length>=1'>
+							<b-card-text v-b-tooltip.hover :title="item.like.map(x=>x.user.pseudo + ',	')" >
+								<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" >
+								<span v-html="item.like.map(x=>x.user.pseudo).length" style='margin-left:0.4rem;'></span>
+							</b-card-text>
+						</div>
+					</div>
 <!-- MenuPost -->	
-		<b-row class="likeComment" >
-			<b-col>
-				<div  v-on:click='function(){likePost(item.id,item.user.id,index); userLike(item);outFocusButton(index)}' block variant="outline-secondary" class='btnLikeComment'>
-					<div  v-if='userLike(item)'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618753322/Group_1bluejaime_ymp6es.svg" alt="" height="22" >
-					<b-card-text style='color:rgb(34,143,222); border:none'>J'aime</b-card-text></div>
-					<div  v-else><img   src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15" style=' border:none'>
-					<b-card-text >J'aime</b-card-text></div>
-				</div>
-				
-			</b-col>
-			<b-col>
-				<div  @click="function(){setFocusInput( index ); switchToUpdate=false}" block variant="outline-secondary" class='btnLikeComment'>
-					<div>
-						<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
-						<b-card-text >Répondre</b-card-text>
+					<b-row class="likeComment" >
+					<b-col>
+						<div  v-on:click='function(){likePost(item.id,item.user.id,index); userLike(item);outFocusButton(index)}' block variant="outline-secondary" class='btnLikeComment'>
+							<div  v-if='userLike(item)'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618753322/Group_1bluejaime_ymp6es.svg" alt="" height="22" >
+							<b-card-text style='color:rgb(34,143,222); border:none'>J'aime</b-card-text></div>
+							<div  v-else>
+								<img   src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15" style=' border:none'>
+								<b-card-text >J'aime</b-card-text></div>
+						</div>
+					</b-col>
+					<b-col>
+						<div  @click="function(){setFocusInputCreate( index )}" block variant="outline-secondary" class='btnLikeComment'>
+							<div>
+								<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
+								<b-card-text >Répondre</b-card-text>
+							</div>
+						</div>
+					</b-col>
+					<b-col v-if="item.user_id === userId || user.is_admin === 1">
+						<div :data-key="index" @click='deletePost(item.id,item.user.id,index)' block variant="outline-secondary"  class='btnLikeComment' >
+							<div>
+								<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616755730/delete_sg8ndk.svg" alt="" height="15">
+								<b-card-text  >Supprimer</b-card-text>
+							</div>
+						</div>
+					</b-col>
+					</b-row> 
+					<div v-if="allPostsByUserId[index].tblComments.length < 4">
+					<div class='commentGroup' block>
+						<div v-for="(comment) in allPostsByUserId[index].tblComments" :key="comment.id" class='commentAndAction'>
+							<div class='commentCollapseMenu'>
+								<b-card class="commentCard">
+									<div class='commentText'>
+										<div href="#" class="link authorComment" style='font-size:0.7rem'>{{comment.user.pseudo}}</div>
+										<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
+									</div>
+								</b-card>
+			<!-- menu Comments -->
+							<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg" height="20" class='imgMenuCollapse'></b-link>
+							</div>
+							<b-collapse	b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
+								<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
+									<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
+									<b-link class='link deleteComment' @click='deleteComment(comment.id,item.user_id)' >Supprimer</b-link>
+								</div>
+							</b-collapse>
+						</div>
 					</div>
-				</div>
-			</b-col>
-			<b-col v-if="item.user_id === userId || user.is_admin === 1">
-				<div :data-key="index" @click='deletePost(item.id,item.user.id,index)' block variant="outline-secondary"  class='btnLikeComment' >
-					<div>
-						<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616755730/delete_sg8ndk.svg" alt="" height="15">
-						<b-card-text  >Supprimer</b-card-text>
 					</div>
-				</div>
-			</b-col>
-		</b-row> 
-
-<b-link v-b-toggle="'my-collapse-'+ index" class='link'>il y a {{allPostsByUserId[index].tblComments.length}} commentaire(s) sur ce post...</b-link>
-<!-- comments -->
-<b-collapse :id="'my-collapse-'+ index" :data-key="index">
-<div class='commentGroup' block>
-	<div v-for="(comment) in allPostsByUserId[index].tblComments" :key="comment.id" class='commentAndAction'>
-		<b-card class="commentCard">
-				<div >
-					<div href="#" class="link authorComment" style='font-size:0.7rem'>{{comment.user.pseudo}}</div>
-					<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
-				</div>
-		</b-card>
-<!-- comments -->
-
-		<div v-if="comment.user.id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
-			<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
-			<b-link class='link deleteComment' @click='deleteComment(comment.id,item.user.id)' >Supprimer</b-link>
-		</div>
-	</div>
-</div>	
-</b-collapse>
+<!-- Au dela de x comments -->
+					<div v-else>
+					<b-link v-b-toggle="'my-collapse-'+ index" class='link not-collapsed'>il y a {{allPostsByUserId[index].tblComments.length}} commentaire(s) sur ce post...</b-link>
+					<b-collapse :id="'my-collapse-'+ index" :data-key="index">
+						<div class='commentGroup' block>
+							<div v-for="(comment) in allPostsByUserId[index].tblComments" :key="comment.id" class='commentAndAction'>
+								<div class='commentCollapseMenu'>
+									<b-card class="commentCard">
+										<div class='commentText'>
+											<div href="#" class="link authorComment" style='font-size:0.7rem'>{{comment.user.pseudo}}</div>
+											<b-card-text   class='textPost'><img src="" alt="">{{ comment.comment_content }}</b-card-text>
+										</div>
+									</b-card>
+	<!-- menu Comments au dela de x comments-->
+								<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg" height="20" class='imgMenuCollapse'></b-link>
+								</div>
+								<b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
+									<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
+										<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
+										<b-link class='link deleteComment' @click='deleteComment(comment.id,item.user_id)' >Supprimer</b-link>
+									</div>
+								</b-collapse>
+							</div>
+						</div>
+					</b-collapse>
+					</div>
 
 <!-- input comment -->
 
-		<b-form-group  v-if='switchToUpdate !== false'>
-			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(item.user.id,index)" ></b-input>
+		<b-form-group  v-if='switchToUpdate[index] === true'><span>update</span>
+			<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)" ></b-input>
 		</b-form-group>
-		<b-form-group  v-else>
+		<b-form-group  v-else><span>create</span>
 			<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index)" ></b-input>
 		</b-form-group>
 
-
-		
-			
-	</b-card>
+</b-card>
 </b-col>
 	<b-col  md= '2' sm> 
 	
@@ -182,26 +186,26 @@ export default {
 		},
 		userLike(item){
 			if(item.like.length !== 0) {
-				return item.like.includes(item.like.find(el=>el.user.id === this.user.id));
-				
-				
-					
+				return item.like.includes(item.like.find(comment=>comment.user.id === this.user.id));
 			}
-		
 		},
-		setFocusInput(index) {
+		setFocusInputUpdate(index) {
 			const inputs = document.querySelectorAll('.inputComment');
 			for (let i = 0; i < inputs.length; i++) {
 				if(inputs[i].dataset.key == index){
 					inputs[i].focus();
 				} 
 			}
-
-
-
-
-		
-			
+		},
+		setFocusInputCreate(index) {
+			const inputs = document.querySelectorAll('.inputComment');
+			for (let i = 0; i < inputs.length; i++) {
+				if(inputs[i].dataset.key == index){
+					inputs[i].focus();
+				} 
+			}
+			this.commentToUpdate = {};
+			this.switchToUpdate[index] =false;
 		},
 		outFocusInput(index) {
 			const inputs = document.querySelectorAll('.inputComment');
@@ -210,6 +214,7 @@ export default {
 					input.blur();
 				} 
 			});
+			this.switchToUpdate[index]=false;
 		},
 		outFocusButton(index) {
 			const buttons = document.querySelectorAll('.btnLikeComment');
@@ -284,219 +289,234 @@ export default {
 			}
 		},
 		async findOnePost(postId) {
-			
-			const requestOptions = {
-				method: "Get",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-			};
-			const response = await fetch(this.urlApi + `/posts/${postId}`, requestOptions);
-			this.onePostData = await response.json();
-			this.postToUpdate = this.onePostData.data;
+			try {
+				const requestOptions = {
+					method: "Get",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+				};
+				const response = await fetch(this.urlApi + `/posts/${postId}`, requestOptions);
+				this.onePostData = await response.json();
+				this.postToUpdate = this.onePostData.data;
 		
-			
+			} catch (error) {
+				console.log(error, 'Errreure sur le findOnePost');
+			}
 		},
 		async findOneComment(commentId,index) {
-			
-			
-			const requestOptions = {
-				method: "Get",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-			};
-			const response = await fetch(this.urlApi + `/comments/${commentId}`, requestOptions);
-			this.oneCommentData = await response.json();
-			this.commentToUpdate = this.oneCommentData.data;
-			this.switchToUpdateReset();
-			this.switchToUpdate[index] = true;
-			this.findAllPosts();
-			this.setFocusInput(index);
-	
-		
-			
+			console.log(index);
+			console.log(this.wallUserId);
+			console.log(this.switchToUpdate);
+			try {
+				const requestOptions = {
+					method: "Get",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+				};
+				const response = await fetch(this.urlApi + `/comments/${commentId}`, requestOptions);
+				this.oneCommentData = await response.json();
+				this.commentToUpdate = this.oneCommentData.data;
+				this.switchToUpdateReset();
+				this.switchToUpdate[index] = true;
+				this.findAllPostsByUserId(this.wallUserId);
+				this.setFocusInputUpdate(index);
+			} catch (error) {
+				console.log(error,'Erreure sur la findOneComment');
+			}
 		},
 		async findAllPostsByUserId(userId) {
-			const requestOptions = {
-				method: "Get",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-			};
-			const response = await fetch(this.urlApi + `/posts/users/${userId}`, requestOptions);
-			this.allPostsByUserIdData = await response.json();
-			if(this.allPostsByUserIdData.count !== 0 && this.isConnect){
-				this.allPostsByUserIdInStore(this.allPostsByUserIdData.data);
-			} else{
-				this.allPostsByUserIdInStore('');
-				this.noPosts = "Vous n'avez aucune publication";
+			try {
+				const requestOptions = {
+					method: "Get",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+				};
+				const response = await fetch(this.urlApi + `/posts/users/${userId}`, requestOptions);
+				this.allPostsByUserIdData = await response.json();
+				if(this.allPostsByUserIdData.count !== 0 && this.isConnect){
+					this.allPostsByUserIdInStore(this.allPostsByUserIdData.data);
+					
+				} else{
+					this.allPostsByUserIdInStore('');
+					this.noPosts = "Vous n'avez aucune publication";
+				}
+			} catch (error) {
+				console.log(error, 'Erreure sur la findAllPostsByUserId');
 			}
+			
+			
 			
 		},
 		async findAllUsers() {
-			const requestOptions = {
-				method: "Get",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-			};
-			const response = await fetch(this.urlApi + `/users`, requestOptions);
-			this.allUsersData = await response.json();
-			if(this.allUsersData.length !== 0 && this.isConnect){
-				return this.allUsersInStore(this.allUsersData.data);
-			} 
+			try {
+				const requestOptions = {
+					method: "Get",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+				};
+				const response = await fetch(this.urlApi + `/users`, requestOptions);
+				this.allUsersData = await response.json();
+				if(this.allUsersData.length !== 0 && this.isConnect){
+					return this.allUsersInStore(this.allUsersData.data);
+				} 
 		
-		},
-		async createPost(){
-			this.$bvModal.hide('publication');
-			const requestOptions = {
-				
-				method: "Post",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-				body:JSON.stringify({
-					post:{ 
-						post_content : this.textArea,
-						user_id : this.userId
-					}
-				})
-			};
-			await fetch(this.urlApi + `/posts`, requestOptions);
-			await this.findAllPosts();
-			this.textArea= "Quoi de neuf?" + this.$store.state.user.pseudo + "......";
-			this.noPosts=null;
-			
-			
+			} catch (error) {
+				console.log(error,'Erreure sur la findAllUsers');
+			}
 			
 		},
 		async updatePost(){
-			this.$bvModal.hide('updatePublication');
-			const requestOptions = {
-				method: "Put",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-				body:JSON.stringify({
-					post:{ 
-						post_content: this.postToUpdate.post_content,
-						userId: 2
-					}
-				})
-			};
-			await fetch(this.urlApi + `/posts/${this.postToUpdate.id}`, requestOptions);
-			await this.findAllPosts();
+			try {
+				this.$bvModal.hide('updatePublication');
+				const requestOptions = {
+					method: "Put",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+					body:JSON.stringify({
+						post:{ 
+							post_content: this.postToUpdate.post_content,
+							userId: 2
+						}
+					})
+				};
+				await fetch(this.urlApi + `/posts/${this.postToUpdate.id}`, requestOptions);
+				await this.findAllPosts();
+			} catch (error) {
+				console.log(error,'Erreure sur la updatePost');
+			}
+			
 			
 		
 			
 			
 		},
-		async updateComment(userId,index){
-			//this.$bvModal.hide('updatePublication');
-			const requestOptions = {
-				method: "Put",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-				body:JSON.stringify({
-					comment:{ 
-						comment_content: this.commentToUpdate.comment_content,
-						userId:this.commentToUpdate.user_id
-					}
-				})
-			};
-			const response =await fetch(this.urlApi + `/comments/${this.commentToUpdate.id}`, requestOptions);
-			await response.json();
-			this.switchToUpdate[index] = false;
-			this.outFocusInput(index);
-			this.findAllPostsByUserId(userId);
-			console.log(this.commentToUpdate);
-			
+		async updateComment(index){
+			console.log(this.commentToUpdate.comment_content);
+			console.log('gege');
+			try {
+				const requestOptions = {
+					method: "Put",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+					body:JSON.stringify({
+						comment:{ 
+							comment_content: this.commentToUpdate.comment_content,
+							userId:this.commentToUpdate.user_id
+						}
+					})
+				};
+				const response =await fetch(this.urlApi + `/comments/${this.commentToUpdate.id}`, requestOptions);
+				await response.json();
+				this.outFocusInput(index);
+				this.commentToUpdate={};
+				this.findAllPostsByUserId(this.wallUserId);
+				
+			} catch (error) {
+				console.log(error,'Erreure sur la updateComment');
+			}  
 		},
 		async deletePost(postId,userId,index){
-			const requestOptions = {
-				method: "Delete",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
+			try {
+				const requestOptions = {
+					method: "Delete",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
 				
-			};
-			const response =confirm('Etes vous sur de vouloir supprimer ce post?');
-			
-			
-			if(response){
-				await fetch(this.urlApi + `/posts/${postId}`, requestOptions);
-				this.findAllPostsByUserId(userId);
-				
-			} else {
-				this.outFocusButton(index);
-			
+				};
+				const response =confirm('Etes vous sur de vouloir supprimer ce post?');
+				if(response){
+					await fetch(this.urlApi + `/posts/${postId}`, requestOptions);
+					this.findAllPostsByUserId(userId);
+				} else {
+					this.outFocusButton(index);
+				}
+			} catch (error) {
+				console.log(error,'Erreure sur la deletePost');
 			}
+			
 			
 			
 			
 		},
 		async createComment(postId, userId,index){
-			this.$bvModal.hide('publication');
-			const requestOptions = {
-				method: "Post",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-				body:JSON.stringify({
-					comment:{
-						comment_content: this.newComment[index],
-						post_id: postId,
-						user_id: userId
-					}
-				})
-			};
-			await fetch(this.urlApi + `/comments`, requestOptions);
-			await this.findAllPostsByUserId(this.wallUserId);
-			this.newComment=[];
-			this.outFocusInput(index);
+			try {
+				this.$bvModal.hide('publication');
+				const requestOptions = {
+					method: "Post",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+					body:JSON.stringify({
+						comment:{
+							comment_content: this.newComment[index],
+							post_id: postId,
+							user_id: userId
+						}
+					})
+				};
+				await fetch(this.urlApi + `/comments`, requestOptions);
+				await this.findAllPostsByUserId(this.wallUserId);
+				this.newComment=[];
+				this.outFocusInput(index);
+			} catch (error) {
+				console.log(error,'Erreure sur la createComment');
+			}
+			
 						
 		},
 		async deleteComment(comment, userId){
-			const requestOptions = {
-				method: "Delete",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
+			try {
+				const response =confirm('Etes vous sur de vouloir supprimer ce commentaire?');
+				console.log(comment);
+				console.log(userId);
+				if(response){
+					const requestOptions = {
+						method: "Delete",
+						headers: { 
+							"Content-Type": "application/json",
+							"Authorization": `Bearer ${this.token}`},
 				
-			};
-			await fetch(this.urlApi + `/comments/${comment}`, requestOptions);
+					};
+					await fetch(this.urlApi + `/comments/${comment}`, requestOptions);
 			
-			const response =confirm('Etes vous sur de vouloir supprimer ce commentaire?');
-			if(response){
-				await this.findAllPostsByUserId(userId);
-			} else {
-				console.log('gege');
+					await this.findAllPostsByUserId(userId);
+				} else {
+					console.log('gege');
+				}
+			
+			} catch (error) {
+				console.log(error,'Erreure sur la deleteComment');
 			}
 			
 			
 			
 		},
 		async likePost(postId,userId){
-			const requestOptions = {
-				method: "Post",
-				headers: { 
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${this.token}`},
-				body:JSON.stringify({
-					like:{ 
-						postId: postId,
-						userId: this.userId
-					}
-				})
-			};
-			await fetch(this.urlApi + `/posts/like`, requestOptions);
-			this.findAllPostsByUserId(userId);
-			
-		
-			
-			
+			try {
+				const requestOptions = {
+					method: "Post",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+					body:JSON.stringify({
+						like:{ 
+							postId: postId,
+							userId: this.userId
+						}
+					})
+				};
+				await fetch(this.urlApi + `/posts/like`, requestOptions);
+				this.findAllPostsByUserId(userId);
+			} catch (error) {
+				console.log(error,'Erreure sur la likePost');
+			}
 		},
 	},
 	mounted(){
@@ -506,23 +526,19 @@ export default {
 };
 </script>
 
-
 <style lang="scss" scoped>
 @media screen and (max-width:500px) {
 	
 }
 .commentCollapseMenu{
 	display:flex;
-	
 }
 .menuCommentCollapse{
 	align-self: center;
-	
 }
 .imgMenuCollapse:hover{
 	border-radius:50%;
 	background-color: rgb(204, 103, 103);
-	
 }
 #menuCommentCollapse{
 	align-self: center;
@@ -530,7 +546,6 @@ export default {
 .commentText{
 	display: flex;
 	flex-direction: column;
-
 }
 .authorPost, .authorComment{
 	font-weight:bolder;
@@ -554,9 +569,7 @@ export default {
 }
 .updateComment{
 	font-size: 0.7rem;
-	
 }
-
 .commentCard{
 	display:flex;
 	width: fit-content;
@@ -571,14 +584,11 @@ export default {
 	font-family:Verdana, Geneva, Tahoma, sans-serif
 	
 }
-
 .commentAndAction{
 	display:flex;
 	flex-direction: column;
 	width: fit-content;
-
 }
-
 .inputComment{
 	border-radius:30px;
 	margin: 0.8rem 0.5rem 0.5rem 0.5rem;
@@ -590,14 +600,12 @@ export default {
 	flex-direction: rows;
 	margin-bottom: 1rem;
 	justify-content:space-between ;
-	
 }
 .textHeader{
 	display: flex;
 	flex-direction: column;
 	text-align: left;
 	margin-left:0.5rem;
-	
 }
 .menuHeader{
 	font-size:1rem
@@ -612,9 +620,7 @@ export default {
 }
 .card{
 	padding:0.4rem;
-
 }
-
 .post {
 	margin-top:1rem;
 	background-color:rgb(250, 244, 244);
@@ -652,7 +658,6 @@ export default {
 	margin:0;
 	margin-bottom: 0.5rem;
 }
-
 .postInput{
 	overflow:hidden;
 	margin:0rem;
@@ -667,12 +672,9 @@ export default {
 	color: rgba(54, 37, 37, 0.993);
 	font-weight: bolder;
 	border: 2.5mm ridge rgba(180, 155, 155, 0.6);
-
 }
 .card-body{
 	padding:0;
-	
-	
 }
 .link, .link:hover{
 	text-decoration:none;

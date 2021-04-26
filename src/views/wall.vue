@@ -517,6 +517,8 @@ export default {
 		
 		},
 		async findOneComment(commentId,index) {
+			console.log(index);
+			console.log(this.wallUserId);
 			console.log(this.switchToUpdate);
 			try {
 				const requestOptions = {

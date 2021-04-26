@@ -1,6 +1,6 @@
 <template>
 	<div>
- 		<Nav></Nav><br><br><br><br>
+		<Nav></Nav><br><br><br><br>
 			<div>Nombre d'utilisateurs inscrits: {{allUsers.length}}</div>
 			<div>Nombre de posts publiés:{{allPosts.length}} </div><br>
 			<b-table striped hover :items="allUsers" :fields="fields"  selectable select-mode='single' @row-selected="onRowSelected">
@@ -88,15 +88,18 @@ export default {
 	},
 	methods:{
 		onRowSelected(items ) {
-			this.selected = items;
-			console.log(this.selected[0]);
-			if(this.selected){
-				if(this.selected[0].id === 1){
-					return 	alert("Vous ne pouvez pas changer le statut de l'admin en chef!!");
-				} else{
-					this.onAdminUser(this.selected[0]);
+			try {
+				this.selected = items;
+				console.log(this.selected[0]);
+				if(this.selected){
+					if(this.selected[0].id === 1){
+						return 	alert("Vous ne pouvez pas changer le statut de l'admin en chef!!");
+					} else{
+						this.onAdminUser(this.selected[0]);
+					}
 				}
-				
+			} catch (error) {
+				console.log(error,'onrowselected');
 			}
 		},
 		allUsersInStore(allUsersData){

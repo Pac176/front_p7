@@ -52,7 +52,7 @@
 <!-- CounterLike -->
 					<div class='counterLike'>
 					<div class="usersLikes" v-show='item.like.map(x=>x.user.pseudo).length>=1'>
-						<b-card-text v-b-tooltip.hover :title="item.like.map(x=> x.user.pseudo  )" >
+						<b-card-text v-b-tooltip.hover :title="item.like.map(x=> x.user.pseudo+ ',  ')" >
 							<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" >
 							<span v-html="item.like.map(x=>x.user.pseudo).length" style='margin-left:0.4rem;'>
 							</span>

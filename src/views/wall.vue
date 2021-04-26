@@ -65,13 +65,14 @@
 						<div  v-on:click='function(){likePost(item.id,index); userLike(item);outFocusButton(index)}' block variant="outline-secondary" class='btnLikeComment'>
 							<div  v-if='userLike(item)'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618753322/Group_1bluejaime_ymp6es.svg" alt="" height="22" >
 							<b-card-text style='color:rgb(34,143,222); border:none'>J'aime</b-card-text></div>
-							<div  v-else><img   src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15" style=' border:none'>
+							<div  v-else>
+								<img   src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15" style=' border:none'>
 								<b-card-text >J'aime</b-card-text>
 							</div>
 						</div>
 					</b-col>
 					<b-col>
-						<div  @click="function(){setFocusInput( index ); switchToUpdate[index]=false}" block variant="outline-secondary" class='btnLikeComment'>
+						<div  @click="function(){setFocusInputCreate( index )}" block variant="outline-secondary" class='btnLikeComment'>
 							<div>
 								<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
 								<b-card-text >Répondre</b-card-text>
@@ -137,10 +138,10 @@
 					</b-collapse>
 					</div>
 <!-- input comment -->
-						<b-form-group  v-if='switchToUpdate[index] === true'>
-						<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)" ></b-input>
+						<b-form-group  v-if='switchToUpdate[index] === true'><span>update</span>
+						<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)"></b-input>
 						</b-form-group>
-						<b-form-group  v-else>
+						<b-form-group  v-else><span>create</span>
 							<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index);"></b-input>
 						</b-form-group>
 				</b-card>
@@ -211,19 +212,23 @@ export default {
 				return item.like.includes(item.like.find(post=>post.user.id === this.user.id));
 			}
 		},
-		setFocusInput(index) {
+		setFocusInputUpdate(index) {
 			const inputs = document.querySelectorAll('.inputComment');
 			for (let i = 0; i < inputs.length; i++) {
 				if(inputs[i].dataset.key == index){
 					inputs[i].focus();
 				} 
 			}
-
-
-
-
-		
-			
+		},
+		setFocusInputCreate(index) {
+			const inputs = document.querySelectorAll('.inputComment');
+			for (let i = 0; i < inputs.length; i++) {
+				if(inputs[i].dataset.key == index){
+					inputs[i].focus();
+				} 
+			}
+			this.commentToUpdate = {};
+			this.switchToUpdate[index] =false;
 		},
 		outFocusInput(index) {
 			const inputs = document.querySelectorAll('.inputComment');
@@ -425,6 +430,7 @@ export default {
 			}
 		},
 		async createComment(postId, userId,index){
+			this.postToUpdate = {};
 			try {
 				this.$bvModal.hide('publication');
 				const requestOptions = {
@@ -441,7 +447,7 @@ export default {
 					})
 				};
 				await fetch(this.urlApi + `/comments`, requestOptions);
-				await this.findAllPosts();
+				this.findAllPosts();
 				this.newComment=[];
 				this.outFocusInput(index);
 			} catch (error) {
@@ -449,6 +455,7 @@ export default {
 			}
 		},
 		async updateComment(index){
+			
 			try {
 				const requestOptions = {
 					method: "Put",
@@ -467,6 +474,7 @@ export default {
 				this.switchToUpdate[index] = false;
 				this.outFocusInput(index);
 				this.findAllPosts();
+
 			
 			} catch (error) {
 				console.log(error,'Erreure sur la updateComment');
@@ -509,6 +517,7 @@ export default {
 		
 		},
 		async findOneComment(commentId,index) {
+			console.log(this.switchToUpdate);
 			try {
 				const requestOptions = {
 					method: "Get",
@@ -522,7 +531,7 @@ export default {
 				this.switchToUpdateReset();
 				this.switchToUpdate[index] = true;
 				this.findAllPosts();
-				this.setFocusInput(index);
+				this.setFocusInputUpdate(index);
 			} catch (error) {
 				console.log(error,'Erreure sur la findOneComment');
 			}

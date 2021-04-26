@@ -1,10 +1,15 @@
 <template>
 	<div>
 		<Nav></Nav><br><br><br><br>
+			<b-link class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible :variant='variantResult'  @dismiss-count-down="countDownChanged" >
+			{{apiResponse.message}}</b-alert></b-link>
+			<h3>Pour changer le statut d'un utilisateur veuillez selectionner la ligne de cet utilisateur</h3><br>
+			<span>{{allUsers[0].first_name}} {{allUsers[0].last_name}} est admin de base, il ne peut pas changer de statut</span><br><br>
+			<b-table striped hover :items="allUsers" :fields="fields"  selectable select-mode='single' @row-selected="onRowSelected" selected-variant="danger">
+			</b-table>
+			<b-button @click='onAdminUser(selected[0]); showAlert({message:`${selected[0].pseudo} a bien changé de statut`}, "success")' v-if="selected[0] && selected[0].id !==1" variant="danger">Changer le statut de {{selected[0].pseudo}}?</b-button>
 			<div>Nombre d'utilisateurs inscrits: {{allUsers.length}}</div>
 			<div>Nombre de posts publiés:{{allPosts.length}} </div><br>
-			<b-table striped hover :items="allUsers" :fields="fields"  selectable select-mode='single' @row-selected="onRowSelected">
-			</b-table>
 	</div>
 </template>
 
@@ -17,7 +22,8 @@ export default {
 	name: 'wall',
 	data(){
 		return{
-			selected:[0],
+			selected:[],
+			oldSelected:[],
 			fields:[
 				{
 					key: 'id',
@@ -49,6 +55,10 @@ export default {
 					sortable: true
 				},
 			], 
+			dismissSecs: 5,
+			dismissCountDown: 0,
+			variantResult:"",
+			apiResponse:{},
 			updateUserStatut:{},
 			isUserLike:[],
 			noPosts:null,
@@ -60,7 +70,7 @@ export default {
 			dropdownDisplay :'display:none',
 			textArea:"Quoi de neuf? " + this.$store.state.user.pseudo + "......",
 			password:null,
-			dismissCountDown: 0
+		
 			
 		};
 	},
@@ -87,17 +97,24 @@ export default {
 			'allPostsByUserId']),
 	},
 	methods:{
-		onRowSelected(items ) {
+		alertHover(){
+			this.dismissCountDown = true;
+		},
+		alertHoverOut(){
+			this.dismissCountDown = 1;
+		},
+		countDownChanged(dismissCountDown) {
+			this.dismissCountDown = dismissCountDown;
+		},
+		showAlert(apiResponse, variant) {
+			this.variantResult = variant;
+			this.apiResponse = apiResponse;
+			this.dismissCountDown = this.dismissSecs;
+		},
+		async onRowSelected(items ) {
 			try {
 				this.selected = items;
-				console.log(this.selected[0]);
-				if(this.selected){
-					if(this.selected[0].id === 1){
-						return 	alert("Vous ne pouvez pas changer le statut de l'admin en chef!!");
-					} else{
-						this.onAdminUser(this.selected[0]);
-					}
-				}
+				
 			} catch (error) {
 				console.log(error,'onrowselected');
 			}
@@ -126,6 +143,7 @@ export default {
 			
 		},
 		async onAdminUser (user) {
+			
 			try {
 				const findOneUserOptions = {
 					method: "Get",
@@ -137,27 +155,25 @@ export default {
 				this.userData = await responseFindOne.json();
 				console.log(this.userData.data);
 				this.updateUserStatut = this.userData.data;
-				const response = confirm('Etes vous sur de changer de statut de cet utilisateur?');
-				if(response){
-					const requestOptions = {
-						method: "Put",
-						headers: { 
-							"Content-Type": "application/json",
-							"Authorization": `Bearer ${this.token}`},
-						body:JSON.stringify({
-							first_name: user.first_name,
-							last_name:user.last_name,
-							pseudo:user.pseudo,
-							email:this.updateUserStatut.email,
-							password: this.updateUserStatut.password,
-							is_admin: user.is_admin === 0 ?  1 : 0
-						})
-					};
-					const response = await fetch(this.urlApi + `/users/${user.id}`, requestOptions);
-					await response.json();
-					await this.findAllUsers();
-					this.selected = user;
-				}
+				const requestOptions = {
+					method: "Put",
+					headers: { 
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${this.token}`},
+					body:JSON.stringify({
+						first_name: user.first_name,
+						last_name:user.last_name,
+						pseudo:user.pseudo,
+						email:this.updateUserStatut.email,
+						password: this.updateUserStatut.password,
+						is_admin: user.is_admin === 0 ?  1 : 0
+					})
+				};
+				const response = await fetch(this.urlApi + `/users/${user.id}`, requestOptions);
+				await response.json();
+				await this.findAllUsers();
+				this.selected = user;
+			
 			} catch (error) {
 				console.log(error,'erreure sur la onAdminUser');
 			}

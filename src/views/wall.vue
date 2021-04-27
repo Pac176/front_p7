@@ -1,11 +1,11 @@
 <template>
 	<div>
-		<Nav></Nav>
+		<Nav></Nav><br>
 			<b-row class="wall">
 				<b-col md="2" sm>
 					<h4>{{user.first_name}} {{user.last_name}}</h4>
-					<h6> ({{user.pseudo}})</h6>
-					<div>Inscrit le {{momentDateMouse(user.createdAt)}}</div>
+					<h5> ({{user.pseudo}})</h5>
+					<div style='font-size:0.7rem'>Inscrit le {{momentDateMouse(user.createdAt)}}</div>
 				</b-col>
 			<b-col  md="8" sm style='padding:0 1.5 0 0 rem;' >
 				<b-alert  :show="dismissCountDown" dismissible variant="success"  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged">Inscription reussie!</b-alert>
@@ -39,7 +39,7 @@
 				<b-card title="" sub-title="" v-for="(item,index) in allPosts" :key="item.id" class="post">
 					<div class='headerCard'>
 						<div  class='headerCard'>
-							<b-link to="/wall/user" @click='findAllPostsByUserId(item.user.id);'><b-img   src="https://picsum.photos/50" fluid alt="Responsive image" class="authorImg link"></b-img>
+							<b-link to="/wall/user" @click='findAllPostsByUserId(item.user.id);'><b-img   src="https://picsum.photos/50" fluid alt="Responsive image" class="authorImg link" width='45rem' height='45rem'></b-img>
 							</b-link>
 							<div class='textHeader' >
 								<b-link to="wall/user" @click='findAllPostsByUserId(item.user.id);' class="authorPost link">{{ item.user.pseudo}}</b-link>
@@ -53,7 +53,7 @@
 					<div class='counterLike'>
 					<div class="usersLikes" v-show='item.like.map(x=>x.user.pseudo).length>=1'>
 						<b-card-text v-b-tooltip.hover :title="item.like.map(x=> x.user.pseudo+ ',  ')" >
-							<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="" height="20" >
+							<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618751389/Group_3rondjaime_fszx9r.svg" alt="bulleBleu" width='20rem' height="20rem" >
 							<span v-html="item.like.map(x=>x.user.pseudo).length" style='margin-left:0.4rem;'>
 							</span>
 						</b-card-text>
@@ -63,10 +63,10 @@
 					<b-row class="likeComment" >
 					<b-col>
 						<div  v-on:click='function(){likePost(item.id,index); userLike(item);outFocusButton(index)}' block variant="outline-secondary" class='btnLikeComment'>
-							<div  v-if='userLike(item)'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618753322/Group_1bluejaime_ymp6es.svg" alt="" height="22" >
+							<div  v-if='userLike(item)'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1618753322/Group_1bluejaime_ymp6es.svg" alt="pouceJaime" width='22rem' height="22rem">
 							<b-card-text style='color:rgb(34,143,222); border:none'>J'aime</b-card-text></div>
 							<div  v-else>
-								<img   src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="" height="15" style=' border:none'>
+								<img   src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616753162/comme_mwyvnb.svg" alt="pouce" width='18rem' height="18rem" style=' border:none'>
 								<b-card-text >J'aime</b-card-text>
 							</div>
 						</div>
@@ -74,7 +74,7 @@
 					<b-col>
 						<div  @click="function(){setFocusInputCreate( index )}" block variant="outline-secondary" class='btnLikeComment'>
 							<div>
-								<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="" height="15">
+								<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616754590/commentaire-bulle-ovale-blanche_vftrbh.svg" alt="repondre" width='20rem' height="20rem">
 								<b-card-text >Répondre</b-card-text>
 							</div>
 						</div>
@@ -82,7 +82,7 @@
 					<b-col v-if="item.user_id === userId || user.is_admin === 1">
 						<div :data-key="index" @click='deletePost(item.id,index)' block variant="outline-secondary"  class='btnLikeComment' >
 							<div>
-								<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616755730/delete_sg8ndk.svg" alt="" height="15">
+								<img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616755730/delete_sg8ndk.svg" alt="poubelle" width='20rem' height="20rem">
 								<b-card-text  >Supprimer </b-card-text>
 							</div>
 						</div>
@@ -100,7 +100,7 @@
 									</div>
 								</b-card>
 			<!-- menu Comments -->
-							<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg" height="20" class='imgMenuCollapse'></b-link>
+							<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg"  width='20rem' height="20rem" class='imgMenuCollapse' alt='menuCommentCollapse'></b-link>
 							</div>
 							<b-collapse	b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
 								<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
@@ -125,7 +125,7 @@
 										</div>
 									</b-card>
 	<!-- menu Comments au dela de x comments-->
-								<b-link v-if="comment.user_id === userId || user.is_admin === 1" v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg" height="20" class='imgMenuCollapse'></b-link>
+								<b-link v-if="comment.user_id === userId || user.is_admin === 1" v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg" width='20rem' height="20rem" alt='menuCommentCollapse'></b-link>
 								</div>
 								<b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
 									<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
@@ -139,7 +139,7 @@
 					</div>
 <!-- input comment -->
 						<b-form-group  v-if='switchToUpdate[index] === true'>
-						<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)"></b-input>
+						<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)" ></b-input>
 						</b-form-group>
 						<b-form-group  v-else>
 							<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index);"></b-input>
@@ -517,9 +517,7 @@ export default {
 		
 		},
 		async findOneComment(commentId,index) {
-			console.log(index);
-			console.log(this.wallUserId);
-			console.log(this.switchToUpdate);
+			
 			try {
 				const requestOptions = {
 					method: "Get",
@@ -577,16 +575,13 @@ export default {
 }
 .commentCollapseMenu{
 	display:flex;
-	
 }
 .menuCommentCollapse{
 	align-self: center;
-	
 }
 .imgMenuCollapse:hover{
 	border-radius:50%;
 	background-color: rgb(204, 103, 103);
-	
 }
 #menuCommentCollapse{
 	align-self: center;
@@ -594,7 +589,6 @@ export default {
 .commentText{
 	display: flex;
 	flex-direction: column;
-
 }
 .authorPost, .authorComment{
 	font-weight:bolder;
@@ -605,7 +599,7 @@ export default {
 .usersLikes{
 	display:flex;
 	font-style:italic;
-	color:rgb(48, 104, 189)
+	color:#2B5BDE
 }
 .actionsComment{
 	align-self: flex-end;
@@ -618,9 +612,7 @@ export default {
 }
 .updateComment{
 	font-size: 0.7rem;
-	
 }
-
 .commentCard{
 	display:flex;
 	width: fit-content;
@@ -628,21 +620,14 @@ export default {
 	border-radius:15px;
 	margin-bottom:0.1rem;
 	margin-top:0.5rem;
-	background-color:rgb(233, 233, 233);
-	-moz-box-shadow:    inset 0 0 7px #000000;
-   -webkit-box-shadow: inset 0 0 7px #000000;
-   box-shadow:         inset 0 0 7px #000000;
-	font-family:Verdana, Geneva, Tahoma, sans-serif
+	background-color:rgb(250, 244, 244);
 	
 }
-
 .commentAndAction{
 	display:flex;
 	flex-direction: column;
 	width: fit-content;
-
 }
-
 .inputComment{
 	border-radius:30px;
 	margin: 0.8rem 0.5rem 0.5rem 0.5rem;
@@ -654,14 +639,12 @@ export default {
 	flex-direction: rows;
 	margin-bottom: 1rem;
 	justify-content:space-between ;
-	
 }
 .textHeader{
 	display: flex;
 	flex-direction: column;
 	text-align: left;
 	margin-left:0.5rem;
-	
 }
 .menuHeader{
 	font-size:1rem
@@ -676,9 +659,7 @@ export default {
 }
 .card{
 	padding:0.4rem;
-
 }
-
 .post {
 	margin-top:1rem;
 	background-color:rgb(250, 244, 244);
@@ -695,7 +676,6 @@ export default {
 	padding:0;
 	border:none;	
 	text-decoration: none;
-	color: rgb(68, 13, 9);
 	font-size:0.8rem;
 	cursor: pointer;
 	border-top:1px rgb(235, 185, 185) solid;
@@ -706,7 +686,7 @@ export default {
 	background-color: rgb(230, 210, 208);
 	cursor: pointer;
 	border-radius: 20rem;
-	color:rgb(34,143,222)
+	color:#2B5BDE
 }
 .likeComment {
 	display: flex;
@@ -716,7 +696,6 @@ export default {
 	margin:0;
 	margin-bottom: 0.5rem;
 }
-
 .postInput{
 	overflow:hidden;
 	margin:0rem;
@@ -731,12 +710,9 @@ export default {
 	color: rgba(54, 37, 37, 0.993);
 	font-weight: bolder;
 	border: 2.5mm ridge rgba(180, 155, 155, 0.6);
-
 }
 .card-body{
 	padding:0;
-	
-	
 }
 .link, .link:hover{
 	text-decoration:none;
@@ -754,5 +730,6 @@ color:rgb(61, 131, 164)
 	flex-direction: row;
 	justify-content: center;
 }
+
 
 </style>

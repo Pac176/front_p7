@@ -4,13 +4,13 @@
 		<b-row class="wall">
 		<b-col md="2" sm>
 			<h4>{{user.first_name}} {{user.last_name}}</h4>
-			<h6> ({{user.pseudo}})</h6>
-			<div>Inscrit le {{momentDateMouse(user.createdAt)}}</div>
+			<h5> ({{user.pseudo}})</h5>
+			<div style='font-size:0.7rem'>Inscrit le {{momentDateMouse(user.createdAt)}}</div>
 		</b-col>
 		<b-col  md="8" sm style='padding:0 1.5 0 0 rem'>
 			<h2 v-if='allPostsByUserId.length >= 1'>Fil d'actualité de {{allPostsByUserId[0].user.pseudo}}</h2>
-			<div v-if='allPostsByUserId.length >= 1'>Inscrit le {{momentDateMouse(allPostsByUserId[0].user.createdAt)}}</div>
-			<div v-if='allPostsByUserId.length >= 1'>Dernière connexion {{momentDateMouse(allPostsByUserId[0].user.updatedAt)}}</div><br> 
+			<div v-if='allPostsByUserId.length >= 1' style='font-size:0.7rem'>Inscrit le {{momentDateMouse(allPostsByUserId[0].user.createdAt)}}</div>
+			<div v-if='allPostsByUserId.length >= 1' style='font-size:0.7rem' >Dernière connexion {{momentDateMouse(allPostsByUserId[0].user.updatedAt)}}</div><br> 
 			<h2 v-if='noPosts' style='font-style:italic; color:#FD2D01;'>{{noPosts}}</h2><br>
 <!-- modals -->
 					<b-modal id="updatePublication" hide-footer size="lg" @close='alertCloseModal'>
@@ -72,7 +72,8 @@
 							</div>
 						</div>
 					</b-col>
-					</b-row> 
+					</b-row><br> 
+					<div style='font-weight=bolder'>Laissez un commentaire</div>
 					<div v-if="allPostsByUserId[index].tblComments.length < 4">
 					<div class='commentGroup' block>
 						<div v-for="(comment) in allPostsByUserId[index].tblComments" :key="comment.id" class='commentAndAction'>
@@ -84,7 +85,8 @@
 									</div>
 								</b-card>
 	<!-- menu Comments -->
-							<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg" height="20" class='imgMenuCollapse'></b-link>
+							
+							<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg" height="20" class='imgMenuCollapse' alt='menuCommentCollapse'></b-link>
 							</div>
 							<b-collapse	b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
 								<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
@@ -109,7 +111,7 @@
 										</div>
 									</b-card>
 	<!-- menu Comments au dela de x comments-->
-								<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg" height="20" class='imgMenuCollapse'></b-link>
+								<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg" height="20" class='imgMenuCollapse' alt='menuCommentCollapse'></b-link>
 								</div>
 								<b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
 									<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
@@ -122,10 +124,10 @@
 					</b-collapse>
 					</div>
 <!-- input comment -->
-				<b-form-group  v-if='switchToUpdate[index] === true'><span>update</span>
+				<b-form-group  v-if='switchToUpdate[index] === true'>
 					<b-input   :data-key="index" class="inputComment"  v-model='commentToUpdate.comment_content' v-on:keyup.enter="updateComment(index)" ></b-input>
 				</b-form-group>
-				<b-form-group  v-else><span>create</span>
+				<b-form-group  v-else>
 					<b-input   :data-key="index" class="inputComment"  v-model='newComment[index]' v-on:keyup.enter="createComment(item.id,user.id,index)" ></b-input>
 				</b-form-group>
 				</b-card>
@@ -312,9 +314,6 @@ export default {
 			}
 		},
 		async findOneComment(commentId,index) {
-			console.log(index);
-			console.log(this.wallUserId);
-			console.log(this.switchToUpdate);
 			try {
 				const requestOptions = {
 					method: "Get",
@@ -474,8 +473,6 @@ export default {
 		async deleteComment(comment, userId){
 			try {
 				const response =confirm('Etes vous sur de vouloir supprimer ce commentaire?');
-				console.log(comment);
-				console.log(userId);
 				if(response){
 					const requestOptions = {
 						method: "Delete",
@@ -487,9 +484,7 @@ export default {
 					await fetch(this.urlApi + `/comments/${comment}`, requestOptions);
 			
 					await this.findAllPostsByUserId(userId);
-				} else {
-					console.log('gege');
-				}
+				} 
 			
 			} catch (error) {
 				console.log(error,'Erreure sur la deleteComment');
@@ -553,7 +548,7 @@ export default {
 .usersLikes{
 	display:flex;
 	font-style:italic;
-	color:rgb(48, 104, 189)
+	color:#2B5BDE
 }
 .actionsComment{
 	align-self: flex-end;
@@ -574,11 +569,7 @@ export default {
 	border-radius:15px;
 	margin-bottom:0.1rem;
 	margin-top:0.5rem;
-	background-color:rgb(233, 233, 233);
-	-moz-box-shadow:    inset 0 0 7px #000000;
-   -webkit-box-shadow: inset 0 0 7px #000000;
-   box-shadow:         inset 0 0 7px #000000;
-	font-family:Verdana, Geneva, Tahoma, sans-serif
+	background-color:rgb(250, 244, 244);
 	
 }
 .commentAndAction{
@@ -634,7 +625,6 @@ export default {
 	padding:0;
 	border:none;	
 	text-decoration: none;
-	color: rgb(68, 13, 9);
 	font-size:0.8rem;
 	cursor: pointer;
 	border-top:1px rgb(235, 185, 185) solid;
@@ -645,7 +635,7 @@ export default {
 	background-color: rgb(230, 210, 208);
 	cursor: pointer;
 	border-radius: 20rem;
-	color:rgb(34,143,222)
+	color:#2B5BDE
 }
 .likeComment {
 	display: flex;

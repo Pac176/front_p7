@@ -83,7 +83,8 @@ li {
   margin: 0 10px;
 }
 #logoHeader {
-  width:10rem
+  width:10rem;
+  height:3rem
 }
 #nav{
   display: flex;

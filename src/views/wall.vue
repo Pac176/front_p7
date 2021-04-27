@@ -47,7 +47,7 @@
 							</div>
 						</div>
 					</div>
-					<b-link v-if="item.user_id === $store.state.userId" class="link" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text v-b-tooltip.right.hover.v-primary title="Modifier" class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
+					<b-link v-if="item.user_id === $store.state.userId || user.is_admin === 1" class="link" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text v-b-tooltip.right.hover.v-primary title="Modifier" class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
 					<b-card-text v-else class='textPost '>{{item.post_content}}</b-card-text><br>
 <!-- CounterLike -->
 					<div class='counterLike'>
@@ -88,7 +88,7 @@
 						</div>
 					</b-col>
 					</b-row><br>
-					<div style='font-weight:bolder'>Laissez un commentaire</div>
+					<div style='font-weight:bolder'>Laissez un commentaire...</div>
 	<!-- Comments en dessous de x comments-->
 					<div v-if="allPosts[index].tblComments.length < 4">
 					<div class='commentGroup' block>

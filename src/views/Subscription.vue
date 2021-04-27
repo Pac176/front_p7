@@ -39,7 +39,6 @@ h1{
 	margin-top:8rem;
 }
 .subscription{
-	margin-top:2rem;
 	display:flex;
 	flex-direction: column;
 	

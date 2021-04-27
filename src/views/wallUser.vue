@@ -73,7 +73,7 @@
 						</div>
 					</b-col>
 					</b-row><br> 
-					<div style='font-weight=bolder'>Laissez un commentaire</div>
+					<div style='font-weight:bolder'>Laissez un commentaire...</div>
 					<div v-if="allPostsByUserId[index].tblComments.length < 4">
 					<div class='commentGroup' block>
 						<div v-for="(comment) in allPostsByUserId[index].tblComments" :key="comment.id" class='commentAndAction'>
@@ -99,7 +99,7 @@
 					</div>
 <!-- Au dela de x comments -->
 					<div v-else>
-					<b-link v-if="comment.user_id === userId || user.is_admin === 1" v-b-toggle="'my-collapse-'+ index" class='link not-collapsed'>il y a {{allPostsByUserId[index].tblComments.length}} commentaire(s) sur ce post...</b-link>
+					<b-link  v-b-toggle="'my-collapse-'+ index" class='link not-collapsed'>il y a {{allPostsByUserId[index].tblComments.length}} commentaire(s) sur ce post...</b-link>
 					<b-collapse :id="'my-collapse-'+ index" :data-key="index">
 						<div class='commentGroup' block>
 							<div v-for="(comment) in allPostsByUserId[index].tblComments" :key="comment.id" class='commentAndAction'>
@@ -115,8 +115,8 @@
 								</div>
 								<b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
 									<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
-										<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
-										<b-link class='link deleteComment' @click='deleteComment(comment.id,item.user_id)' >Supprimer</b-link>
+										<b-link class='link updateComment'  @click='findOneComment(comment.id,index)' style='font-size:0.8rem; font-weight:bolder'>Modifier</b-link>
+										<b-link class='link deleteComment' @click='deleteComment(comment.id,item.user_id)' style='font-size:0.8rem; font-weight:bolder'>Supprimer</b-link>
 									</div>
 								</b-collapse>
 							</div>
@@ -256,25 +256,25 @@ export default {
 		showAlert() {
 			this.dismissCountDown = this.dismissSecs;
 		},
-		/* 	successSubscrirtionShow(){
+		successSubscrirtionShow(){
 			this.$store.commit('SUCCESSSUBSCIBE');
-		}, */
-		/* allPostsInStore(allPostsData){
+		}, 
+		allPostsInStore(allPostsData){
 			this.$store.commit('ALLPOSTS',allPostsData);
-		}, */
+		}, 
 		allPostsByUserIdInStore(allPostsByUserIdData){
 			this.$store.commit('ALLPOSTSBYUSERID',allPostsByUserIdData);
 		},
-		/* allCommentsInStore(allCommentsData){
+		allCommentsInStore(allCommentsData){
 			this.$store.commit('ALLCOMMENTS',allCommentsData);
-		}, */
-		/* allUsersInStore(allUsersData){
+		}, 
+		allUsersInStore(allUsersData){
 			this.$store.commit('ALLUSERS',allUsersData);
-		}, */
+		}, 
 		wallUserIdInStore(wallUserData){
 			this.$store.commit('WALLUSERID', wallUserData);
 		},
-		/* 	async findAllPosts() {
+		async findAllPosts() {
 			try {
 				const requestOptions = {
 					method: "Get",
@@ -296,7 +296,7 @@ export default {
 			} catch (error) {
 				console.log(error,"erreure sur findAllPosts");
 			}
-		}, */
+		}, 
 		async findOnePost(postId) {
 			try {
 				const requestOptions = {
@@ -356,7 +356,7 @@ export default {
 			
 			
 		},
-		/* async findAllUsers() {
+		async findAllUsers() {
 			try {
 				const requestOptions = {
 					method: "Get",
@@ -374,7 +374,7 @@ export default {
 				console.log(error,'Erreure sur la findAllUsers');
 			}
 			
-		}, */
+		}, 
 		async updatePost(){
 			try {
 				this.$bvModal.hide('updatePublication');
@@ -569,8 +569,8 @@ export default {
 	border-radius:15px;
 	margin-bottom:0.1rem;
 	margin-top:0.5rem;
-	background-color:rgb(250, 244, 244);
-	
+	background-color:rgb(236, 228, 228);
+	border: 1px rgba(121, 102, 102, 0.6) dashed
 }
 .commentAndAction{
 	display:flex;

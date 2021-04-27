@@ -254,25 +254,25 @@ export default {
 		showAlert() {
 			this.dismissCountDown = this.dismissSecs;
 		},
-		successSubscrirtionShow(){
+		/* 	successSubscrirtionShow(){
 			this.$store.commit('SUCCESSSUBSCIBE');
-		},
-		allPostsInStore(allPostsData){
+		}, */
+		/* allPostsInStore(allPostsData){
 			this.$store.commit('ALLPOSTS',allPostsData);
-		},
+		}, */
 		allPostsByUserIdInStore(allPostsByUserIdData){
 			this.$store.commit('ALLPOSTSBYUSERID',allPostsByUserIdData);
 		},
-		allCommentsInStore(allCommentsData){
+		/* allCommentsInStore(allCommentsData){
 			this.$store.commit('ALLCOMMENTS',allCommentsData);
-		},
-		allUsersInStore(allUsersData){
+		}, */
+		/* allUsersInStore(allUsersData){
 			this.$store.commit('ALLUSERS',allUsersData);
-		},
+		}, */
 		wallUserIdInStore(wallUserData){
 			this.$store.commit('WALLUSERID', wallUserData);
 		},
-		async findAllPosts() {
+		/* 	async findAllPosts() {
 			try {
 				const requestOptions = {
 					method: "Get",
@@ -294,7 +294,7 @@ export default {
 			} catch (error) {
 				console.log(error,"erreure sur findAllPosts");
 			}
-		},
+		}, */
 		async findOnePost(postId) {
 			try {
 				const requestOptions = {
@@ -357,7 +357,7 @@ export default {
 			
 			
 		},
-		async findAllUsers() {
+		/* async findAllUsers() {
 			try {
 				const requestOptions = {
 					method: "Get",
@@ -375,7 +375,7 @@ export default {
 				console.log(error,'Erreure sur la findAllUsers');
 			}
 			
-		},
+		}, */
 		async updatePost(){
 			try {
 				this.$bvModal.hide('updatePublication');

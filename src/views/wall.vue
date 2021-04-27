@@ -87,7 +87,8 @@
 							</div>
 						</div>
 					</b-col>
-					</b-row>
+					</b-row><br>
+					<div style='font-weight:bolder'>Laissez un commentaire</div>
 	<!-- Comments en dessous de x comments-->
 					<div v-if="allPosts[index].tblComments.length < 4">
 					<div class='commentGroup' block>
@@ -104,8 +105,8 @@
 							</div>
 							<b-collapse	b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
 								<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
-									<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
-									<b-link class='link deleteComment' @click='deleteComment(comment.id)' >Supprimer</b-link>
+									<b-link class='link updateComment'  @click='findOneComment(comment.id,index)' style='font-size:0.8rem; font-weight:bolder'>Modifier</b-link>
+									<b-link class='link deleteComment' @click='deleteComment(comment.id)' style='font-size:0.8rem; font-weight:bolder'>Supprimer</b-link>
 								</div>
 							</b-collapse>
 						</div>
@@ -113,7 +114,7 @@
 					</div>
 <!-- Au dela de x comments -->
 					<div v-else>
-					<b-link v-b-toggle="'my-collapse-'+ index" class='link not-collapsed'>il y a {{allPosts[index].tblComments.length}} commentaire(s) sur ce post...</b-link>
+					<b-link v-b-toggle="'my-collapse-'+ index" class='link not-collapsed'>il y a déja {{allPosts[index].tblComments.length}} commentaire(s) sur ce post...</b-link>
 					<b-collapse :id="'my-collapse-'+ index" :data-key="index">
 						<div class='commentGroup' block>
 							<div v-for="(comment) in allPosts[index].tblComments" :key="comment.id" class='commentAndAction'>
@@ -129,8 +130,8 @@
 								</div>
 								<b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
 									<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
-										<b-link class='link updateComment'  @click='findOneComment(comment.id,index)'>Modifier</b-link>
-										<b-link class='link deleteComment' @click='deleteComment(comment.id)' >Supprimer</b-link>
+										<b-link class='link updateComment'  @click='findOneComment(comment.id,index)' style='font-size:0.8rem; font-weight:bolder'>Modifier</b-link>
+										<b-link class='link deleteComment' @click='deleteComment(comment.id)' style='font-size:0.8rem; font-weight:bolder'>Supprimer</b-link>
 									</div>
 								</b-collapse>
 							</div>
@@ -620,8 +621,8 @@ export default {
 	border-radius:15px;
 	margin-bottom:0.1rem;
 	margin-top:0.5rem;
-	background-color:rgb(250, 244, 244);
-	
+	background-color:rgb(236, 228, 228);
+	border: 1px rgba(121, 102, 102, 0.6) dashed
 }
 .commentAndAction{
 	display:flex;

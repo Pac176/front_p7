@@ -130,7 +130,8 @@ export default {
 						last_name:this.last_name,
 						pseudo:this.pseudo,
 						email:this.email,
-						password:this.password
+						password:this.password,
+						is_admin:0,
 					})
 				};
 				const signup = await fetch(this.urlApi + "/users/signup", requestOptions);

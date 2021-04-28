@@ -4,7 +4,7 @@
      <b-link  style='text-decoration:none' class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible  :variant='variantResult'  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged" id='alert'>
     {{apiResponse.message}}</b-alert></b-link>
      <h1>Bienvenue sur le reseau social de l'entreprise</h1>
-      <img id="homeLogo" src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616663942/icon-above-font_hzocsv.svg" alt="logo">
+      <img id="homeLogo" src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1616663942/icon-above-font_hzocsv.svg" alt="logo" width="500rem" height="500rem">
      </div>
 </template>
 

@@ -12,7 +12,7 @@ projet developpé avec nodeJS V14.16
 
  npm i
 ```````
-### Creer un fichier .env et y mettre les variables de .env.dist
+### Creer un fichier .env.local et y mettre les variables de .env.dist.local
 
 ```````bash
 

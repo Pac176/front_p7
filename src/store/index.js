@@ -9,7 +9,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
 	state: {
 		wallUserId:null,
-		urlApi:process.env.URL_API,
+		urlApi:process.env.VUE_APP_URL_API,
 		isConnect: false,
 		isAdmin: false,
 		successSubscribe: false,

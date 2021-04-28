@@ -330,7 +330,7 @@ export default {
 				this.commentToUpdate = this.oneCommentData.data;
 				this.switchToUpdateReset();
 				this.switchToUpdate[index] = true;
-				this.findAllPostsByUserId(this.wallUserId);
+				await this.findAllPostsByUserId(this.wallUserId);
 				this.setFocusInputUpdate(index);
 			} catch (error) {
 				console.log(error,'Erreure sur la findOneComment');
@@ -418,7 +418,7 @@ export default {
 				await response.json();
 				this.outFocusInput(index);
 				this.commentToUpdate={};
-				this.findAllPostsByUserId(this.wallUserId);
+				await this.findAllPostsByUserId(this.wallUserId);
 				
 			} catch (error) {
 				console.log(error,'Erreure sur la updateComment');
@@ -509,14 +509,14 @@ export default {
 					})
 				};
 				await fetch(this.urlApi + `/posts/like`, requestOptions);
-				this.findAllPostsByUserId(userId);
+				await this.findAllPostsByUserId(userId);
 			} catch (error) {
 				console.log(error,'Erreure sur la likePost');
 			}
 		},
 	},
-	mounted(){
-		this.findAllPostsByUserId(this.wallUserId);
+	async mounted(){
+		await this.findAllPostsByUserId(this.wallUserId);
 		
 	}
 };

@@ -411,7 +411,7 @@ export default {
 				this.allPostsByUserIdData = await response.json();
 				if(this.allPostsByUserIdData.count !== 0 && this.isConnect){
 					this.wallUserIdInStore(userId);
-					this.allPostsByUserIdInStore(this.allPostsByUserIdData.data);
+					await this.allPostsByUserIdInStore(this.allPostsByUserIdData.data);
 				} else{
 					this.allPostsByUserIdInStore('');
 				}
@@ -452,7 +452,7 @@ export default {
 					})
 				};
 				await fetch(this.urlApi + `/comments`, requestOptions);
-				this.findAllPosts();
+				await this.findAllPosts();
 				this.newComment=[];
 				this.outFocusInput(index);
 			} catch (error) {
@@ -478,7 +478,7 @@ export default {
 				await response.json();
 				this.switchToUpdate[index] = false;
 				this.outFocusInput(index);
-				this.findAllPosts();
+				await this.findAllPosts();
 
 			
 			} catch (error) {
@@ -496,7 +496,7 @@ export default {
 							"Authorization": `Bearer ${this.token}`},
 					};
 					await fetch(this.urlApi + `/comments/${comment}`, requestOptions);
-					this.findAllPosts();
+					await this.findAllPosts();
 				} 
 			} catch (error) {
 				console.log(error,'Erreure sur la deleteComment');
@@ -535,7 +535,7 @@ export default {
 				this.commentToUpdate = this.oneCommentData.data;
 				this.switchToUpdateReset();
 				this.switchToUpdate[index] = true;
-				this.findAllPosts();
+				await this.findAllPosts();
 				this.setFocusInputUpdate(index);
 			} catch (error) {
 				console.log(error,'Erreure sur la findOneComment');
@@ -556,19 +556,19 @@ export default {
 					})
 				};
 				await fetch(this.urlApi + `/posts/like`, requestOptions);
-				this.findAllPosts();
+				await this.findAllPosts();
 			} catch (error) {
 				console.log(error,'Erreure sur la likePost');
 			}
 		},
 	},
-	mounted(){
-		this.findAllPosts();
-		this.findAllComments();
+	async mounted(){
 		if (this.$store.state.successSubscribe){
 			this.showAlert();
-			this.successSubscrirtionShow();
+			
 		}
+		await this.findAllPosts();
+		await this.findAllComments();
 	}
 };
 </script>

@@ -149,12 +149,12 @@ export default {
 					const login = await fetch(this.urlApi + "/users/login", ConnectRequestOptions);
 					this.loginResponse = await login.json();
 					if (login.ok === true) {
+						this.successSubscriptionShow();
 						this.tokenInStore(this.loginResponse.token);
 						this.userIdInStore(this.loginResponse.userId);
 						await this.findOneUser();
 						this.isConnectInStore();
 						this.$router.push('/Wall');
-						this.successSubscriptionShow();
 					} 
 				} else {
 					this.showAlert(signupResponse, 'danger');

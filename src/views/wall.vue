@@ -47,7 +47,7 @@
 							</div>
 						</div>
 					</div>
-					<b-link v-if="item.user_id === $store.state.userId || user.is_admin === 1" class="link" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text v-b-tooltip.right.hover.v-primary title="Modifier" class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
+					<b-link v-if="item.user_id === $store.state.userId || user.is_admin === 1" class="link PostUpdate" v-b-modal.updatePublication @click='findOnePost(item.id)' ><b-card-text  class='textPost linkUser'>{{item.post_content}}</b-card-text></b-link>
 					<b-card-text v-else class='textPost '>{{item.post_content}}</b-card-text><br>
 <!-- CounterLike -->
 					<div class='counterLike'>
@@ -101,12 +101,12 @@
 									</div>
 								</b-card>
 			<!-- menu Comments -->
-							<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg"  width='20rem' height="20rem" class='imgMenuCollapse' alt='menuCommentCollapse'></b-link>
+							<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img  src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619594749/menucollapsecomment_ggusga.svg"  width='20rem' height="20rem" class='imgMenuCollapse' alt='menuCommentCollapse'></b-link>
 							</div>
 							<b-collapse	b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
 								<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
-									<b-link class='link updateComment'  @click='findOneComment(comment.id,index)' style='font-size:0.8rem; font-weight:bolder'>Modifier</b-link>
-									<b-link class='link deleteComment' @click='deleteComment(comment.id)' style='font-size:0.8rem; font-weight:bolder'>Supprimer</b-link>
+									<b-link class='link updateComment'  @click='findOneComment(comment.id,index)' >Modifier</b-link>
+									<b-link class='link deleteComment' @click='deleteComment(comment.id)' >Supprimer</b-link>
 								</div>
 							</b-collapse>
 						</div>
@@ -126,12 +126,12 @@
 										</div>
 									</b-card>
 	<!-- menu Comments au dela de x comments-->
-								<b-link v-if="comment.user_id === userId || user.is_admin === 1" v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619195197/Group_1menu3pointscollapsecomment_b9bbfm.svg" width='20rem' height="20rem" alt='menuCommentCollapse'></b-link>
+								<b-link v-if="comment.user_id === userId || user.is_admin === 1" v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img class='imgMenuCollapse' src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619594749/menucollapsecomment_ggusga.svg" width='20rem' height="20rem" alt='menuCommentCollapse'></b-link>
 								</div>
 								<b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
 									<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
-										<b-link class='link updateComment'  @click='findOneComment(comment.id,index)' style='font-size:0.8rem; font-weight:bolder'>Modifier</b-link>
-										<b-link class='link deleteComment' @click='deleteComment(comment.id)' style='font-size:0.8rem; font-weight:bolder'>Supprimer</b-link>
+										<b-link class='link updateComment'  @click='findOneComment(comment.id,index)' >Modifier</b-link>
+										<b-link class='link deleteComment' @click='deleteComment(comment.id)' >Supprimer</b-link>
 									</div>
 								</b-collapse>
 							</div>
@@ -582,7 +582,7 @@ export default {
 }
 .imgMenuCollapse:hover{
 	border-radius:50%;
-	background-color: rgb(204, 103, 103);
+	background-color: rgb(211, 204, 204);
 }
 #menuCommentCollapse{
 	align-self: center;
@@ -610,9 +610,13 @@ export default {
 	font-size: 0.7rem;
 	margin-right: 1.5rem;
 	margin-left: 0.5rem;
+	font-size:0.8rem; 
+	font-weight:bolder
 }
 .updateComment{
 	font-size: 0.7rem;
+	font-size:0.8rem; 
+	font-weight:bolder
 }
 .commentCard{
 	display:flex;
@@ -669,6 +673,10 @@ export default {
 .textPost{
 	text-align: justify;
 }	
+.postUpdate:hover{
+	background-color:red
+
+}
 .btnLikeComment{
 	display:flex;
 	justify-content: center;
@@ -684,7 +692,7 @@ export default {
 	font-weight: bolder
 }
 .btnLikeComment:hover{
-	background-color: rgb(230, 210, 208);
+	background-color: #ece1e0;
 	cursor: pointer;
 	border-radius: 20rem;
 	color:#2B5BDE
@@ -720,7 +728,8 @@ export default {
 	color:black
 }
 .linkUser:hover{
-color:rgb(61, 131, 164)
+color:#2B5BDE;
+background-color:#ece1e0;
 }
 .row{
 	margin:0

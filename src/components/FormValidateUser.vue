@@ -151,10 +151,10 @@ export default {
 					if (login.ok === true) {
 						this.tokenInStore(this.loginResponse.token);
 						this.userIdInStore(this.loginResponse.userId);
-						this.findOneUser();
+						await this.findOneUser();
+						this.isConnectInStore();
 						this.$router.push('/Wall');
 						this.successSubscriptionShow();
-						this.isConnectInStore();
 					} 
 				} else {
 					this.showAlert(signupResponse, 'danger');

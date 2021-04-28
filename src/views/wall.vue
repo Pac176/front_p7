@@ -102,7 +102,7 @@
 									</div>
 								</b-card>
 			<!-- menu Comments -->
-							<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img  src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619594749/menucollapsecomment_ggusga.svg"  width='20rem' height="20rem" class='imgMenuCollapse' alt='menuCommentCollapse'></b-link>
+							<b-link v-if="comment.user_id === userId || user.is_admin === 1"  v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img  src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619594749/menucollapsecomment_ggusga.svg"  width='20rem' height="20rem" class='imgMenuCollapse' alt='menuCommentCollapse'></b-link>
 								</div>
 								<b-collapse	b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
 								<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>

@@ -77,7 +77,8 @@
 					<div v-if="allPostsByUserId[index].tblComments.length < 4">
 					<div class='commentGroup' block>
 						<div v-for="(comment) in allPostsByUserId[index].tblComments" :key="comment.id" class='commentAndAction'>
-							<div class='commentCollapseMenu'>
+							<div class='commentMenu'>
+								<div class='commentCollapseMenu'>
 								<b-card class="commentCard">
 									<div class='commentText'>
 										<div href="#" class="link authorComment" style='font-size:0.7rem'>{{comment.user.pseudo}}</div>
@@ -87,13 +88,14 @@
 	<!-- menu Comments -->
 							
 							<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619594749/menucollapsecomment_ggusga.svg" height="20" class='imgMenuCollapse' alt='menuCommentCollapse'></b-link>
-							</div>
-							<b-collapse	b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
-								<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
-									<b-link class='link updateComment'  @click='findOneComment(comment.id,index)' style='font-size:0.8rem; font-weight:bolder'>Modifier</b-link>
-									<b-link class='link deleteComment' @click='deleteComment(comment.id,item.user_id)' style='font-size:0.8rem; font-weight:bolder'>Supprimer</b-link>
 								</div>
-							</b-collapse>
+								<b-collapse	b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
+									<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
+										<b-link class='link updateComment'  @click='findOneComment(comment.id,index)' style='font-size:0.8rem; font-weight:bolder'>Modifier</b-link>
+										<b-link class='link deleteComment' @click='deleteComment(comment.id,item.user_id)' style='font-size:0.8rem; font-weight:bolder'>Supprimer</b-link>
+									</div>
+								</b-collapse>
+							</div>
 						</div>
 					</div>
 					</div>
@@ -103,7 +105,8 @@
 					<b-collapse :id="'my-collapse-'+ index" :data-key="index">
 						<div class='commentGroup' block>
 							<div v-for="(comment) in allPostsByUserId[index].tblComments" :key="comment.id" class='commentAndAction'>
-								<div class='commentCollapseMenu'>
+								<div class='commentMenu'>
+									<div class='commentCollapseMenu'>
 									<b-card class="commentCard">
 										<div class='commentText'>
 											<div href="#" class="link authorComment" style='font-size:0.7rem'>{{comment.user.pseudo}}</div>
@@ -112,13 +115,14 @@
 									</b-card>
 	<!-- menu Comments au dela de x comments-->
 								<b-link v-b-toggle="'collapseMenu'+ comment.id" class='link menuCommentCollapse'><img src="https://res.cloudinary.com/dvtklgrcu/image/upload/v1619594749/menucollapsecomment_ggusga.svg" height="20" class='imgMenuCollapse' alt='menuCommentCollapse'></b-link>
-								</div>
-								<b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
+									</div>
+									<b-collapse :id="'collapseMenu'+ comment.id" :data-key="index" class='menuCommentCollapse'>
 									<div v-if="comment.user_id === userId || user.is_admin === 1"  block variant="outline-secondary"  class='link actionsComment' style='font-size:0.6rem'>
 										<b-link class='link updateComment'  @click='findOneComment(comment.id,index)' style='font-size:0.8rem; font-weight:bolder'>Modifier</b-link>
 										<b-link class='link deleteComment' @click='deleteComment(comment.id,item.user_id)' style='font-size:0.8rem; font-weight:bolder'>Supprimer</b-link>
 									</div>
-								</b-collapse>
+									</b-collapse>
+								</div>
 							</div>
 						</div>
 					</b-collapse>
@@ -552,7 +556,7 @@ export default {
 }
 .actionsComment{
 	align-self: flex-end;
-	
+	text-align-last: justify;
 }
 .deleteComment{
 	font-size: 0.7rem;

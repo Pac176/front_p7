@@ -18,7 +18,7 @@ projet developpé avec nodeJS V14.16
 
 touch .env
 
-cp .env.local.dist .env
+cp .env.dist .env
 
 ```````
  

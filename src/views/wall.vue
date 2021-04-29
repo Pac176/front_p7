@@ -277,8 +277,8 @@ export default {
 		showAlert() {
 			this.dismissCountDown = this.dismissSecs;
 		},
-		successSubscrirtionShow(){
-			this.$store.commit('SUCCESSSUBSCIBE');
+		successSubscriptionShow(response){
+			this.$store.commit('SUCCESSSUBSCRIBE',response);
 		},
 		allPostsInStore(allPostsData){
 			this.$store.commit('ALLPOSTS',allPostsData);
@@ -565,7 +565,7 @@ export default {
 	async mounted(){
 		if (this.$store.state.successSubscribe){
 			this.showAlert();
-			
+			this.successSubscriptionShow(false);
 		}
 		await this.findAllPosts();
 		await this.findAllComments();

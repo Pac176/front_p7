@@ -187,14 +187,14 @@ export default {
 					const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
 					const updateResponse = await response.json();
 					if(response.ok === true ){
-						console.log('1');
-						await this.findOneUser();
-						this.savePwd  = true;
 						this.showAlert({message:'Mot de passe modifié!'},"success");
+						this.savePwd  = true;
 						this.updatePwdSuccess = false;
 						this.newPassword = null;
 						this.repeatNewPassword = null;
 						this.oldPassword = null;
+						this.$v.oldPassword.$reset();
+						await this.findOneUser();
 					} else {
 						this.showAlert(updateResponse, "danger");
 					} 

@@ -26,7 +26,7 @@ export default {
 		Nav
 	},
 	computed:{
-		...mapState(['deleteAccountSuccess','deleteAccountRequest'])
+		...mapState(['deleteAccountSuccess','deleteAccountRequest','successSubscribe'])
 	},
 	methods:{
 		alertHover() {

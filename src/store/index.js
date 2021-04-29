@@ -27,8 +27,8 @@ export default new Vuex.Store({
 		ISCONNECT(state) {
 			return (state.isConnect = !state.isConnect ? true : false);
 		},
-		SUCCESSSUBSCIBE(state) {
-			return (state.successSubscribe = !state.successSubscribe ? true : false);
+		SUCCESSSUBSCRIBE(state, response) {
+			return (state.successSubscribe = response);
 		},
 		TOKEN(state, tokenRequest) {
 			state.token = tokenRequest;

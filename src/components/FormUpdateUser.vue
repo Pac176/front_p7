@@ -148,11 +148,13 @@ export default {
 						this.showAlert(updateResponse,'success');
 					} 
 				} else {
+					console.log('4');
 					this.updateUser = false;
 					this.showAlert(updateResponse,'danger');
+					this.pseudo = this.user.pseudo;
+					this.email = this.user.email;
 				}
 			} catch (error) {
-				console.log(error,'erreure sur la onUpdateUser');
 				this.showAlert({message: error},'danger');
 			}
 		}

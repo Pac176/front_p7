@@ -141,7 +141,7 @@ export default {
 				console.log(this.dataResponse.message);
 				if(response.ok === true ){
 					this.updatePwdSuccess = true;
-					this.showAlert(dataResponse, "success");
+					this.showAlert({message:'Choisissez et confirmez un nouveau mot de passe!'}, "success");
 				} else {
 					this.showAlert(dataResponse, "danger");
 				}
@@ -171,25 +171,31 @@ export default {
 		async onUpdatePwd (event) {
 			event.preventDefault();
 			try {
-				const requestOptions = {
-					method: "Put",
-					headers: { 
-						"Content-Type": "application/json",
-						"Authorization": `Bearer ${this.token}`},
-					body: JSON.stringify(this.bodyUpdate())
-				};
-				const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
-				const updateResponse = await response.json();
-				if(response.ok === true ){
-					await this.findOneUser();
+				if(this.oldPassword === this.newPassword){
+					this.showAlert({message:"Vous avez deja ce mot de passe!!"}, "danger");
+					this.updatePwdSuccess = false;
+					this.newPassword = null;
+					this.repeatNewPassword = null;
+				} else{
+					const requestOptions = {
+						method: "Put",
+						headers: { 
+							"Content-Type": "application/json",
+							"Authorization": `Bearer ${this.token}`},
+						body: JSON.stringify(this.bodyUpdate())
+					};
+					const response = await fetch(this.urlApi + `/users/${this.userId}`, requestOptions);
+					const updateResponse = await response.json();
+					if(response.ok === true ){
+						console.log('1');
+						await this.findOneUser();
+						this.savePwd  = true;
+						this.showAlert({message:'Mot de passe modifié!'},"success");
 					
-					this.savePwd  = true;
-					this.showAlert(updateResponse,"success");
-					
-				} else {
-					
-					this.showAlert(updateResponse, "danger");
-				} 
+					} else {
+						this.showAlert(updateResponse, "danger");
+					} 
+				}
 			} catch (error) {
 				console.log(error.message);
 			}

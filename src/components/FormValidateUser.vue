@@ -2,11 +2,11 @@
 	<b-form class="formSubscribe"  @submit="onSubscription">
 			<b-link class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible :variant='variantResult'  @dismiss-count-down="countDownChanged" >
 			{{apiResponse.message}}</b-alert></b-link>
-			<b-form-group style="font-weight:bold" id="input-group-1"   label="Votre nom:" label-for="input-2" >
-              <b-form-input style="font-style:italic" id="input-1" autocomplete="section-blue family-name" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' placeholder="Entrez votre nom (uniquement des lettres)"  ></b-form-input>
+            <b-form-group style="font-weight:bold" id="input-group-2"  label="Votre Prénom:" label-for="input-2" >
+              <b-form-input style="font-style:italic" id="input-2" autocomplete="section-blue first-name" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' placeholder="Entrez votre prénom (uniquement des lettres)"  ></b-form-input>
             </b-form-group>
-            <b-form-group style="font-weight:bold" id="input-group-2"  label="Votre prénom:" label-for="input-2" >
-              <b-form-input style="font-style:italic" id="input-2" autocomplete="section-blue first-name" v-model.trim="$v.last_name.$model" :class='{"is-invalid":$v.last_name.$error,"is-valid":!$v.last_name.$invalid}' placeholder="Entrez votre prénom (uniquement des lettres)"  ></b-form-input>
+			<b-form-group style="font-weight:bold" id="input-group-1"   label="Votre nom:" label-for="input-2" >
+              <b-form-input style="font-style:italic" id="input-1" autocomplete="section-blue family-name" v-model.trim="$v.last_name.$model" :class='{"is-invalid":$v.last_name.$error,"is-valid":!$v.last_name.$invalid}' placeholder="Entrez votre nom (uniquement des lettres)"  ></b-form-input>
             </b-form-group>
             <b-form-group style="font-weight:bold" id="input-group-3"  label="Votre pseudo:" label-for="input-3" >
               <b-form-input style="font-style:italic" id="input-3" autocomplete="section-blue nickname" v-model.trim="$v.pseudo.$model" :class='{"is-invalid":$v.pseudo.$error,"is-valid":!$v.pseudo.$invalid}' placeholder="Entrez votre pseudo (uniquement des lettres)" ></b-form-input>

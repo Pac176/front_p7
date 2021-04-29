@@ -23,7 +23,7 @@
        </b-form>
 </template>
 <script>
-import { required,  helpers, minLength, maxLength, alphaNum } from 'vuelidate/lib/validators';
+import { required,  helpers, minLength, maxLength, alpha } from 'vuelidate/lib/validators';
 import {mapState} from 'vuex';
 const emailRegex = helpers.regex('emailRegex', /^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,6}$/);
 const pwdRegex = helpers.regex('pwdRegex', /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/);
@@ -50,14 +50,14 @@ export default {
 			required,
 			minLength: minLength(2),
 			maxLength: maxLength(50),
-			alphaNum
+			alpha
 
 		},
 		last_name:{
 			required,
 			minLength: minLength(2),
 			maxLength: maxLength(50),
-			alphaNum
+			alpha
 		},
 		pseudo:{
 			required,
@@ -156,10 +156,14 @@ export default {
 						this.isConnectInStore();
 						this.$router.push('/Wall');
 					} 
-				} else {
+				} /* else if(signup.status === 500 ){
+					console.log();
+					this.showAlert({message: 'Verifiez vos informations'}, 'danger'); 
+				} */else {
 					this.showAlert(signupResponse, 'danger');
 				} 
 			} catch (error) {
+				console.log('dfdsfdsf');
 				this.showAlert({message: error},'danger');
 				console.log(error);
 			}

@@ -100,6 +100,7 @@ export default {
 			}
 		},
 		async onConnect (event) {
+			this.$store.state.successSubscribe = false;
 			try {
 				event.preventDefault();
 				const requestOptions = {

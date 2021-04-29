@@ -3,16 +3,16 @@
 		<b-link  class='linkAlert' v-on:mouseover="alertHover" v-on:mouseleave="alertHoverOut"><b-alert v-b-tooltip.bottom.v-info="'Garder la souris ici pour conserver le message'" :show="dismissCountDown" dismissible  :variant='variantResult'  @dismissed="dismissCountDown=0"  @dismiss-count-down="countDownChanged" id='alert'>
     {{apiResponse.message}}</b-alert></b-link>
            <b-form-group style="font-weight:bold" id="input-group-1"  label="Modifier votre Nom:"  label-for="input-1" > 
-              <b-form-input  style="font-style:italic" id="input-1" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' :placeholder="user.first_name"   ></b-form-input>
+              <b-form-input  style="font-style:italic" id="input-1" autocomplete="section-blue first-name" v-model.trim="$v.first_name.$model" :class='{"is-invalid":$v.first_name.$error,"is-valid":!$v.first_name.$invalid}' :placeholder="user.first_name"   ></b-form-input>
             </b-form-group>
            <b-form-group style="font-weight:bold" id="input-group-2"  label="Modifier votre prénom:" label-for="input-2" >
-              <b-form-input style="font-style:italic" id="input-2"   v-model.trim="$v.last_name.$model" :class='{"is-invalid":$v.last_name.$error,"is-valid":!$v.last_name.$invalid}' :placeholder="user.last_name"   ></b-form-input>
+              <b-form-input style="font-style:italic" id="input-2"   autocomplete="section-blue last-name" v-model.trim="$v.last_name.$model" :class='{"is-invalid":$v.last_name.$error,"is-valid":!$v.last_name.$invalid}' :placeholder="user.last_name"   ></b-form-input>
             </b-form-group>
             <b-form-group style="font-weight:bold" id="input-group-3"  label="Modifier votre pseudo:" label-for="input-3" >
-              <b-form-input style="font-style:italic" id="input-3"  v-model.trim="$v.pseudo.$model" :class='{"is-invalid":$v.pseudo.$error,"is-valid":!$v.pseudo.$invalid}'  :placeholder="user.pseudo" ></b-form-input>
+              <b-form-input style="font-style:italic" id="input-3"  autocomplete="section-blue nickname" v-model.trim="$v.pseudo.$model" :class='{"is-invalid":$v.pseudo.$error,"is-valid":!$v.pseudo.$invalid}'  :placeholder="user.pseudo" ></b-form-input>
             </b-form-group> 
-            <b-form-group style="font-weight:bold" id="input-group-5"  label="Modifier votre adresse Email:" label-for="input-5"  description="Sous la forme xxxx@xxxxx.xxxx">
-            <b-form-input style="font-style:italic" id="input-5"  type="email" v-model.trim="$v.email.$model" :class='{"is-invalid":$v.email.$error,"is-valid":!$v.email.$invalid}' :placeholder="user.email"  ></b-form-input>
+            <b-form-group style="font-weight:bold" id="input-group-4"  label="Modifier votre adresse Email:" label-for="input-4"  description="Sous la forme xxxx@xxxxx.xxxx">
+            <b-form-input style="font-style:italic" id="input-4"  type="email" autocomplete="section-blue email" v-model.trim="$v.email.$model" :class='{"is-invalid":$v.email.$error,"is-valid":!$v.email.$invalid}' :placeholder="user.email"  ></b-form-input>
             </b-form-group> 
             <button   type="submit"   class="btn btn-success btn-lg btn-block">Modifier mes donnees</button>
             <p class="forgot-password text-right mt-2 mb-4">

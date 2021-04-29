@@ -6,10 +6,10 @@
               <b-form-input  style="font-style:italic" id="input-5" autocomplete="section-blue current-password" v-model.trim="$v.oldPassword.$model" :class='{"is-invalid":$v.oldPassword.$error,"is-valid":!$v.oldPassword.$invalid}' type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
             </b-form-group>
            <b-form-group  v-if="updatePwdSuccess" style="font-weight:bold" id="input-group-6"   label="Choisir un nouveau mot de passe:" label-for="input-6" description="Au moins 8 caractères, 1 majuscule, 1 chiffre et un caratere special" >
-              <b-form-input style="font-style:italic" id="input-6" autocomplete="section-blue current-password" v-model.trim="$v.newPassword.$model" :class='{"is-invalid":$v.newPassword.$error,"is-valid":!$v.newPassword.$invalid}' type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
+              <b-form-input style="font-style:italic" id="input-6" autocomplete="section-blue new-password" v-model.trim="$v.newPassword.$model" :class='{"is-invalid":$v.newPassword.$error,"is-valid":!$v.newPassword.$invalid}' type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
             </b-form-group>
             <b-form-group v-if="updatePwdSuccess" style="font-weight:bold" id="input-group-7"   label="Confirmez nouveau mot de passe:" label-for="input-7" description="Au moins 8 caractères, 1 majuscule, 1 chiffre et un caratere special" >
-              <b-form-input style="font-style:italic" id="input-7" autocomplete="section-blue current-password" v-model.trim="$v.repeatNewPassword.$model" :class='{"is-invalid":$v.repeatNewPassword.$error,"is-valid":!$v.repeatNewPassword.$invalid}' type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
+              <b-form-input style="font-style:italic" id="input-7" autocomplete="section-blue new-password" v-model.trim="$v.repeatNewPassword.$model" :class='{"is-invalid":$v.repeatNewPassword.$error,"is-valid":!$v.repeatNewPassword.$invalid}' type="password" placeholder="Entrez votre mot de passe"    ></b-form-input>
             </b-form-group> 
 			<b-row>
 				<b-col>

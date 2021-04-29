@@ -217,7 +217,6 @@ export default {
 				};
 				const loginRequest = await fetch(this.urlApi + "/users/login", requestOptions);
 				const loginResponse = await loginRequest.json();
-				console.log(loginResponse);	
 				if(loginRequest.ok === true && this.user.is_admin == 0){
 					await this.showMsgDeleteAccount();
 					//const confirmResponse = confirm("Etes vous sur de vouloir supprimer définitivement votre compte?");

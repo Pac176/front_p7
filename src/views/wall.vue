@@ -723,6 +723,7 @@ export default {
 	color: rgba(54, 37, 37, 0.993);
 	font-weight: bolder;
 	border: 2.5mm ridge rgba(180, 155, 155, 0.6);
+	background-color: #f0e7e6;
 }
 .card-body{
 	padding:0;

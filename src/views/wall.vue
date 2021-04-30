@@ -330,7 +330,7 @@ export default {
 				};
 				await fetch(this.urlApi + `/posts`, requestOptions);
 				await this.findAllPosts();
-				this.textArea= "Quoi de neuf?" + this.$store.state.user.pseudo + "......";
+				this.textArea= "Quoi de neuf?" + this.$store.state.user.first_name + "......";
 				this.noPosts=null;
 			} catch (error) {
 				console.log(error,'Erreure sur la createPost');

@@ -39,10 +39,10 @@
 				<b-card title="" sub-title="" v-for="(item,index) in allPosts" :key="item.id" class="post">
 					<div class='headerCard'>
 						<div  class='headerCard'>
-							<b-link to="/wall/user" @click='findAllPostsByUserId(item.user.id);'><b-img   src="https://picsum.photos/50" fluid alt="Responsive image" class="authorImg link" width='45rem' height='45rem'></b-img>
+							<b-link @click='findAllPostsByUserId(item.user.id);'><b-img   src="https://picsum.photos/50" fluid alt="Responsive image" class="authorImg link" width='45rem' height='45rem'></b-img>
 							</b-link>
 							<div class='textHeader' >
-								<b-link to="wall/user" @click='findAllPostsByUserId(item.user.id);' class="authorPost link">{{ item.user.pseudo}}</b-link>
+								<b-link @click='findAllPostsByUserId(item.user.id);' class="authorPost link">{{ item.user.pseudo}}</b-link>
 								<b-link class="link" v-b-tooltip.leftbottom.v-info ="momentDateMouse(item.createdAt)" >{{ momentDate(item.createdAt)}}</b-link>
 							</div>
 						</div>
@@ -412,6 +412,7 @@ export default {
 				if(this.allPostsByUserIdData.count !== 0 && this.isConnect){
 					this.wallUserIdInStore(userId);
 					await this.allPostsByUserIdInStore(this.allPostsByUserIdData.data);
+					this.$router.push('wall/user');
 				} else{
 					this.allPostsByUserIdInStore('');
 				}

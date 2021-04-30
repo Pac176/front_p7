@@ -515,10 +515,7 @@ export default {
 			}
 		},
 	},
-	async mounted(){
-		await this.findAllPostsByUserId(this.wallUserId);
-		
-	}
+	
 };
 </script>
 

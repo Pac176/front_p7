@@ -36,7 +36,7 @@ export default {
 
 <style lang="scss" scoped >
 h1{
-	margin-top:8rem;
+	margin-top:6rem;
 }
 .subscription{
 	display:flex;
